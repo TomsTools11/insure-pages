@@ -1,0 +1,41 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Repository status: pre-implementation
+
+This repo currently contains **only a PRD** ([Insurance-Agency-Website-Service-PRD.md](Insurance-Agency-Website-Service-PRD.md)). There is no source code, build system, test suite, or chosen tech stack yet. Do not invent build/lint/test commands — none exist. When code is added, update this file with the real commands and architecture.
+
+The tech stack is an **open, undecided question** (PRD §17.3: "which CMS/stack and hosting; build vs. buy for the template engine and connectors"). Do not assume a framework. If asked to scaffold or implement, surface the stack decision first rather than picking silently.
+
+## What this product is
+
+"RapidSite" (working name) is a **productized service that ships modern, conversion-optimized, WCAG 2.1 AA-compliant websites for insurance agencies in under one week** (target: ≤5 business days from intake completion). It is two systems shipping as one product:
+
+- **Client-facing service** — structured intake → design → one consolidated revision round → launch, on a fixed scope and sub-1-week SLA.
+- **Internal build platform (the "speed engine")** — a templated, token-themable, accessibility-tested design system + AI-assisted content generation + pre-built insurance integrations + automated QA + provisioning/deploy automation. This is what makes the speed economically viable.
+
+The PRD is the source of truth for scope, personas, the day-by-day delivery workflow (§7), functional requirements (§9), and roadmap phasing (§16). Read it before proposing product or architecture decisions.
+
+## Constraints that shape every technical decision
+
+These are product invariants, not nice-to-haves. Any code or design must hold to them:
+
+- **WCAG 2.1 AA by default** — accessibility is a core selling wedge (de-risking ADA lawsuits), not an add-on. Automated accessibility scans must pass at launch; every site publishes an accessibility statement. Never write code that regresses this, and never promise legal *immunity* — the product reduces risk and conforms to the standard, it does not guarantee against suits (PRD §9.3).
+- **Conversion-first** — templates exist to turn paid/organic traffic into quote requests and calls (click-to-call, sticky CTAs, above-the-fold quote forms, trust signals). "Looks good" is insufficient.
+- **Core Web Vitals "Good"** at launch is a target metric — performance is a hard requirement, not a polish step.
+- **Productized, not bespoke** — fixed scope, token-based brand theming, reusable templates/components. Anything that forces per-client bespoke engineering is explicitly **out of v1 scope** (PRD §9.5, §6.2). Favor configuration/theming over one-off code.
+- **AI-generated content always gets mandatory human review** with compliance guardrails (no unverifiable claims, correct disclaimers).
+
+## Domain vocabulary
+
+Insurance-specific terms that recur throughout the product (PRD Appendix A):
+
+- **AMS** — Agency Management System (Applied Epic, AMS360, EZLynx, HawkSoft). Sites integrate via pre-built connectors or an integration-layer fallback.
+- **Comparative rater** — multi-carrier quoting tool (e.g., EZLynx); sites hand off / link to these.
+- **LOB (Lines of Business)** — insurance product categories (auto, home, life, commercial); each gets a templated, AI-drafted landing page.
+- **Care plan** — the recurring monthly subscription (hosting, security, accessibility monitoring, content updates). This MRR is "the real business"; the one-time build is the front door.
+
+## Build platform — the nine required capabilities
+
+When implementation begins, the internal engine (PRD §10) must provide: (1) component/template library, (2) token-based brand theming, (3) AI content generation with human review, (4) a CMS for producer assembly + client light edits, (5) integration connectors (quote forms, analytics, call tracking, CRM/AMS, rater), (6) an automated QA suite (accessibility, Core Web Vitals, mobile, broken links, form submission), (7) provisioning + deploy automation (spin-up, staging preview, prod deploy, DNS/SSL), (8) an intake pipeline that maps form fields directly to template fields, (9) an internal dashboard with per-build SLA countdown.
