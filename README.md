@@ -1,6 +1,6 @@
 # insure-pages
 
-Working name: **RapidSite** *(to be finalized)*
+finalized name: **InsurePages** 
 
 A productized service that delivers modern, conversion-optimized, **WCAG 2.1 AA-compliant** websites for insurance agencies — live in **under one week** (target ≤ 5 business days from intake completion).
 
