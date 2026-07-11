@@ -1,11 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, existsSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { page } from "./support/page.mjs";
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), "..", "dist");
-export const page = (p = "index.html") => readFileSync(join(dist, p), "utf-8");
 
 test("build produced index.html with the InsurePages title", () => {
   assert.ok(existsSync(join(dist, "index.html")), "dist/index.html missing — run npm run build");

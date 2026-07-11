@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { page } from "./build.test.mjs";
+import { page } from "./support/page.mjs";
 
 test("header has nav links and a centered Start now sticker", () => {
   const html = page();
