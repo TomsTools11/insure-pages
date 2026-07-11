@@ -1,0 +1,123 @@
+<section class="method" id="method">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow" style="background: var(--green);">The method</span>
+      <h2 class="section-title">Our practiced 5-step process.</h2>
+      <p class="section-sub">From first call to launch day. No surprises, no mystery.</p>
+    </div>
+    <ol class="method-list">
+      <li class="method-row">
+        <div class="method-num" aria-hidden="true">01</div>
+        <div>
+          <h3 class="method-step">A conversation, first.</h3>
+          <p class="method-detail">
+            We start by listening — about your practice, your clients, and what
+            makes your agency yours.
+          </p>
+        </div>
+      </li>
+      <li class="method-row">
+        <div class="method-num" aria-hidden="true">02</div>
+        <div>
+          <h3 class="method-step">Comprehensive style guide.</h3>
+          <p class="method-detail">
+            A 20+ page detailed style guide that includes website direction,
+            color palette, and branding.
+          </p>
+        </div>
+      </li>
+      <li class="method-row">
+        <div class="method-num" aria-hidden="true">03</div>
+        <div>
+          <h3 class="method-step">Design &amp; build.</h3>
+          <p class="method-detail">
+            We design and build the site — measured, considered, and made to
+            load fast and rank well from day one.
+          </p>
+        </div>
+      </li>
+      <li class="method-row">
+        <div class="method-num" aria-hidden="true">04</div>
+        <div>
+          <h3 class="method-step">Review &amp; refine.</h3>
+          <p class="method-detail">
+            A working draft to walk through together. We revise until every
+            section earns its place.
+          </p>
+        </div>
+      </li>
+      <li class="method-row">
+        <div class="method-num" aria-hidden="true">05</div>
+        <div>
+          <h3 class="method-step">Launch — and onward.</h3>
+          <p class="method-detail">
+            We hand you the keys and stay on hand. The site is yours, always.
+          </p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<style>
+  .method {
+    padding: 120px 0;
+    background: var(--cream-deep);
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+  }
+  .method-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    list-style: none;
+  }
+  .method-row {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: 32px;
+    align-items: center;
+    background: #fff;
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    padding: 24px 32px;
+    box-shadow: 5px 5px 0 var(--ink);
+    transition: all 0.15s ease;
+  }
+  .method-row:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--ink); }
+  .method-num {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    border: 2px solid var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--ink);
+  }
+  .method-row:nth-child(1) .method-num { background: var(--red); color: #fff; }
+  .method-row:nth-child(2) .method-num { background: var(--yellow); }
+  .method-row:nth-child(3) .method-num { background: var(--green); }
+  .method-row:nth-child(4) .method-num { background: var(--blue); }
+  .method-row:nth-child(5) .method-num { background: var(--lavender); }
+  .method-step {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .method-detail {
+    font-size: 15px;
+    color: #3a3a3a;
+    font-weight: 500;
+    line-height: 1.55;
+  }
+  @media (max-width: 900px) {
+    .method { padding: 72px 0; }
+    .method-row { grid-template-columns: 1fr; gap: 12px; text-align: left; }
+  }
+</style>
