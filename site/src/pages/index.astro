@@ -1,6 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
 import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import TrustStrip from "../components/TrustStrip.astro";
 import Footer from "../components/Footer.astro";
 ---
 
@@ -9,6 +11,9 @@ import Footer from "../components/Footer.astro";
   description="We build independent insurance agents a website that gets found, earns trust on sight, and turns searches into clients."
 >
   <Header />
-  <main id="main"><h1>InsurePages</h1></main>
+  <main id="main">
+    <Hero />
+    <TrustStrip />
+  </main>
   <Footer />
 </Base>

@@ -1,0 +1,62 @@
+<section class="trust-strip" aria-label="Why agents choose us">
+  <ul class="container trust-inner">
+    <li class="trust-item">
+      <span class="trust-dot" style="background: var(--red);" aria-hidden="true"></span>
+      Launch in days
+    </li>
+    <li class="trust-item">
+      <span class="trust-dot" style="background: var(--yellow);" aria-hidden="true"></span>
+      SEO from day one
+    </li>
+    <li class="trust-item">
+      <span class="trust-dot" style="background: var(--green);" aria-hidden="true"></span>
+      You own the site
+    </li>
+    <li class="trust-item">
+      <span class="trust-dot" style="background: var(--blue);" aria-hidden="true"></span>
+      No long-term contracts
+    </li>
+  </ul>
+</section>
+
+<style>
+  .trust-strip {
+    padding: 24px 0;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    background: var(--cream-deep);
+    overflow: hidden;
+  }
+  .trust-inner {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    list-style: none;
+  }
+  .trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  /* dot separators from the prototype are drawn with ::after so the list
+     stays clean semantically */
+  .trust-item:not(:last-child)::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: var(--ink);
+    border-radius: 50%;
+    margin-left: 22px;
+  }
+  .trust-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--ink);
+  }
+</style>
