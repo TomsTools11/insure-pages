@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://insure-pages.vercel.app/sitemap-index.xml

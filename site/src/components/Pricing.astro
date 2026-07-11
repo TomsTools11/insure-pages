@@ -1,0 +1,181 @@
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow" style="background: var(--blue);">Packages</span>
+      <h2 class="section-title">Three levels of support.</h2>
+      <p class="section-sub">Pick what fits. No fine print, no contracts, no upsells.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <h3 class="price-tier">Starter</h3>
+        <p class="price-amount">
+          <span class="price-amount-currency" aria-hidden="true">$</span>499
+          <span class="sr-only">dollars</span>
+        </p>
+        <p class="price-cadence">One-time payment</p>
+        <ul class="price-features">
+          <li>Five to seven essential pages</li>
+          <li>Custom design to your brand</li>
+          <li>Mobile responsive throughout</li>
+          <li>Foundational SEO setup</li>
+          <li>Contact form &amp; integrations</li>
+        </ul>
+        <a href="#contact" class="btn btn-light price-btn">Begin →</a>
+      </div>
+      <div class="price-card featured">
+        <span class="price-badge">★ Best value</span>
+        <h3 class="price-tier">Gold</h3>
+        <p class="price-amount">
+          <span class="price-amount-currency" aria-hidden="true">$</span>699
+          <span class="sr-only">dollars</span>
+        </p>
+        <p class="price-cadence">Setup · $75/mo</p>
+        <ul class="price-features">
+          <li>Everything in Starter</li>
+          <li>Monthly SEO-focused content</li>
+          <li>Quarterly strategy review</li>
+          <li>Monthly reporting</li>
+          <li>Priority support, always</li>
+        </ul>
+        <a href="#contact" class="btn btn-yellow price-btn">Begin →</a>
+      </div>
+      <div class="price-card">
+        <h3 class="price-tier">Silver</h3>
+        <p class="price-amount">
+          <span class="price-amount-currency" aria-hidden="true">$</span>599
+          <span class="sr-only">dollars</span>
+        </p>
+        <p class="price-cadence">Setup · $25/mo</p>
+        <ul class="price-features">
+          <li>Everything in Starter</li>
+          <li>Advanced SEO setup</li>
+          <li>Hosting &amp; maintenance</li>
+          <li>Monthly edits included</li>
+          <li>Email support</li>
+        </ul>
+        <a href="#contact" class="btn btn-light price-btn">Begin →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pricing { padding: 120px 0; }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+  .price-card {
+    background: #fff;
+    border: 2px solid var(--ink);
+    border-radius: 24px;
+    padding: 36px 32px 32px;
+    box-shadow: 6px 6px 0 var(--ink);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+  .price-card:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--ink); }
+  .price-card.featured {
+    background: var(--ink);
+    color: #fff;
+    box-shadow: 6px 6px 0 var(--red);
+    transform: translateY(-12px);
+  }
+  .price-card.featured:hover {
+    box-shadow: 9px 9px 0 var(--red);
+    transform: translate(-3px, -15px);
+  }
+  .price-card.featured .price-features li,
+  .price-card.featured .price-cadence { color: rgba(255, 255, 255, 0.85); }
+  .price-badge {
+    position: absolute;
+    top: -16px;
+    left: 24px;
+    background: var(--yellow);
+    color: var(--ink);
+    padding: 6px 14px;
+    border: 2px solid var(--ink);
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    box-shadow: 3px 3px 0 var(--ink);
+    transform: rotate(-3deg);
+  }
+  .price-tier {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+  }
+  .price-amount {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  .price-amount-currency {
+    font-size: 28px;
+    margin-top: 10px;
+    color: var(--red);
+  }
+  .price-card.featured .price-amount-currency { color: var(--yellow); }
+  .price-cadence {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .price-features {
+    list-style: none;
+    flex-grow: 1;
+    margin-bottom: 28px;
+  }
+  .price-features li {
+    padding: 10px 0;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    border-bottom: 1px dashed rgba(26, 26, 26, 0.15);
+  }
+  .price-card.featured .price-features li { border-bottom-color: rgba(255, 255, 255, 0.15); }
+  .price-features li:last-child { border-bottom: none; }
+  .price-features li::before {
+    content: "✓";
+    color: var(--red);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .price-card.featured .price-features li::before { color: var(--yellow); }
+  .price-btn { width: 100%; justify-content: center; }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  @media (max-width: 900px) {
+    .pricing { padding: 72px 0; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .price-card.featured { transform: none; }
+  }
+</style>

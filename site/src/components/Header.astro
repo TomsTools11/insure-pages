@@ -1,0 +1,91 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand-mark" href="/" aria-label="InsurePages home">
+      <span class="brand-pill">InsurePages</span>
+      <span class="brand-meta-house">by S3 Labs</span>
+    </a>
+    <nav class="primary-nav" aria-label="Main">
+      <a class="sticker nav-link" href="/#build">Approach</a>
+      <a class="sticker nav-link" href="/#method">Method</a>
+      <a class="sticker nav-link" href="/#pricing">Packages</a>
+      <a class="sticker nav-cta" href="/#contact">Start now <span aria-hidden="true">✨</span></a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    background: var(--cream);
+    z-index: 100;
+    padding: 20px 0;
+    border-bottom: 2px solid var(--ink);
+  }
+  .site-header > .container {
+    max-width: 100%;
+    padding-left: 24px;
+    padding-right: 40px;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .brand-mark {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .brand-pill {
+    background: var(--red);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 14px;
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    box-shadow: 4px 4px 0 var(--ink);
+    border: 2px solid var(--ink);
+    transform: rotate(-2deg);
+  }
+  .brand-meta-house {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-left: 4px;
+  }
+  .primary-nav {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .primary-nav a { text-decoration: none; color: var(--ink); }
+  /* Spec fix 1a: centered label. Emoji sits in its own span so the text
+     block itself stays optically centered inside the pill. */
+  .nav-cta {
+    background: var(--yellow);
+    gap: 6px;
+    justify-content: center;
+  }
+  @media (max-width: 900px) {
+    .nav-link { display: none; }
+  }
+  /* Verification fix (Task 8): on narrow phones the unbreakable brand pill
+     plus the "Start now" sticker (both white-space: nowrap) don't fit the
+     content box and push the header past the viewport edge. Tighten the
+     padding/gap to reclaim width. The pill font must stay at/above 19px
+     bold -- WCAG's "large text" bold threshold is 18.66px, and below it
+     the white-on-red pill (3.1:1) needs 4.5:1 instead of 3:1 and fails AA. */
+  @media (max-width: 480px) {
+    .site-header > .container { padding-left: 14px; padding-right: 14px; }
+    .header-inner { gap: 8px; }
+    .brand-pill { font-size: 19px; padding: 7px 12px; }
+    .nav-cta { padding: 10px 14px; }
+  }
+</style>

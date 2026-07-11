@@ -540,7 +540,7 @@ Create `site/tests/chrome.test.mjs`:
 ```js
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { page } from "./build.test.mjs";
+import { page } from "./support/page.mjs";
 
 test("header has nav links and a centered Start now sticker", () => {
   const html = page();
@@ -830,7 +830,7 @@ Create `site/tests/hero.test.mjs`:
 ```js
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { page } from "./build.test.mjs";
+import { page } from "./support/page.mjs";
 
 test("hero: headline, lede, and CTA link map", () => {
   const html = page();
@@ -1100,7 +1100,7 @@ Create `site/tests/content.test.mjs`:
 ```js
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { page } from "./build.test.mjs";
+import { page } from "./support/page.mjs";
 
 test("pillars: three cards with headings", () => {
   const html = page();
@@ -1481,7 +1481,7 @@ Create `site/tests/conversion.test.mjs`:
 ```js
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { page } from "./build.test.mjs";
+import { page } from "./support/page.mjs";
 
 test("pricing: three tiers, prices, fixed copy, Begin CTAs to #contact", () => {
   const html = page();
@@ -1910,7 +1910,7 @@ Create `site/tests/accessibility-page.test.mjs`:
 ```js
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { page } from "./build.test.mjs";
+import { page } from "./support/page.mjs";
 
 test("accessibility statement page exists with required content", () => {
   const html = page("accessibility/index.html");
@@ -2127,7 +2127,7 @@ import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { page } from "./build.test.mjs";
+import { page } from "./support/page.mjs";
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), "..", "dist");
 
