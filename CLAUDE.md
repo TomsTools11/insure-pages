@@ -2,11 +2,29 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Repository status: pre-implementation
+## Repository status: marketing site implemented; product platform still undecided
 
-This repo currently contains **only a PRD** ([Insurance-Agency-Website-Service-PRD.md](Insurance-Agency-Website-Service-PRD.md)). There is no source code, build system, test suite, or chosen tech stack yet. Do not invent build/lint/test commands — none exist. When code is added, update this file with the real commands and architecture.
+The InsurePages **marketing site** — the site that sells this productized service — is implemented in `site/`: an **Astro ^5** static site. Real commands (run from `site/`):
 
-The tech stack is an **open, undecided question** (PRD §17.3: "which CMS/stack and hosting; build vs. buy for the template engine and connectors"). Do not assume a framework. If asked to scaffold or implement, surface the stack decision first rather than picking silently.
+```bash
+cd site
+npm install
+npm run dev      # local dev server
+npm run build    # static build to dist/
+npm test         # build first — tests read dist/, not source
+npm run preview  # preview the production build locally
+```
+
+`npm test` reads the built HTML in `dist/`, not the source `.astro` files — always `npm run build` before `npm test`, or use `npm run build && npm test`.
+
+Structure:
+
+- `src/components/` — one component per page section (`Header`, `Hero`, `TrustStrip`, `Pillars`, `Method`, `Pricing`, `ContactCta`, `Footer`).
+- `src/layouts/Base.astro` — shared page shell; `src/styles/global.css` — design tokens (color, type, spacing).
+- `src/pages/index.astro` and `src/pages/accessibility.astro` — the two published pages.
+- `tests/*.test.mjs` — 14 `node:test` assertions against the built HTML. The shared `page()` helper lives in `tests/support/page.mjs`, which is imported by every test file. **Test files must never import from each other**: `node --test` globs `tests/*.mjs`, so a test file that imports another test file re-registers that file's tests, silently duplicating them. Keep shared helpers under `tests/support/` (outside the glob) and have each test file import only from there.
+
+Still open, per PRD §17.3: the **product platform** stack — the templated, multi-tenant engine that will generate client agencies' sites — is undecided ("which CMS/stack and hosting; build vs. buy for the template engine and connectors"). If asked to scaffold or implement that platform, surface the stack decision first rather than picking silently; do not assume a framework for it. This is separate from the marketing-site stack above, which is now fixed. Also open: attaching a custom domain, and the final S3 Labs logo asset for the header (`assets/` currently holds exploratory variants, not a confirmed final lockup).
 
 ## What this product is
 
