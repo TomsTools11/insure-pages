@@ -38,6 +38,13 @@
       s.src = "https://formrobin.com/js/embed.js";
       s.async = true;
       document.body.appendChild(s);
+      s.onload = function () {
+        var t = setInterval(function () {
+          var f = document.querySelector(".formrobin-embed iframe");
+          if (f) { if (!f.title) f.title = "InsurePages contact form"; clearInterval(t); }
+        }, 200);
+        setTimeout(function () { clearInterval(t); }, 10000);
+      };
     }
     var target = document.getElementById("contact");
     if (!target || !("IntersectionObserver" in window)) {

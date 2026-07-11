@@ -4,10 +4,10 @@ import { page } from "./support/page.mjs";
 
 test("header has nav links and a centered Start now sticker", () => {
   const html = page();
-  assert.match(html, /href="#build"/);
-  assert.match(html, /href="#method"/);
-  assert.match(html, /href="#pricing"/);
-  assert.match(html, /class="[^"]*nav-cta[^"]*"[^>]*href="#contact"/);
+  assert.match(html, /href="\/#build"/);
+  assert.match(html, /href="\/#method"/);
+  assert.match(html, /href="\/#pricing"/);
+  assert.match(html, /class="[^"]*nav-cta[^"]*"[^>]*href="\/#contact"/);
   assert.match(html, /Start now/);
 });
 
