@@ -1,0 +1,89 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Base
+  title="Accessibility statement — InsurePages"
+  description="InsurePages is committed to an accessible web. Our site targets WCAG 2.1 level AA, and every site we build for clients ships to the same standard."
+>
+  <Header />
+  <main id="main" class="statement">
+    <div class="container">
+      <h1>Accessibility statement</h1>
+      <p class="updated">Last updated: July 11, 2026</p>
+
+      <h2>Our commitment</h2>
+      <p>
+        InsurePages by S3 Labs builds websites for independent insurance
+        agents, and we believe those websites should work for everyone. This
+        site — and every site we build for clients — targets
+        <strong>WCAG 2.1 level AA</strong>, the standard broadly referenced for
+        web accessibility under the Americans with Disabilities Act.
+      </p>
+
+      <h2>Measures we take</h2>
+      <ul>
+        <li>Semantic HTML landmarks, headings, and lists throughout.</li>
+        <li>Color contrast checked against WCAG 2.1 AA for text and interactive elements.</li>
+        <li>Full keyboard operability with visible focus indicators and a skip link.</li>
+        <li>Motion and transitions respect the <code>prefers-reduced-motion</code> setting.</li>
+        <li>Automated accessibility scans (axe) run before every release.</li>
+      </ul>
+
+      <h2>Known limitations</h2>
+      <p>
+        Our contact form is provided by FormRobin, a third-party service. If
+        you have difficulty using the embedded form, the same form is available
+        directly at
+        <a href="https://formrobin.com/f/wy85le3">formrobin.com/f/wy85le3</a>.
+      </p>
+
+      <h2>Feedback</h2>
+      <p>
+        If you encounter an accessibility barrier anywhere on this site, please
+        tell us through
+        <a href="https://formrobin.com/f/wy85le3">our contact form</a> — include
+        the page and a short description of the problem. We aim to respond
+        within two business days and to fix verified issues promptly.
+      </p>
+
+      <h2>A note on standards</h2>
+      <p>
+        Conformance targets reduce risk and improve real-world usability; no
+        statement of conformance is a legal guarantee. We continuously test and
+        improve this site as guidelines and assistive technologies evolve.
+      </p>
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .statement { padding: 80px 0 120px; }
+  .statement .container { max-width: 760px; }
+  h1 {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: clamp(36px, 5vw, 56px);
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+  }
+  .updated {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+  h2 {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    margin: 40px 0 12px;
+  }
+  p, li { font-size: 16px; font-weight: 500; color: #3a3a3a; }
+  ul { padding-left: 22px; display: grid; gap: 8px; }
+  a { color: var(--ink); font-weight: 700; }
+</style>
