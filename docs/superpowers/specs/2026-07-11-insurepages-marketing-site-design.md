@@ -82,6 +82,8 @@ insure-pages/
 
 1. **Copy:** "styled guide" → "style guide"; "color pallet" → "color palette";
    stray double spaces ("Quarterly  strategy", "Monthly  reporting").
+1a. **Header "Start now" button:** center the label — in the prototype the text
+   sits off-center in the yellow sticker (flagged by Tom via screenshot).
 2. **Metadata:** title + description rewritten for InsurePages (prototype still
    says "Branded Agency Partners"); OG/Twitter cards with a social share image;
    canonical, sitemap, robots.
