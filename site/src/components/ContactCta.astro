@@ -1,0 +1,153 @@
+<section class="cta-band" id="contact">
+  <span class="cta-deco cta-deco-1" aria-hidden="true">Free consult ✦</span>
+  <span class="cta-deco cta-deco-2" aria-hidden="true">No contracts ★</span>
+  <span class="cta-deco cta-deco-3" aria-hidden="true"></span>
+  <span class="cta-deco cta-deco-4" aria-hidden="true"></span>
+  <div class="container">
+    <h2>Ready to look as good as you are?</h2>
+    <p>A conversation costs nothing. Let's see what your site could do.</p>
+    <div class="cta-actions">
+      <a
+        href="https://formrobin.com/f/wy85le3"
+        target="_blank"
+        rel="noopener"
+        class="btn btn-yellow cta-btn"
+        >Schedule a call →</a
+      >
+    </div>
+    <div class="form-shell">
+      <h3 class="form-title">Or tell us about your project</h3>
+      <div class="formrobin-embed" data-path="/f/wy85le3"></div>
+      <noscript>
+        <p class="form-fallback">
+          Our contact form needs JavaScript. You can also reach us directly at
+          <a href="https://formrobin.com/f/wy85le3">formrobin.com/f/wy85le3</a>.
+        </p>
+      </noscript>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    var loaded = false;
+    function loadEmbed() {
+      if (loaded) return;
+      loaded = true;
+      var s = document.createElement("script");
+      s.src = "https://formrobin.com/js/embed.js";
+      s.async = true;
+      document.body.appendChild(s);
+    }
+    var target = document.getElementById("contact");
+    if (!target || !("IntersectionObserver" in window)) {
+      loadEmbed();
+      return;
+    }
+    var io = new IntersectionObserver(
+      function (entries) {
+        if (entries.some(function (e) { return e.isIntersecting; })) {
+          loadEmbed();
+          io.disconnect();
+        }
+      },
+      { rootMargin: "600px" }
+    );
+    io.observe(target);
+  })();
+</script>
+
+<style>
+  .cta-band {
+    padding: 140px 0;
+    background: var(--red);
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-deco { position: absolute; pointer-events: none; }
+  .cta-deco-1 {
+    top: 40px; left: 80px;
+    background: var(--yellow);
+    border: 2px solid var(--ink);
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    transform: rotate(-12deg);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .cta-deco-2 {
+    bottom: 60px; right: 100px;
+    background: var(--blue);
+    border: 2px solid var(--ink);
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    transform: rotate(8deg);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .cta-deco-3 {
+    top: 80px; right: 140px;
+    width: 72px; height: 72px;
+    background: var(--green);
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    box-shadow: 4px 4px 0 var(--ink);
+    transform: rotate(-15deg);
+  }
+  .cta-deco-4 {
+    bottom: 80px; left: 120px;
+    width: 80px; height: 80px;
+    background: var(--lavender);
+    border: 2px solid var(--ink);
+    border-radius: 16px;
+    box-shadow: 4px 4px 0 var(--ink);
+    transform: rotate(18deg);
+  }
+  h2 {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: clamp(40px, 6vw, 80px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    color: #fff;
+    max-width: 980px;
+    margin: 0 auto 28px;
+    position: relative;
+  }
+  p {
+    font-size: 19px;
+    color: #fff;
+    font-weight: 700; /* bold => AA large-text threshold on red */
+    max-width: 540px;
+    margin: 0 auto 44px;
+    position: relative;
+  }
+  .cta-actions { position: relative; margin-bottom: 56px; }
+  .cta-btn { font-size: 17px; padding: 22px 36px; }
+  .form-shell {
+    position: relative;
+    max-width: 720px;
+    margin: 0 auto;
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 24px;
+    box-shadow: 6px 6px 0 var(--ink);
+    padding: 32px;
+    text-align: left;
+  }
+  .form-title {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+  .form-fallback { color: var(--ink); font-weight: 600; }
+  .form-fallback a { color: var(--ink); }
+  @media (max-width: 900px) {
+    .cta-band { padding: 72px 0; }
+    .cta-deco { display: none; }
+  }
+</style>
