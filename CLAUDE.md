@@ -28,7 +28,7 @@ Still open, per PRD §17.3: the **product platform** stack — the templated, mu
 
 ## What this product is
 
-"RapidSite" (working name) is a **productized service that ships modern, conversion-optimized, WCAG 2.1 AA-compliant websites for insurance agencies in under one week** (target: ≤5 business days from intake completion). It is two systems shipping as one product:
+**InsurePages** (finalized name; the PRD's "RapidSite" is the old working name) is a **productized service that ships modern, conversion-optimized, WCAG 2.1 AA-compliant websites for insurance agencies in under one week** (target: ≤5 business days from intake completion). It is two systems shipping as one product:
 
 - **Client-facing service** — structured intake → design → one consolidated revision round → launch, on a fixed scope and sub-1-week SLA.
 - **Internal build platform (the "speed engine")** — a templated, token-themable, accessibility-tested design system + AI-assisted content generation + pre-built insurance integrations + automated QA + provisioning/deploy automation. This is what makes the speed economically viable.
