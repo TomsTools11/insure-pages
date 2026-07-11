@@ -113,4 +113,12 @@
   @media (max-width: 900px) {
     .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
   }
+  /* Verification fix (Task 8): at narrow phone widths the 2-column grid's
+     implicit auto-minimum track size (driven by the unbreakable "InsurePages"
+     brand pill) forced the grid wider than the viewport, causing horizontal
+     scroll. Stack to one column and shrink the pill so it never has to. */
+  @media (max-width: 560px) {
+    .footer-top { grid-template-columns: 1fr; gap: 40px; }
+    .footer-brand-pill { font-size: 22px; padding: 10px 18px; }
+  }
 </style>

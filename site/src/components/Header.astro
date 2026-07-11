@@ -76,4 +76,16 @@
   @media (max-width: 900px) {
     .nav-link { display: none; }
   }
+  /* Verification fix (Task 8): on narrow phones the unbreakable brand pill
+     plus the "Start now" sticker (both white-space: nowrap) don't fit the
+     content box and push the header past the viewport edge. Tighten the
+     padding/gap to reclaim width. The pill font must stay at/above 19px
+     bold -- WCAG's "large text" bold threshold is 18.66px, and below it
+     the white-on-red pill (3.1:1) needs 4.5:1 instead of 3:1 and fails AA. */
+  @media (max-width: 480px) {
+    .site-header > .container { padding-left: 14px; padding-right: 14px; }
+    .header-inner { gap: 8px; }
+    .brand-pill { font-size: 19px; padding: 7px 12px; }
+    .nav-cta { padding: 10px 14px; }
+  }
 </style>
