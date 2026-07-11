@@ -72,8 +72,8 @@ insure-pages/
   `<script src="https://formrobin.com/js/embed.js"></script>`
 - The embed script loads lazily (IntersectionObserver as the section approaches
   the viewport) so it costs nothing on first paint.
-- Every CTA ("Start now", "Schedule a call", "Begin →", "View packages" chain)
-  anchors to `#contact` or `#pricing` as in the prototype.
+- CTA anchor map (as in the prototype): "View packages →" → `#pricing`;
+  "Start now", "Schedule a call", and all "Begin →" buttons → `#contact`.
 - `<noscript>` fallback links directly to `https://formrobin.com/f/wy85le3`.
 - No public email/phone in the footer; leads flow only through FormRobin.
 
