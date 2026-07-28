@@ -1,8 +1,16 @@
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand-mark" href="/" aria-label="InsurePages home">
-      <span class="brand-pill">InsurePages</span>
-      <span class="brand-meta-house">by S3 Labs</span>
+      {/* Decorative: the anchor's aria-label carries the accessible name, so
+          an alt here would only duplicate it. The lockup's "by S3 Labs" is
+          carried as real text in the footer. */}
+      <img
+        class="brand-logo"
+        src="/images/insurepages-logo.png"
+        alt=""
+        width="655"
+        height="259"
+      />
     </a>
     <nav class="primary-nav" aria-label="Main">
       <a class="sticker nav-link" href="/#build">Approach</a>
@@ -35,30 +43,20 @@
   }
   .brand-mark {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
+    align-items: center;
     text-decoration: none;
     color: var(--ink);
+    /* Flex items default to min-width:auto, which would let the logo's
+       intrinsic width push the header past the viewport. */
+    min-width: 0;
   }
-  .brand-pill {
-    background: var(--red);
-    color: #fff;
-    padding: 10px 18px;
-    border-radius: 14px;
-    font-family: "Unbounded", sans-serif;
-    font-weight: 700;
-    font-size: 22px;
-    letter-spacing: -0.02em;
-    box-shadow: 4px 4px 0 var(--ink);
-    border: 2px solid var(--ink);
-    transform: rotate(-2deg);
-  }
-  .brand-meta-house {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--muted);
-    margin-left: 4px;
+  /* 205px keeps the header the same height it was with the old text pill
+     (~123px), so the sticky header doesn't shift in-page anchor landings. */
+  .brand-logo {
+    display: block;
+    width: 205px;
+    max-width: 100%;
+    height: auto;
   }
   .primary-nav {
     display: flex;
@@ -76,16 +74,17 @@
   @media (max-width: 900px) {
     .nav-link { display: none; }
   }
-  /* Verification fix (Task 8): on narrow phones the unbreakable brand pill
-     plus the "Start now" sticker (both white-space: nowrap) don't fit the
-     content box and push the header past the viewport edge. Tighten the
-     padding/gap to reclaim width. The pill font must stay at/above 19px
-     bold -- WCAG's "large text" bold threshold is 18.66px, and below it
-     the white-on-red pill (3.1:1) needs 4.5:1 instead of 3:1 and fails AA. */
+  /* Verification fix (Task 8): on narrow phones the brand mark plus the
+     "Start now" sticker (white-space: nowrap) don't fit the content box and
+     push the header past the viewport edge. Tighten the padding/gap to
+     reclaim width. Budget at a 320px viewport: 292px of content box, minus
+     the 121px sticker and the 8px gap, leaves 163px for the logo -- 152px
+     keeps a margin. Contrast isn't a factor at this size: WCAG 1.4.3
+     exempts text that is part of a logo. */
   @media (max-width: 480px) {
     .site-header > .container { padding-left: 14px; padding-right: 14px; }
     .header-inner { gap: 8px; }
-    .brand-pill { font-size: 19px; padding: 7px 12px; }
+    .brand-logo { width: 152px; }
     .nav-cta { padding: 10px 14px; }
   }
 </style>

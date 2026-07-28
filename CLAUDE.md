@@ -24,7 +24,21 @@ Structure:
 - `src/pages/index.astro` and `src/pages/accessibility.astro` — the two published pages.
 - `tests/*.test.mjs` — 14 `node:test` assertions against the built HTML. The shared `page()` helper lives in `tests/support/page.mjs`, which is imported by every test file. **Test files must never import from each other**: `node --test` globs `tests/*.mjs`, so a test file that imports another test file re-registers that file's tests, silently duplicating them. Keep shared helpers under `tests/support/` (outside the glob) and have each test file import only from there.
 
-Still open, per PRD §17.3: the **product platform** stack — the templated, multi-tenant engine that will generate client agencies' sites — is undecided ("which CMS/stack and hosting; build vs. buy for the template engine and connectors"). If asked to scaffold or implement that platform, surface the stack decision first rather than picking silently; do not assume a framework for it. This is separate from the marketing-site stack above, which is now fixed. Also open: attaching a custom domain, and the final S3 Labs logo asset for the header (`assets/` currently holds exploratory variants, not a confirmed final lockup).
+Brand mark: the master lockup lives at repo root as `ip-logo.png` (800×350 RGBA,
+transparent). Two derived assets are what the site actually serves, both trimmed
+to the art's bounding box (655×259) and palette-quantized:
+
+- `site/public/images/insurepages-logo.png` — master art, used in the header on cream.
+- `site/public/images/insurepages-logo-dark.png` — on-ink variant for the footer.
+  The master's `#1a1a1a` outline/shadow vanishes against `--ink`, and its `#2c5972`
+  "by … labs" sits at 2.3:1 there, so those two colors are remapped to `--yellow`
+  and `#8fc7ff` (the values this footer already uses on dark).
+
+Both derived files are generated, not hand-edited. If the master changes, rerun
+`python3 design/build-logo-assets.py` from the repo root rather than editing them.
+
+Still open, per PRD §17.3: the **product platform** stack — the templated, multi-tenant engine that will generate client agencies' sites — is undecided ("which CMS/stack and hosting; build vs. buy for the template engine and connectors"). If asked to scaffold or implement that platform, surface the stack decision first rather than picking silently; do not assume a framework for it. This is separate from the marketing-site stack above, which is now fixed. Also open: attaching a custom domain. (The header logo is no longer open — the
+finalized lockup is in place; see "Brand mark" above.)
 
 ## What this product is
 
