@@ -1,0 +1,87 @@
+---
+const words = [
+  "Bold",
+  "Warm",
+  "Modern",
+  "Classic",
+  "Friendly",
+  "Editorial",
+  "Confident",
+  "Calm",
+];
+---
+
+<aside class="ticker" aria-label="Template styles">
+  <p class="sr-only">
+    Our templates cover a range of styles: bold, warm, modern, classic,
+    friendly, editorial, confident, and calm.
+  </p>
+  <div class="ticker-viewport" aria-hidden="true">
+    <div class="ticker-track">
+      {
+        [0, 1].map(() => (
+          <div class="ticker-group">
+            {words.map((w) => (
+              <span class="ticker-word">
+                {w} <span class="ticker-mark">✦</span>
+              </span>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</aside>
+
+<style>
+  .ticker {
+    background: var(--cream-deep);
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    padding: 20px 0;
+    overflow: hidden;
+  }
+  .ticker-track {
+    display: flex;
+    width: max-content;
+  }
+  .ticker-group {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .ticker-word {
+    display: inline-flex;
+    align-items: center;
+    gap: 28px;
+    padding-right: 28px;
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .ticker-mark {
+    color: var(--red);
+    font-size: 16px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .ticker-track {
+      animation: ticker-scroll 30s linear infinite;
+    }
+    @keyframes ticker-scroll {
+      to { transform: translateX(-50%); }
+    }
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

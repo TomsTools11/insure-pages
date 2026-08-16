@@ -1,0 +1,71 @@
+---
+import { templates } from "../../data/templates.mjs";
+import TemplateCard from "./TemplateCard.astro";
+---
+
+<section class="gallery" id="gallery">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow" style="background: var(--blue);"
+        >The gallery</span
+      >
+      <h2 class="section-title">Four sites, four personalities.</h2>
+      <p class="section-sub">
+        Every one opens as a real, working website. Click around the way a
+        customer would.
+      </p>
+    </div>
+    {
+      templates.length === 0 ? (
+        <div class="gallery-empty">
+          <p class="gallery-empty-title">New looks are on the drawing board.</p>
+          <p class="gallery-empty-sub">
+            The first templates land here soon. Until then, we can walk you
+            through them on a call.
+          </p>
+        </div>
+      ) : (
+        <div class="t-grid">
+          {templates.map((t, i) => (
+            <TemplateCard t={t} index={i} />
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .gallery {
+    padding: 110px 0 120px;
+  }
+  .t-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+  }
+  .gallery-empty {
+    border: 2px dashed var(--ink);
+    border-radius: 24px;
+    padding: 72px 32px;
+    text-align: center;
+    background: #fff;
+  }
+  .gallery-empty-title {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+  .gallery-empty-sub {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--muted);
+    max-width: 440px;
+    margin: 0 auto;
+  }
+  @media (max-width: 900px) {
+    .gallery { padding: 72px 0; }
+    .t-grid { grid-template-columns: 1fr; }
+  }
+</style>

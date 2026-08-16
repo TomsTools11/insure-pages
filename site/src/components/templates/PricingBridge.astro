@@ -1,0 +1,125 @@
+---
+const tiers = [
+  { name: "Starter", price: "$499" },
+  { name: "Gold", price: "$699", star: true },
+  { name: "Silver", price: "$599" },
+];
+---
+
+<section class="bridge">
+  <div class="container">
+    <div class="ticket" data-reveal>
+      <div class="ticket-copy">
+        <span class="section-eyebrow ticket-eyebrow">Pricing</span>
+        <h2 class="ticket-title">Any template. Every package.</h2>
+        <p class="ticket-sub">
+          Each design comes in all three packages, starting at a one time $499.
+        </p>
+      </div>
+      <div class="ticket-side">
+        <div class="ticket-tiers">
+          {
+            tiers.map((tier) => (
+              <span class={`ticket-tier${tier.star ? " is-star" : ""}`}>
+                {tier.star && <span aria-hidden="true">★ </span>}
+                {tier.name} {tier.price}
+              </span>
+            ))
+          }
+        </div>
+        <a href="/#pricing" class="btn btn-ink">View packages →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bridge {
+    padding: 0 0 120px;
+  }
+  .ticket {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 48px;
+    align-items: center;
+    background: var(--yellow);
+    border: 2px solid var(--ink);
+    border-radius: 24px;
+    padding: 52px 56px;
+    box-shadow: 8px 8px 0 var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  /* Perforated ticket edge between the copy and the stub. */
+  .ticket::after {
+    content: "";
+    position: absolute;
+    top: 14px;
+    bottom: 14px;
+    left: 55%;
+    border-left: 3px dashed rgba(26, 26, 26, 0.45);
+  }
+  .ticket-eyebrow {
+    background: #fff;
+    margin-bottom: 20px;
+    display: inline-block;
+  }
+  .ticket-title {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: clamp(26px, 3.2vw, 40px);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 14px;
+  }
+  .ticket-sub {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(26, 26, 26, 0.75);
+    max-width: 40ch;
+  }
+  .ticket-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    padding-left: 24px;
+    position: relative;
+    z-index: 1;
+  }
+  .ticket-tiers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .ticket-tier {
+    background: #fff;
+    border: 2px solid var(--ink);
+    border-radius: 100px;
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .ticket-tier.is-star {
+    background: var(--ink);
+    color: var(--yellow);
+  }
+  @media (max-width: 900px) {
+    .bridge { padding-bottom: 72px; }
+    .ticket {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      padding: 36px 28px;
+    }
+    .ticket::after {
+      top: auto;
+      bottom: 46%;
+      left: 14px;
+      right: 14px;
+      border-left: none;
+      border-top: 3px dashed rgba(26, 26, 26, 0.45);
+    }
+    .ticket-side { padding-left: 0; }
+  }
+</style>

@@ -13,7 +13,11 @@ test("og image exists and sitemap generated", () => {
 });
 
 test("all internal anchors have matching ids", () => {
-  const pages = { "index.html": page(), "accessibility/index.html": page("accessibility/index.html") };
+  const pages = {
+    "index.html": page(),
+    "accessibility/index.html": page("accessibility/index.html"),
+    "templates/index.html": page("templates/index.html"),
+  };
   const index = pages["index.html"];
   for (const [name, html] of Object.entries(pages)) {
     for (const [, frag] of html.matchAll(/href="#([\w-]+)"/g)) {
