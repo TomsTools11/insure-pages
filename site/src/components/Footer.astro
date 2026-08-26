@@ -19,6 +19,25 @@
           Considered websites and brand work for independent insurance agents.
         </p>
         <div class="footer-house">InsurePages by S3 Labs</div>
+        {/* Startup Fame directory badge. Self-hosted rather than hot-linked
+            from startupfa.me (same as the fonts and logos) so the footer costs
+            no third-party request; the dofollow link back is what the
+            directory verifies, and that is preserved. */}
+        <a
+          class="footer-badge"
+          href="https://startupfa.me/s/insurepages?utm_source=insurepages.com"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            src="/images/startup-fame-badge.webp"
+            alt="Featured on Startup Fame"
+            width="468"
+            height="148"
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
       </div>
       <nav aria-label="Site">
         <h2 class="footer-col-title">Site</h2>
@@ -83,6 +102,20 @@
     font-size: 12px;
     color: #8fc7ff; /* was #2e9df180 in prototype — fails contrast on ink */
     font-weight: 600;
+  }
+  .footer-badge {
+    display: inline-block;
+    margin-top: 20px;
+    border-radius: 10px;
+  }
+  .footer-badge img {
+    display: block;
+    width: 171px;
+    height: auto;
+  }
+  .footer-badge:focus-visible {
+    outline: 3px solid var(--yellow);
+    outline-offset: 3px;
   }
   .footer-col-title {
     font-family: "Unbounded", sans-serif;

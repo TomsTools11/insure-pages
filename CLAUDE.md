@@ -37,6 +37,12 @@ to the art's bounding box (655×259) and palette-quantized:
 Both derived files are generated, not hand-edited. If the master changes, rerun
 `python3 design/build-logo-assets.py` from the repo root rather than editing them.
 
+Third-party badge: `site/public/images/startup-fame-badge.webp` is Startup Fame's
+own artwork (468×148), served from `public/` rather than hot-linked from
+startupfa.me so the footer costs no third-party request — the dofollow link back
+in `Footer.astro` is what the directory verifies. Re-download it from
+`https://startupfa.me/badges/featured-badge.webp` if it changes; don't edit it.
+
 Still open, per PRD §17.3: the **product platform** stack — the templated, multi-tenant engine that will generate client agencies' sites — is undecided ("which CMS/stack and hosting; build vs. buy for the template engine and connectors"). If asked to scaffold or implement that platform, surface the stack decision first rather than picking silently; do not assume a framework for it. This is separate from the marketing-site stack above, which is now fixed. Also open: attaching a custom domain. (The header logo is no longer open — the
 finalized lockup is in place; see "Brand mark" above.)
 
