@@ -36,15 +36,39 @@
           <a href="/accessibility/">Accessibility</a>
         </div>
       </nav>
-      <nav aria-label="Get in touch">
-        <h2 class="footer-col-title">Hello</h2>
-        <div class="footer-col-list">
-          <a href="/#contact">Contact us</a>
-          <a href="https://formrobin.com/f/344no93" target="_blank" rel="noopener"
-            >Schedule a call</a
-          >
-        </div>
-      </nav>
+      {/* The badge shares this grid cell with the Hello column but sits
+          outside the <nav>: a directory badge is not site navigation, and
+          folding it into the nav's link list would announce it as one. */}
+      <div class="footer-hello">
+        <nav aria-label="Get in touch">
+          <h2 class="footer-col-title">Hello</h2>
+          <div class="footer-col-list">
+            <a href="/#contact">Contact us</a>
+            <a href="https://formrobin.com/f/344no93" target="_blank" rel="noopener"
+              >Schedule a call</a
+            >
+          </div>
+        </nav>
+        {/* Startup Fame directory badge. Self-hosted rather than hot-linked
+            from startupfa.me (same as the fonts and logos) so the footer costs
+            no third-party request; the dofollow link back is what the
+            directory verifies, and that is preserved. */}
+        <a
+          class="footer-badge"
+          href="https://startupfa.me/s/insurepages?utm_source=insurepages.com"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            src="/images/startup-fame-badge.webp"
+            alt="Featured on Startup Fame"
+            width="468"
+            height="148"
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      </div>
     </div>
     <div class="footer-bar">
       <span>© 2026 InsurePages · by S3 Labs</span>
@@ -84,6 +108,20 @@
     font-size: 12px;
     color: #8fc7ff; /* was #2e9df180 in prototype — fails contrast on ink */
     font-weight: 600;
+  }
+  .footer-badge {
+    display: inline-block;
+    margin-top: 24px;
+    border-radius: 10px;
+  }
+  .footer-badge img {
+    display: block;
+    width: 171px;
+    height: auto;
+  }
+  .footer-badge:focus-visible {
+    outline: 3px solid var(--yellow);
+    outline-offset: 3px;
   }
   .footer-col-title {
     font-family: "Unbounded", sans-serif;

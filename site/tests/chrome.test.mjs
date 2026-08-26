@@ -34,6 +34,38 @@ test("footer brand uses the on-dark logo variant", () => {
   assert.match(img, /loading="lazy"/);
 });
 
+test("footer carries the Startup Fame badge, self-hosted and linked back", () => {
+  const html = page();
+  const a = html.match(/<a[^>]*class="[^"]*footer-badge[^"]*"[^>]*>/)?.[0];
+  assert.ok(a, "footer should render the Startup Fame badge link");
+  // The dofollow link back is what the directory verifies -- no rel="nofollow".
+  assert.match(a, /href="https:\/\/startupfa\.me\/s\/insurepages\?utm_source=insurepages\.com"/);
+  assert.doesNotMatch(a, /nofollow/);
+
+  const img = html.match(/<img[^>]*startup-fame-badge[^>]*>/)?.[0];
+  assert.ok(img, "badge should render an image");
+  // Served from public/, not hot-linked from startupfa.me.
+  assert.match(img, /src="\/images\/startup-fame-badge\.webp"/);
+  assert.match(img, /alt="Featured on Startup Fame"/);
+  // Intrinsic dimensions reserve the box before decode (no layout shift).
+  assert.match(img, /width="468"/);
+  assert.match(img, /height="148"/);
+  assert.match(img, /loading="lazy"/);
+
+  // Placement: the badge sits in the Hello column, after "Schedule a call",
+  // and outside the <nav> -- it is not one of that nav's links.
+  const hello = html.match(/<div class="footer-hello"[^>]*>[\s\S]*?<\/div>\s*<\/div>/)?.[0];
+  assert.ok(hello, "footer should render the Hello column wrapper");
+  assert.ok(
+    hello.indexOf("Schedule a call") < hello.indexOf("footer-badge"),
+    "badge should follow the Schedule a call link",
+  );
+  assert.ok(
+    hello.indexOf("</nav>") < hello.indexOf("footer-badge"),
+    "badge should sit outside the Get in touch nav",
+  );
+});
+
 test("footer: no dead links, correct brand, accessibility link", () => {
   const html = page();
   assert.doesNotMatch(html, />About</);
