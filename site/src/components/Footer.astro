@@ -19,6 +19,35 @@
           Considered websites and brand work for independent insurance agents.
         </p>
         <div class="footer-house">InsurePages by S3 Labs</div>
+      </div>
+      <nav aria-label="Site">
+        <h2 class="footer-col-title">Site</h2>
+        <div class="footer-col-list">
+          <a href="/#build">Approach</a>
+          <a href="/#method">Method</a>
+          <a href="/#pricing">Packages</a>
+          <a href="/#contact">Contact</a>
+        </div>
+      </nav>
+      <nav aria-label="Resources">
+        <h2 class="footer-col-title">Resources</h2>
+        <div class="footer-col-list">
+          <a href="/accessibility/">Accessibility</a>
+        </div>
+      </nav>
+      {/* The badge shares this grid cell with the Hello column but sits
+          outside the <nav>: a directory badge is not site navigation, and
+          folding it into the nav's link list would announce it as one. */}
+      <div class="footer-hello">
+        <nav aria-label="Get in touch">
+          <h2 class="footer-col-title">Hello</h2>
+          <div class="footer-col-list">
+            <a href="/#contact">Contact us</a>
+            <a href="https://formrobin.com/f/344no93" target="_blank" rel="noopener"
+              >Schedule a call</a
+            >
+          </div>
+        </nav>
         {/* Startup Fame directory badge. Self-hosted rather than hot-linked
             from startupfa.me (same as the fonts and logos) so the footer costs
             no third-party request; the dofollow link back is what the
@@ -39,30 +68,6 @@
           />
         </a>
       </div>
-      <nav aria-label="Site">
-        <h2 class="footer-col-title">Site</h2>
-        <div class="footer-col-list">
-          <a href="/#build">Approach</a>
-          <a href="/#method">Method</a>
-          <a href="/#pricing">Packages</a>
-          <a href="/#contact">Contact</a>
-        </div>
-      </nav>
-      <nav aria-label="Resources">
-        <h2 class="footer-col-title">Resources</h2>
-        <div class="footer-col-list">
-          <a href="/accessibility/">Accessibility</a>
-        </div>
-      </nav>
-      <nav aria-label="Get in touch">
-        <h2 class="footer-col-title">Hello</h2>
-        <div class="footer-col-list">
-          <a href="/#contact">Contact us</a>
-          <a href="https://formrobin.com/f/344no93" target="_blank" rel="noopener"
-            >Schedule a call</a
-          >
-        </div>
-      </nav>
     </div>
     <div class="footer-bar">
       <span>© 2026 InsurePages · by S3 Labs</span>
@@ -105,7 +110,7 @@
   }
   .footer-badge {
     display: inline-block;
-    margin-top: 20px;
+    margin-top: 24px;
     border-radius: 10px;
   }
   .footer-badge img {
