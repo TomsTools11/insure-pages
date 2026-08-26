@@ -51,6 +51,19 @@ test("footer carries the Startup Fame badge, self-hosted and linked back", () =>
   assert.match(img, /width="468"/);
   assert.match(img, /height="148"/);
   assert.match(img, /loading="lazy"/);
+
+  // Placement: the badge sits in the Hello column, after "Schedule a call",
+  // and outside the <nav> -- it is not one of that nav's links.
+  const hello = html.match(/<div class="footer-hello"[^>]*>[\s\S]*?<\/div>\s*<\/div>/)?.[0];
+  assert.ok(hello, "footer should render the Hello column wrapper");
+  assert.ok(
+    hello.indexOf("Schedule a call") < hello.indexOf("footer-badge"),
+    "badge should follow the Schedule a call link",
+  );
+  assert.ok(
+    hello.indexOf("</nav>") < hello.indexOf("footer-badge"),
+    "badge should sit outside the Get in touch nav",
+  );
 });
 
 test("footer: no dead links, correct brand, accessibility link", () => {
