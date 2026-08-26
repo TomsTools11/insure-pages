@@ -34,6 +34,25 @@ test("footer brand uses the on-dark logo variant", () => {
   assert.match(img, /loading="lazy"/);
 });
 
+test("footer carries the Startup Fame badge, self-hosted and linked back", () => {
+  const html = page();
+  const a = html.match(/<a[^>]*class="[^"]*footer-badge[^"]*"[^>]*>/)?.[0];
+  assert.ok(a, "footer should render the Startup Fame badge link");
+  // The dofollow link back is what the directory verifies -- no rel="nofollow".
+  assert.match(a, /href="https:\/\/startupfa\.me\/s\/insurepages\?utm_source=insurepages\.com"/);
+  assert.doesNotMatch(a, /nofollow/);
+
+  const img = html.match(/<img[^>]*startup-fame-badge[^>]*>/)?.[0];
+  assert.ok(img, "badge should render an image");
+  // Served from public/, not hot-linked from startupfa.me.
+  assert.match(img, /src="\/images\/startup-fame-badge\.webp"/);
+  assert.match(img, /alt="Featured on Startup Fame"/);
+  // Intrinsic dimensions reserve the box before decode (no layout shift).
+  assert.match(img, /width="468"/);
+  assert.match(img, /height="148"/);
+  assert.match(img, /loading="lazy"/);
+});
+
 test("footer: no dead links, correct brand, accessibility link", () => {
   const html = page();
   assert.doesNotMatch(html, />About</);
