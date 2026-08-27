@@ -75,4 +75,13 @@ export const templates = [
     accent: "lavender",
     featured: false,
   },
+  {
+    slug: "kestrel",
+    name: "Kestrel",
+    domain: "kestrelcover.co.uk",
+    tagline: "Cool grey and cobalt, with a price slider up front.",
+    tags: ["Clean", "Direct"],
+    accent: "blue",
+    featured: false,
+  },
 ];
