@@ -109,6 +109,32 @@ test("gallery images are sized, described, and resolvable", () => {
   }
 });
 
+test("the grid re-shapes itself around the number of templates", async () => {
+  const { templates } = await import("../src/data/templates.mjs");
+  const h = html();
+  const cards = (h.match(/class="t-card /g) ?? []).length;
+  assert.equal(cards, templates.length, "one card per template entry");
+  // Two across: an odd count would leave the last card beside an empty slot,
+  // so it spans the row instead.
+  const wide = (h.match(/class="t-card [^"]*is-wide/g) ?? []).length;
+  assert.equal(wide, templates.length % 2, `${templates.length} templates`);
+});
+
+test("every card carries local imagery or a waiting frame", async () => {
+  const { templates } = await import("../src/data/templates.mjs");
+  const h = html();
+  const shots = (h.match(/src="\/images\/templates\/[\w-]+\.png"/g) ?? []).length;
+  const waiting = (h.match(/class="t-waiting"/g) ?? []).length;
+  assert.ok(
+    shots + waiting >= templates.length,
+    `${templates.length} templates but ${shots} screenshots and ${waiting} waiting frames`,
+  );
+  // No template imagery is fetched from another site.
+  for (const [, src] of h.matchAll(/<img[^>]*src="(https?:[^"]+)"/g)) {
+    assert.fail(`gallery image loaded from off site: ${src}`);
+  }
+});
+
 test("motion is guarded and never driven by scroll listeners", () => {
   const h = html();
   assert.match(h, /prefers-reduced-motion/);

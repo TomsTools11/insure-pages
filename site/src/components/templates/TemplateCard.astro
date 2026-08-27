@@ -11,25 +11,42 @@ interface Props {
     accent: string;
   };
   index: number;
+  total: number;
 }
-const { t, index } = Astro.props;
+const { t, index, total } = Astro.props;
 const live = demoExists(t.slug);
+// The grid runs two across. An odd count would strand the last card beside
+// an empty slot, so that one spans the full width instead.
+const wide = total % 2 === 1 && index === total - 1;
+const thumb = thumbSrc(t.slug);
 ---
 
-<article class={`t-card accent-${t.accent}`} data-reveal style={`--ri: ${index}`}>
+<article
+  class={`t-card accent-${t.accent}${wide ? " is-wide" : ""}`}
+  data-reveal
+  style={`--ri: ${index}`}
+>
   <div class="t-frame">
     <div class="t-bar">
       <span class="t-dots" aria-hidden="true"><i></i><i></i><i></i></span>
       <span class="t-domain">{t.domain}</span>
     </div>
-    <img
-      src={thumbSrc(t.slug)}
-      alt={`Screenshot of the ${t.name} template homepage`}
-      width={THUMB_W}
-      height={THUMB_H}
-      loading="lazy"
-      decoding="async"
-    />
+    {
+      thumb ? (
+        <img
+          src={thumb}
+          alt={`Screenshot of the ${t.name} template homepage`}
+          width={THUMB_W}
+          height={THUMB_H}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <div class="t-waiting">
+          <span>Screenshot on the way</span>
+        </div>
+      )
+    }
   </div>
   <div class="t-meta">
     <div class="t-title-row">
@@ -118,6 +135,37 @@ const live = demoExists(t.slug);
     width: 100%;
     height: auto;
   }
+  /* Full width means the screenshot would be roughly 900px tall at its own
+     proportions, which dwarfs the rest of the grid. Cropping the foot of the
+     page keeps the card in scale, while still reaching past the hero buttons.
+     Nothing is lost sideways: this frame shows
+     the page wider than any other card on the grid, so it reads more easily,
+     not less. */
+  .is-wide .t-frame img {
+    aspect-ratio: 15 / 8;
+    object-fit: cover;
+    object-position: top center;
+  }
+  /* Same proportions as a real screenshot, so adding a template to the data
+     before its files land does not move the grid around later. */
+  .t-waiting {
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      repeating-linear-gradient(
+        -45deg,
+        var(--cream) 0 14px,
+        var(--cream-deep) 14px 28px
+      );
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .is-wide .t-waiting {
+    aspect-ratio: 15 / 8;
+  }
   .t-meta {
     padding: 24px 26px 26px;
     display: flex;
@@ -125,6 +173,21 @@ const live = demoExists(t.slug);
     gap: 12px;
     align-items: flex-start;
     flex-grow: 1;
+  }
+  /* At full width the stacked meta would leave most of the row empty, so it
+     runs across instead. */
+  .is-wide .t-meta {
+    flex-direction: row;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    padding: 22px 26px;
+  }
+  .is-wide .t-tagline {
+    margin-right: auto;
+  }
+  .is-wide .t-btn {
+    margin-top: 0;
   }
   .t-title-row {
     display: flex;
@@ -174,6 +237,26 @@ const live = demoExists(t.slug);
     font-size: 14px;
     color: var(--muted);
     background: var(--cream);
+  }
+  @media (max-width: 900px) {
+    /* One column, so the wide card is no wider than the rest and goes back
+       to showing the whole screenshot. */
+    .is-wide .t-frame img {
+      aspect-ratio: auto;
+      object-fit: fill;
+    }
+    .is-wide .t-waiting {
+      aspect-ratio: 4 / 3;
+    }
+    .is-wide .t-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 24px 26px 26px;
+    }
+    .is-wide .t-btn {
+      margin-top: auto;
+    }
   }
   .sr-only {
     position: absolute;

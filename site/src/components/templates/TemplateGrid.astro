@@ -27,7 +27,7 @@ import TemplateCard from "./TemplateCard.astro";
       ) : (
         <div class="t-grid">
           {templates.map((t, i) => (
-            <TemplateCard t={t} index={i} />
+            <TemplateCard t={t} index={i} total={templates.length} />
           ))}
         </div>
       )
@@ -52,6 +52,12 @@ import TemplateCard from "./TemplateCard.astro";
   }
   .t-grid > :global(.t-card:nth-child(even)) {
     margin-top: 64px;
+  }
+  /* An odd number of templates would leave the last card alone beside a
+     gap, so it takes the full width instead. The card itself switches to a
+     wide frame at that size; see TemplateCard. */
+  .t-grid > :global(.t-card.is-wide) {
+    grid-column: 1 / -1;
   }
   .gallery-empty {
     border: 2px dashed var(--ink);

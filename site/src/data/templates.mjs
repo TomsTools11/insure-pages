@@ -20,9 +20,14 @@
 //   accent   one of: red | yellow | green | blue | lavender
 //   featured true for the one template the deep-dive section spotlights
 //
-// There is no layout field: the gallery lays entries out two across in the
-// order written, so every screenshot gets the same landscape frame and a
-// new template never needs the grid rebalanced.
+// There is no layout field. The gallery lays entries out two across in the
+// order written, so every screenshot gets the same landscape frame. Add or
+// remove entries freely: an even count fills clean pairs, and an odd count
+// gives the last card the full width instead of stranding it beside a gap.
+// Steps 1 and 3 can lag behind step 2. A template listed here without a demo
+// shows a "Demo landing soon" badge instead of a link, and one without a
+// screenshot shows a waiting frame at the same proportions, so nothing on the
+// page shifts when the real files arrive.
 
 export const templates = [
   {
@@ -59,6 +64,15 @@ export const templates = [
     tagline: "Editorial calm in deep green, with a serif voice.",
     tags: ["Editorial", "Classic"],
     accent: "yellow",
+    featured: false,
+  },
+  {
+    slug: "keel",
+    name: "Keel",
+    domain: "keelinsurance.com",
+    tagline: "Dark and calm, with gold accents where they count.",
+    tags: ["Dark", "Calm"],
+    accent: "lavender",
     featured: false,
   },
 ];

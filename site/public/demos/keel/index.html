@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<!--
+  Keel Insurance template, exported from the Claude Design project
+  "Keel Insurance Landing" and served here as a working preview.
+
+  The export is a dc-runtime template: support.js (verbatim from the project)
+  renders it with React at load time, so the page stays interactive. Three
+  changes were made to the export so it runs with no third party requests:
+    1. window.__resources, the runtime's own offline hook, points its React
+       and ReactDOM lookups at ./vendor instead of unpkg.
+    2. The Google Fonts link became ./fonts.css, with the woff2 files in
+       ./fonts (latin and latin-ext subsets).
+    3. The picsum.photos images, both the static tags and the coverage tab's
+       built src, became ./img/<seed>.jpg.
+  Re-export from the design project and re-apply those three if it changes.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keel Insurance</title>
+<script>
+  // dc-runtime reads window.__resources to resolve its CDN scripts. Pointing
+  // them at local copies keeps this demo free of third party requests.
+  window.__resources = {
+    "https://unpkg.com/react@18.3.1/umd/react.production.min.js": "./vendor/react.production.min.js",
+    "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js": "./vendor/react-dom.production.min.js"
+  };
+</script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keel Insurance</title>
+<link rel="stylesheet" href="./fonts.css">
+<style>
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#0B1411;color:#E9E4D7;font-family:"Instrument Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#E9E4D7;text-decoration:none}
+  a:hover{color:var(--kl-accent,#D99A3C)}
+  ::selection{background:var(--kl-accent,#D99A3C);color:#12190F}
+  input,select,button,textarea{font:inherit;color:inherit}
+  input::placeholder{color:rgba(233,228,215,.36)}
+  select{appearance:none;-webkit-appearance:none}
+  button{cursor:pointer}
+  @keyframes klSheen{0%{background-position:-380px 0}100%{background-position:380px 0}}
+  @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}html{scroll-behavior:auto}}
+</style>
+</helmet>
+
+<!-- Shape rule for this page: panels, inputs and buttons all use 2px radius. Circles only for the monogram, avatars and carousel dots. -->
+<div style="min-height:100vh;background:#0B1411;color:#E9E4D7;overflow-x:hidden">
+
+<header data-kl-header="1" style="position:sticky;top:0;z-index:60;background:rgba(11,20,17,.88);backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%);border-bottom:1px solid rgba(233,228,215,.10)">
+  <div style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,4vw,48px);height:68px;display:flex;align-items:center;gap:28px">
+    <a href="#hero" aria-label="Keel home" style="display:flex;align-items:center;gap:10px;flex:0 0 auto">
+      <span style="width:27px;height:27px;border-radius:50%;border:1.5px solid var(--kl-accent,#D99A3C);display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--kl-accent,#D99A3C)">K</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:500;letter-spacing:-.02em">Keel</span>
+    </a>
+    <div style="flex:1 1 auto;display:flex;align-items:center;justify-content:flex-end;gap:clamp(16px,2.4vw,34px)">
+      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+        <nav style="display:flex;align-items:center;gap:clamp(16px,2.4vw,32px);font-size:15px;font-weight:500">
+          <a href="#coverage" style="color:rgba(233,228,215,.78)">Coverage</a>
+          <a href="#claims" style="color:rgba(233,228,215,.78)">Claims</a>
+          <a href="#reviews" style="color:rgba(233,228,215,.78)">Reviews</a>
+          <a href="#faq" style="color:rgba(233,228,215,.78)">FAQ</a>
+        </nav>
+        <button type="button" onClick="{{ goQuote }}" style="border:0;border-radius:2px;background:var(--kl-accent,#D99A3C);color:#12190F;font-size:15px;font-weight:600;padding:11px 20px;transition:transform .18s cubic-bezier(.16,1,.3,1),filter .18s" style-hover="filter:brightness(1.07);transform:translateY(-1px)" style-active="transform:translateY(0) scale(.985)">Get a quote</button>
+      </sc-if>
+      <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+        <button type="button" onClick="{{ toggleNav }}" aria-label="Open menu" aria-expanded="{{ nav }}" style="border:1px solid rgba(233,228,215,.24);border-radius:2px;background:transparent;padding:10px 14px;font-size:14px;font-weight:500;letter-spacing:.02em">Menu</button>
+      </sc-if>
+    </div>
+  </div>
+  <sc-if value="{{ nav }}" hint-placeholder-val="{{ false }}">
+    <div style="border-top:1px solid rgba(233,228,215,.10);background:#0B1411;padding:14px clamp(20px,4vw,48px) 22px;display:flex;flex-direction:column;gap:2px">
+      <a href="#coverage" onClick="{{ toggleNav }}" style="padding:13px 0;font-family:'Space Grotesk',sans-serif;font-size:22px;border-bottom:1px solid rgba(233,228,215,.08)">Coverage</a>
+      <a href="#claims" onClick="{{ toggleNav }}" style="padding:13px 0;font-family:'Space Grotesk',sans-serif;font-size:22px;border-bottom:1px solid rgba(233,228,215,.08)">Claims</a>
+      <a href="#reviews" onClick="{{ toggleNav }}" style="padding:13px 0;font-family:'Space Grotesk',sans-serif;font-size:22px;border-bottom:1px solid rgba(233,228,215,.08)">Reviews</a>
+      <a href="#faq" onClick="{{ toggleNav }}" style="padding:13px 0;font-family:'Space Grotesk',sans-serif;font-size:22px;border-bottom:1px solid rgba(233,228,215,.08)">FAQ</a>
+      <button type="button" onClick="{{ goQuote }}" style="margin-top:14px;border:0;border-radius:2px;background:var(--kl-accent,#D99A3C);color:#12190F;font-size:16px;font-weight:600;padding:14px 18px">Get a quote</button>
+    </div>
+  </sc-if>
+</header>
+
+<section id="hero" style="max-width:1360px;margin:0 auto;padding:clamp(48px,7vw,96px) clamp(20px,4vw,48px) clamp(56px,6vw,84px);display:flex;flex-wrap:wrap;align-items:stretch;gap:clamp(28px,4vw,64px)">
+  <div style="flex:1 1 480px;min-width:290px;display:flex;flex-direction:column;justify-content:center;gap:26px;padding:clamp(8px,2vw,28px) 0">
+    <h1 data-rv="0" style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(40px,6vw,78px);line-height:1.01;letter-spacing:-.038em;text-wrap:balance">Cover for the things<br>you cannot replace</h1>
+    <p data-rv="1" style="margin:0;max-width:52ch;font-size:clamp(16px,1.3vw,18.5px);line-height:1.62;color:rgba(233,228,215,.66);text-wrap:pretty">Home, auto, life and travel policies. Fixed prices, one claims team, and most payouts settled inside a week.</p>
+    <div data-rv="2" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:4px">
+      <button type="button" onClick="{{ goQuote }}" style="border:0;border-radius:2px;background:var(--kl-accent,#D99A3C);color:#12190F;font-size:16px;font-weight:600;padding:15px 26px;transition:transform .18s cubic-bezier(.16,1,.3,1),filter .18s" style-hover="filter:brightness(1.07);transform:translateY(-1px)" style-active="transform:translateY(0) scale(.985)">Price a policy</button>
+      <a href="#coverage" style="border:1px solid rgba(233,228,215,.26);border-radius:2px;font-size:16px;font-weight:500;padding:15px 24px;transition:border-color .2s,background .2s" style-hover="border-color:rgba(233,228,215,.5);background:rgba(233,228,215,.05)">See what is covered</a>
+    </div>
+  </div>
+  <div data-rv="1" style="flex:1 1 380px;min-width:280px;position:relative;min-height:clamp(320px,42vw,540px);border-radius:2px;overflow:hidden;background:linear-gradient(158deg,#1D352A,#0D1815)">
+    <img src="./img/keel-house-evening.jpg" alt="A weatherboard house at dusk" loading="eager" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);mix-blend-mode:luminosity;opacity:.9">
+    <div style="position:absolute;inset:0;background:radial-gradient(130% 80% at 18% 4%,rgba(217,154,60,.14),transparent 58%)"></div>
+  </div>
+</section>
+
+<section style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(64px,7vw,104px)">
+  <div data-rv="0" style="border-top:1px solid rgba(233,228,215,.13);padding-top:24px;display:flex;flex-wrap:wrap;align-items:center;gap:clamp(20px,4vw,56px)">
+    <span style="font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:rgba(233,228,215,.42);flex:0 0 auto">Underwriting partners</span>
+    <div style="flex:1 1 420px;display:flex;flex-wrap:wrap;align-items:center;gap:clamp(18px,3vw,44px)">
+      <span style="display:flex;align-items:center;gap:9px;opacity:.72"><span style="width:22px;height:22px;border-radius:50%;border:1px solid rgba(233,228,215,.5);display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700">A</span><span style="font-family:'Space Grotesk',sans-serif;font-size:15.5px;letter-spacing:-.01em">Ashcombe Re</span></span>
+      <span style="display:flex;align-items:center;gap:9px;opacity:.72"><span style="width:22px;height:22px;border:1px solid rgba(233,228,215,.5);display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700">H</span><span style="font-family:'Space Grotesk',sans-serif;font-size:15.5px;letter-spacing:-.01em">Halvard Mutual</span></span>
+      <span style="display:flex;align-items:center;gap:9px;opacity:.72"><span style="width:22px;height:22px;border-radius:50%;background:rgba(233,228,215,.5);display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;color:#0B1411">K</span><span style="font-family:'Space Grotesk',sans-serif;font-size:15.5px;letter-spacing:-.01em">Kestrel Underwriting</span></span>
+      <span style="display:flex;align-items:center;gap:9px;opacity:.72"><span style="width:22px;height:22px;border:1px solid rgba(233,228,215,.5);transform:rotate(45deg);display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700"><span style="transform:rotate(-45deg);display:block">S</span></span><span style="font-family:'Space Grotesk',sans-serif;font-size:15.5px;letter-spacing:-.01em">Sable &amp; Roe</span></span>
+      <span style="display:flex;align-items:center;gap:9px;opacity:.72"><span style="width:22px;height:22px;border-radius:50% 50% 50% 2px;border:1px solid rgba(233,228,215,.5);display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700">T</span><span style="font-family:'Space Grotesk',sans-serif;font-size:15.5px;letter-spacing:-.01em">Torrin Re</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- Coverage picker: interactive. Prices below are mock figures. -->
+<section id="coverage" style="background:#0E1A16;border-top:1px solid rgba(233,228,215,.09);border-bottom:1px solid rgba(233,228,215,.09)">
+  <div style="max-width:1360px;margin:0 auto;padding:clamp(64px,8vw,120px) clamp(20px,4vw,48px)">
+    <h2 data-rv="0" style="margin:0 0 clamp(34px,4vw,56px);max-width:22ch;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(30px,3.6vw,48px);line-height:1.06;letter-spacing:-.032em">What you can insure with us</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:clamp(28px,3.5vw,60px);align-items:flex-start">
+      <div data-rv="1" style="flex:0 1 330px;min-width:270px;display:flex;flex-direction:column">
+        <sc-for list="{{ covList }}" as="c" hint-placeholder-count="6">
+          <button type="button" onClick="{{ c.onSelect }}" style="text-align:left;border:0;border-bottom:1px solid rgba(233,228,215,.12);border-left:2px solid {{ c.bl }};background:{{ c.bg }};color:{{ c.fg }};padding:17px 16px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;transition:background .22s,color .22s,border-color .22s" style-hover="background:rgba(233,228,215,.045)">
+            <span style="font-family:'Space Grotesk',sans-serif;font-size:19.5px;letter-spacing:-.02em">{{ c.name }}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;opacity:.62;white-space:nowrap">{{ c.priceText }}</span>
+          </button>
+        </sc-for>
+      </div>
+      <div data-rv="2" style="flex:1 1 460px;min-width:280px;display:flex;flex-direction:column;gap:26px">
+        <div style="position:relative;height:clamp(190px,22vw,280px);border-radius:2px;overflow:hidden;background:linear-gradient(158deg,#20392D,#0D1815)">
+          <img data-kl-cov="1" src="./img/keel-cov-home.jpg" alt="{{ cov.alt }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);mix-blend-mode:luminosity;opacity:.88"></div>
+        <div>
+          <h3 style="margin:0 0 12px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(23px,2.2vw,30px);letter-spacing:-.028em">{{ cov.title }}</h3>
+          <p style="margin:0;max-width:60ch;font-size:16.5px;line-height:1.62;color:rgba(233,228,215,.66);text-wrap:pretty">{{ cov.blurb }}</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:rgba(233,228,215,.12);border:1px solid rgba(233,228,215,.12);border-radius:2px">
+          <sc-for list="{{ cov.inc }}" as="i" hint-placeholder-count="4">
+            <div style="background:#0E1A16;padding:16px 18px">
+              <div style="font-size:11.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(233,228,215,.42);margin-bottom:7px">{{ i.k }}</div>
+              <div style="font-size:15.5px;line-height:1.45">{{ i.v }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:20px">
+          <button type="button" onClick="{{ addToQuote }}" style="border:0;border-radius:2px;background:var(--kl-accent,#D99A3C);color:#12190F;font-size:15.5px;font-weight:600;padding:14px 24px;transition:transform .18s cubic-bezier(.16,1,.3,1),filter .18s" style-hover="filter:brightness(1.07);transform:translateY(-1px)" style-active="transform:translateY(0) scale(.985)">Price {{ cov.short }} cover</button>
+          <sc-if value="{{ prices }}" hint-placeholder-val="{{ true }}">
+            <span style="font-size:14.5px;color:rgba(233,228,215,.56)">From <span style="font-family:'IBM Plex Mono',monospace;color:#E9E4D7">{{ cov.priceMono }}</span> a month</span>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats: mock operating figures -->
+<section style="max-width:1360px;margin:0 auto;padding:clamp(56px,6vw,92px) clamp(20px,4vw,48px)">
+  <div data-rv="0" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:clamp(24px,3vw,44px)">
+    <div style="padding-left:18px;border-left:1px solid rgba(233,228,215,.16)">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:clamp(28px,3vw,40px);letter-spacing:-.03em">41,800</div>
+      <div style="margin-top:8px;font-size:14.5px;color:rgba(233,228,215,.56)">Policies active</div>
+    </div>
+    <div style="padding-left:18px;border-left:1px solid rgba(233,228,215,.16)">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:clamp(28px,3vw,40px);letter-spacing:-.03em">6.2 days</div>
+      <div style="margin-top:8px;font-size:14.5px;color:rgba(233,228,215,.56)">Median claim payout</div>
+    </div>
+    <div style="padding-left:18px;border-left:1px solid rgba(233,228,215,.16)">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:clamp(28px,3vw,40px);letter-spacing:-.03em">94%</div>
+      <div style="margin-top:8px;font-size:14.5px;color:rgba(233,228,215,.56)">Renewed last year</div>
+    </div>
+    <div style="padding-left:18px;border-left:1px solid rgba(233,228,215,.16)">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:clamp(28px,3vw,40px);letter-spacing:-.03em">1m 40s</div>
+      <div style="margin-top:8px;font-size:14.5px;color:rgba(233,228,215,.56)">Average wait on the claims line</div>
+    </div>
+  </div>
+</section>
+
+<section id="claims" style="max-width:1360px;margin:0 auto;padding:clamp(48px,6vw,88px) clamp(20px,4vw,48px) clamp(64px,7vw,104px)">
+  <h2 data-rv="0" style="margin:0 0 clamp(30px,3.5vw,50px);max-width:20ch;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(30px,3.6vw,48px);line-height:1.06;letter-spacing:-.032em">How a claim actually runs</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:clamp(24px,3vw,48px);border-top:1px solid rgba(233,228,215,.13);padding-top:clamp(24px,3vw,38px)">
+    <div data-rv="0">
+      <h3 style="margin:0 0 12px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:22px;letter-spacing:-.02em;color:var(--kl-accent,#D99A3C)">Report</h3>
+      <p style="margin:0;font-size:16px;line-height:1.6;color:rgba(233,228,215,.64);text-wrap:pretty">Call or file online. You leave the first conversation with a claim number and the name of the person handling it.</p>
+    </div>
+    <div data-rv="1">
+      <h3 style="margin:0 0 12px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:22px;letter-spacing:-.02em;color:var(--kl-accent,#D99A3C)">Assess</h3>
+      <p style="margin:0;font-size:16px;line-height:1.6;color:rgba(233,228,215,.64);text-wrap:pretty">We ask for what we need once. Most home and auto claims are settled on two documents and a set of photos.</p>
+    </div>
+    <div data-rv="2">
+      <h3 style="margin:0 0 12px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:22px;letter-spacing:-.02em;color:var(--kl-accent,#D99A3C)">Pay</h3>
+      <p style="margin:0;font-size:16px;line-height:1.6;color:rgba(233,228,215,.64);text-wrap:pretty">Money goes to your account, or straight to the repairer if you prefer. No vouchers and no store credit.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Quote flow: 3 steps, validation, sending and confirmation states -->
+<section id="quote" style="background:#0E1A16;border-top:1px solid rgba(233,228,215,.09);border-bottom:1px solid rgba(233,228,215,.09)">
+  <div style="max-width:1360px;margin:0 auto;padding:clamp(64px,8vw,116px) clamp(20px,4vw,48px);display:flex;flex-wrap:wrap;gap:clamp(28px,4vw,64px);align-items:flex-start">
+    <div data-rv="0" style="flex:1 1 460px;min-width:290px">
+      <h2 style="margin:0 0 14px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(30px,3.6vw,48px);line-height:1.06;letter-spacing:-.032em">Price a policy</h2>
+      <p style="margin:0 0 clamp(28px,3vw,40px);max-width:46ch;font-size:16.5px;line-height:1.6;color:rgba(233,228,215,.62);text-wrap:pretty">Three steps. No credit check, no phone call unless you ask for one.</p>
+
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:26px">
+        <sc-for list="{{ stepBars }}" as="s" hint-placeholder-count="3">
+          <span style="height:2px;flex:1 1 0;background:{{ s.bg }};transition:background .3s"></span>
+        </sc-for>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:rgba(233,228,215,.5);white-space:nowrap">{{ stepLabel }}</span>
+      </div>
+
+      <sc-if value="{{ isForm }}" hint-placeholder-val="{{ true }}">
+        <div style="border:1px solid rgba(233,228,215,.13);border-radius:2px;padding:clamp(20px,2.6vw,32px);background:#0B1411">
+          <sc-if value="{{ isStep0 }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="font-size:15px;font-weight:600;margin-bottom:14px">What do you want to cover?</div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <sc-for list="{{ chips }}" as="c" hint-placeholder-count="6">
+                  <button type="button" onClick="{{ c.onSelect }}" style="border:1px solid {{ c.bd }};border-radius:2px;background:{{ c.bg }};color:{{ c.fg }};padding:11px 16px;font-size:15px;font-weight:500;transition:all .2s" style-hover="border-color:rgba(233,228,215,.45)">{{ c.name }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:22px">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <label for="klPost" style="font-size:13.5px;font-weight:600">Postcode</label>
+                <input id="klPost" value="{{ f.postcode }}" onInput="{{ onPostcode }}" placeholder="6011" inputmode="numeric" style="border:1px solid rgba(233,228,215,.2);border-radius:2px;background:rgba(233,228,215,.03);padding:13px 14px;font-size:16px;outline:none;transition:border-color .2s" style-focus="border-color:var(--kl-accent,#D99A3C)">
+                <sc-if value="{{ errPostcode }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:13px;color:#E8A387">{{ errPostcode }}</span>
+                </sc-if>
+                <span style="font-size:13px;color:rgba(233,228,215,.42)">Pricing changes by area for flood and theft risk.</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <span style="font-size:13.5px;font-weight:600">Cover level</span>
+                <div style="display:flex;flex-wrap:wrap;gap:8px">
+                  <sc-for list="{{ levels }}" as="l" hint-placeholder-count="3">
+                    <button type="button" onClick="{{ l.onPick }}" style="flex:1 1 110px;border:1px solid {{ l.bd }};border-radius:2px;background:{{ l.bg }};color:{{ l.fg }};padding:12px 10px;font-size:15px;font-weight:500;transition:all .2s">{{ l.label }}</button>
+                  </sc-for>
+                </div>
+                <span style="font-size:13px;color:rgba(233,228,215,.42)">{{ levelNote }}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <label for="klStart" style="font-size:13.5px;font-weight:600">When should it start?</label>
+                <select id="klStart" value="{{ f.start }}" onChange="{{ onStart }}" style="border:1px solid rgba(233,228,215,.2);border-radius:2px;background:rgba(233,228,215,.03);padding:13px 14px;font-size:16px;outline:none">
+                  <option>Right away</option>
+                  <option>Within 30 days</option>
+                  <option>Still comparing</option>
+                </select>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:22px">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <label for="klName" style="font-size:13.5px;font-weight:600">Full name</label>
+                <input id="klName" value="{{ f.name }}" onInput="{{ onName }}" placeholder="Halima Osei" style="border:1px solid rgba(233,228,215,.2);border-radius:2px;background:rgba(233,228,215,.03);padding:13px 14px;font-size:16px;outline:none;transition:border-color .2s" style-focus="border-color:var(--kl-accent,#D99A3C)">
+                <sc-if value="{{ errName }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:13px;color:#E8A387">{{ errName }}</span>
+                </sc-if>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:18px">
+                <div style="flex:1 1 220px;display:flex;flex-direction:column;gap:8px">
+                  <label for="klEmail" style="font-size:13.5px;font-weight:600">Email</label>
+                  <input id="klEmail" value="{{ f.email }}" onInput="{{ onEmail }}" placeholder="you@example.com" type="email" style="border:1px solid rgba(233,228,215,.2);border-radius:2px;background:rgba(233,228,215,.03);padding:13px 14px;font-size:16px;outline:none;transition:border-color .2s" style-focus="border-color:var(--kl-accent,#D99A3C)">
+                  <sc-if value="{{ errEmail }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:13px;color:#E8A387">{{ errEmail }}</span>
+                  </sc-if>
+                </div>
+                <div style="flex:1 1 180px;display:flex;flex-direction:column;gap:8px">
+                  <label for="klPhone" style="font-size:13.5px;font-weight:600">Phone <span style="font-weight:400;color:rgba(233,228,215,.42)">(optional)</span></label>
+                  <input id="klPhone" value="{{ f.phone }}" onInput="{{ onPhone }}" placeholder="021 847 1928" style="border:1px solid rgba(233,228,215,.2);border-radius:2px;background:rgba(233,228,215,.03);padding:13px 14px;font-size:16px;outline:none;transition:border-color .2s" style-focus="border-color:var(--kl-accent,#D99A3C)">
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:28px">
+            <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ back }}" style="border:1px solid rgba(233,228,215,.24);border-radius:2px;background:transparent;padding:13px 20px;font-size:15px;font-weight:500;transition:border-color .2s,background .2s" style-hover="border-color:rgba(233,228,215,.5);background:rgba(233,228,215,.05)">Back</button>
+            </sc-if>
+            <button type="button" onClick="{{ next }}" style="border:0;border-radius:2px;background:var(--kl-accent,#D99A3C);color:#12190F;padding:13px 24px;font-size:15.5px;font-weight:600;transition:transform .18s cubic-bezier(.16,1,.3,1),filter .18s" style-hover="filter:brightness(1.07);transform:translateY(-1px)" style-active="transform:translateY(0) scale(.985)">{{ nextLabel }}</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isSending }}" hint-placeholder-val="{{ false }}">
+        <div style="border:1px solid rgba(233,228,215,.13);border-radius:2px;padding:clamp(20px,2.6vw,32px);background:#0B1411;display:flex;flex-direction:column;gap:14px">
+          <div style="height:15px;width:58%;border-radius:2px;background:linear-gradient(90deg,rgba(233,228,215,.06),rgba(233,228,215,.16),rgba(233,228,215,.06));background-size:380px 100%;animation:klSheen 1.15s linear infinite"></div>
+          <div style="height:15px;width:82%;border-radius:2px;background:linear-gradient(90deg,rgba(233,228,215,.06),rgba(233,228,215,.16),rgba(233,228,215,.06));background-size:380px 100%;animation:klSheen 1.15s linear infinite"></div>
+          <div style="height:15px;width:40%;border-radius:2px;background:linear-gradient(90deg,rgba(233,228,215,.06),rgba(233,228,215,.16),rgba(233,228,215,.06));background-size:380px 100%;animation:klSheen 1.15s linear infinite"></div>
+          <span style="font-size:14px;color:rgba(233,228,215,.5);margin-top:4px">Checking rates for your area</span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+        <div style="border:1px solid var(--kl-accent,#D99A3C);border-radius:2px;padding:clamp(20px,2.6vw,32px);background:#0B1411">
+          <div style="font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--kl-accent,#D99A3C);margin-bottom:14px">Quote {{ ref }}</div>
+          <h3 style="margin:0 0 12px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(22px,2.4vw,30px);letter-spacing:-.026em">{{ doneHead }}</h3>
+          <p style="margin:0 0 22px;max-width:48ch;font-size:16px;line-height:1.6;color:rgba(233,228,215,.64)">{{ doneBody }}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px">
+            <a href="#coverage" style="border:1px solid rgba(233,228,215,.24);border-radius:2px;padding:13px 20px;font-size:15px;font-weight:500" style-hover="border-color:rgba(233,228,215,.5);background:rgba(233,228,215,.05)">Compare another cover</a>
+            <button type="button" onClick="{{ reset }}" style="border:0;border-radius:2px;background:rgba(233,228,215,.1);padding:13px 20px;font-size:15px;font-weight:500" style-hover="background:rgba(233,228,215,.16)">Start again</button>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <aside data-rv="1" style="flex:1 1 320px;min-width:270px;border:1px solid rgba(233,228,215,.13);border-radius:2px;background:#0B1411;padding:clamp(20px,2.6vw,30px);display:flex;flex-direction:column;gap:20px">
+      <div style="font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(233,228,215,.42)">Your selection</div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;justify-content:space-between;gap:16px;padding-bottom:14px;border-bottom:1px solid rgba(233,228,215,.1)">
+          <span style="font-size:14.5px;color:rgba(233,228,215,.56)">Cover</span>
+          <span style="font-size:15px;font-weight:500;text-align:right">{{ cov.name }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;gap:16px;padding-bottom:14px;border-bottom:1px solid rgba(233,228,215,.1)">
+          <span style="font-size:14.5px;color:rgba(233,228,215,.56)">Level</span>
+          <span style="font-size:15px;font-weight:500;text-align:right">{{ level }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;gap:16px;padding-bottom:14px;border-bottom:1px solid rgba(233,228,215,.1)">
+          <span style="font-size:14.5px;color:rgba(233,228,215,.56)">Area</span>
+          <span style="font-size:15px;font-weight:500;text-align:right;font-family:'IBM Plex Mono',monospace">{{ postcodeText }}</span>
+        </div>
+      </div>
+      <sc-if value="{{ prices }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <div style="font-size:14.5px;color:rgba(233,228,215,.56);margin-bottom:8px">Indicative monthly premium</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:clamp(26px,3vw,36px);letter-spacing:-.03em;color:var(--kl-accent,#D99A3C)">{{ estRange }}</div>
+          <div style="font-size:13px;color:rgba(233,228,215,.42);margin-top:10px;line-height:1.5">Estimate only. The bound price depends on the property and claims history.</div>
+        </div>
+      </sc-if>
+    </aside>
+  </div>
+</section>
+
+<section id="reviews" style="max-width:1360px;margin:0 auto;padding:clamp(64px,8vw,112px) clamp(20px,4vw,48px)">
+  <div data-rv="0" style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:clamp(28px,3.5vw,48px)">
+    <h2 style="margin:0;max-width:18ch;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(30px,3.6vw,48px);line-height:1.06;letter-spacing:-.032em">What people say after a claim</h2>
+    <div style="display:flex;gap:8px">
+      <button type="button" onClick="{{ prevSlide }}" aria-label="Previous review" style="width:46px;height:46px;border:1px solid rgba(233,228,215,.24);border-radius:2px;background:transparent;font-size:17px;transition:border-color .2s,background .2s" style-hover="border-color:rgba(233,228,215,.5);background:rgba(233,228,215,.05)">&#8592;</button>
+      <button type="button" onClick="{{ nextSlide }}" aria-label="Next review" style="width:46px;height:46px;border:1px solid rgba(233,228,215,.24);border-radius:2px;background:transparent;font-size:17px;transition:border-color .2s,background .2s" style-hover="border-color:rgba(233,228,215,.5);background:rgba(233,228,215,.05)">&#8594;</button>
+    </div>
+  </div>
+  <div data-rv="1" style="border-top:1px solid rgba(233,228,215,.13);padding-top:clamp(28px,3.5vw,44px);display:flex;flex-wrap:wrap;gap:clamp(24px,4vw,64px);align-items:flex-start">
+    <blockquote style="flex:1 1 460px;min-width:280px;margin:0">
+      <p style="margin:0 0 24px;font-family:'Space Grotesk',sans-serif;font-weight:400;font-size:clamp(21px,2.3vw,31px);line-height:1.34;letter-spacing:-.022em;text-wrap:pretty">{{ review.text }}</p>
+      <footer style="font-size:14.5px;color:rgba(233,228,215,.56)"><span style="color:#E9E4D7;font-weight:600">{{ review.name }}</span>, {{ review.meta }}</footer>
+    </blockquote>
+    <div style="flex:0 1 220px;display:flex;align-items:center;gap:10px">
+      <sc-for list="{{ dots }}" as="d" hint-placeholder-count="3">
+        <button type="button" onClick="{{ d.onPick }}" aria-label="{{ d.label }}" style="width:9px;height:9px;padding:0;border:0;border-radius:50%;background:{{ d.bg }};transition:background .25s"></button>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section style="background:#0E1A16;border-top:1px solid rgba(233,228,215,.09);border-bottom:1px solid rgba(233,228,215,.09)">
+  <div style="max-width:1360px;margin:0 auto;padding:clamp(64px,8vw,110px) clamp(20px,4vw,48px)">
+    <h2 data-rv="0" style="margin:0 0 clamp(30px,3.5vw,50px);font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(30px,3.6vw,48px);line-height:1.06;letter-spacing:-.032em">The people who answer</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:clamp(20px,2.6vw,36px)">
+      <div data-rv="0">
+        <div style="position:relative;aspect-ratio:4/5;border-radius:2px;overflow:hidden;background:linear-gradient(158deg,#22402F,#0D1815);margin-bottom:16px">
+          <img src="./img/keel-team-claims.jpg" alt="Halima Osei" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.04);mix-blend-mode:luminosity;opacity:.88"></div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;letter-spacing:-.02em">Halima Osei</div>
+        <div style="font-size:14px;color:rgba(233,228,215,.52);margin-top:4px">Head of claims</div>
+      </div>
+      <div data-rv="1" style="padding-top:clamp(0px,3vw,42px)">
+        <div style="position:relative;aspect-ratio:4/5;border-radius:2px;overflow:hidden;background:linear-gradient(158deg,#22402F,#0D1815);margin-bottom:16px">
+          <img src="./img/keel-team-underwriting.jpg" alt="Duncan Reith" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.04);mix-blend-mode:luminosity;opacity:.88"></div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;letter-spacing:-.02em">Duncan Reith</div>
+        <div style="font-size:14px;color:rgba(233,228,215,.52);margin-top:4px">Underwriting lead</div>
+      </div>
+      <div data-rv="2">
+        <div style="position:relative;aspect-ratio:4/5;border-radius:2px;overflow:hidden;background:linear-gradient(158deg,#22402F,#0D1815);margin-bottom:16px">
+          <img src="./img/keel-team-ops.jpg" alt="Sofia Barrantes" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.04);mix-blend-mode:luminosity;opacity:.88"></div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;letter-spacing:-.02em">Sofia Barrantes</div>
+        <div style="font-size:14px;color:rgba(233,228,215,.52);margin-top:4px">Customer operations</div>
+      </div>
+      <div data-rv="3" style="padding-top:clamp(0px,3vw,42px)">
+        <div style="position:relative;aspect-ratio:4/5;border-radius:2px;overflow:hidden;background:linear-gradient(158deg,#22402F,#0D1815);margin-bottom:16px">
+          <img src="./img/keel-team-pricing.jpg" alt="Theo Nakamura" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.04);mix-blend-mode:luminosity;opacity:.88"></div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;letter-spacing:-.02em">Theo Nakamura</div>
+        <div style="font-size:14px;color:rgba(233,228,215,.52);margin-top:4px">Pricing</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="max-width:1360px;margin:0 auto;padding:clamp(64px,8vw,110px) clamp(20px,4vw,48px);display:flex;flex-wrap:wrap;gap:clamp(28px,4vw,72px);align-items:flex-start">
+  <h2 data-rv="0" style="flex:0 1 300px;margin:0;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(30px,3.6vw,48px);line-height:1.06;letter-spacing:-.032em">Questions we get asked</h2>
+  <div data-rv="1" style="flex:1 1 480px;min-width:280px;border-top:1px solid rgba(233,228,215,.13)">
+    <sc-for list="{{ faqs }}" as="q" hint-placeholder-count="5">
+      <div style="border-bottom:1px solid rgba(233,228,215,.13)">
+        <button type="button" onClick="{{ q.onToggle }}" aria-expanded="{{ q.open }}" style="width:100%;border:0;background:transparent;text-align:left;padding:22px 0;display:flex;align-items:baseline;justify-content:space-between;gap:20px;color:{{ q.fg }};transition:color .2s" style-hover="color:var(--kl-accent,#D99A3C)">
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:clamp(17px,1.6vw,20px);letter-spacing:-.02em">{{ q.q }}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:16px;opacity:.6;flex:0 0 auto">{{ q.sign }}</span>
+        </button>
+        <div style="overflow:hidden;transition:max-height .36s cubic-bezier(.16,1,.3,1),opacity .3s;max-height:{{ q.mh }};opacity:{{ q.op }}">
+          <p style="margin:0;padding:0 0 24px;max-width:62ch;font-size:16px;line-height:1.62;color:rgba(233,228,215,.64);text-wrap:pretty">{{ q.a }}</p>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section id="news" style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,4vw,48px) clamp(64px,8vw,110px)">
+  <div data-rv="0" style="display:flex;flex-wrap:wrap;gap:clamp(24px,3.5vw,56px);align-items:stretch">
+    <a href="#news" data-rv="0" style="flex:1 1 520px;min-width:290px;display:flex;flex-direction:column;gap:20px">
+      <div style="position:relative;height:clamp(220px,26vw,340px);border-radius:2px;overflow:hidden;background:linear-gradient(158deg,#20392D,#0D1815)">
+        <img src="./img/keel-flood-maps.jpg" alt="A river running high past houses" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);mix-blend-mode:luminosity;opacity:.88;transition:transform .7s cubic-bezier(.16,1,.3,1)"></div>
+      <div>
+        <div style="font-size:12.5px;color:rgba(233,228,215,.45);margin-bottom:10px">14 August 2026</div>
+        <h3 style="margin:0 0 10px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(21px,2.2vw,29px);line-height:1.16;letter-spacing:-.026em;max-width:26ch">What the 2026 flood maps change for homeowners</h3>
+        <p style="margin:0;max-width:56ch;font-size:16px;line-height:1.6;color:rgba(233,228,215,.6)">Three regions moved band. Here is how it reads on a schedule and what it does to an excess.</p>
+      </div>
+    </a>
+    <div style="flex:1 1 320px;min-width:270px;display:flex;flex-direction:column;justify-content:flex-end">
+      <a href="#news" style="padding:26px 0;border-top:1px solid rgba(233,228,215,.13);display:block">
+        <div style="font-size:12.5px;color:rgba(233,228,215,.45);margin-bottom:10px">2 August 2026</div>
+        <h3 style="margin:0 0 8px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:19.5px;line-height:1.25;letter-spacing:-.02em">Why we stopped selling excess waiver add-ons</h3>
+        <p style="margin:0;font-size:15px;line-height:1.55;color:rgba(233,228,215,.55)">They cost more than they returned for four years running.</p>
+      </a>
+      <a href="#news" style="padding:26px 0;border-top:1px solid rgba(233,228,215,.13);display:block">
+        <div style="font-size:12.5px;color:rgba(233,228,215,.45);margin-bottom:10px">21 July 2026</div>
+        <h3 style="margin:0 0 8px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:19.5px;line-height:1.25;letter-spacing:-.02em">Reading a policy schedule: the four lines that matter</h3>
+        <p style="margin:0;font-size:15px;line-height:1.55;color:rgba(233,228,215,.55)">Sum insured, excess, exclusions, and the endorsement list.</p>
+      </a>
+      <a href="#news" style="padding:26px 0;border-top:1px solid rgba(233,228,215,.13);border-bottom:1px solid rgba(233,228,215,.13);display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:15px;font-weight:500;color:var(--kl-accent,#D99A3C)"><span>All writing</span><span>&#8594;</span></a>
+    </div>
+  </div>
+</section>
+
+<footer style="background:#0E1A16;border-top:1px solid rgba(233,228,215,.09)">
+  <div style="max-width:1360px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(20px,4vw,48px) 34px;display:flex;flex-wrap:wrap;gap:clamp(28px,4vw,64px)">
+    <div style="flex:1 1 300px;min-width:250px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+        <span style="width:27px;height:27px;border-radius:50%;border:1.5px solid var(--kl-accent,#D99A3C);display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--kl-accent,#D99A3C)">K</span>
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:500;letter-spacing:-.02em">Keel</span>
+      </div>
+      <p style="margin:0;max-width:34ch;font-size:15px;line-height:1.6;color:rgba(233,228,215,.55)">Keel is an insurance broker and underwriter. Licence 481-C, held with the Financial Markets Authority.</p>
+    </div>
+    <div style="flex:0 1 160px">
+      <div style="font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(233,228,215,.4);margin-bottom:16px">Coverage</div>
+      <div style="display:flex;flex-direction:column;gap:11px;font-size:15px">
+        <a href="#coverage" style="color:rgba(233,228,215,.72)">Home</a>
+        <a href="#coverage" style="color:rgba(233,228,215,.72)">Auto</a>
+        <a href="#coverage" style="color:rgba(233,228,215,.72)">Life</a>
+        <a href="#coverage" style="color:rgba(233,228,215,.72)">Travel</a>
+        <a href="#coverage" style="color:rgba(233,228,215,.72)">Business</a>
+      </div>
+    </div>
+    <div style="flex:0 1 160px">
+      <div style="font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(233,228,215,.4);margin-bottom:16px">Company</div>
+      <div style="display:flex;flex-direction:column;gap:11px;font-size:15px">
+        <a href="#claims" style="color:rgba(233,228,215,.72)">Claims process</a>
+        <a href="#reviews" style="color:rgba(233,228,215,.72)">Reviews</a>
+        <a href="#faq" style="color:rgba(233,228,215,.72)">FAQ</a>
+        <a href="#news" style="color:rgba(233,228,215,.72)">Writing</a>
+        <a href="#quote" style="color:rgba(233,228,215,.72)">Contact</a>
+      </div>
+    </div>
+    <div style="flex:1 1 300px;min-width:250px">
+      <div style="font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(233,228,215,.4);margin-bottom:16px">Monthly note</div>
+      <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:rgba(233,228,215,.55)">One email a month on claims, pricing and cover changes.</p>
+      <sc-if value="{{ mailOpen }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <div style="display:flex;flex-wrap:wrap;gap:9px">
+            <input value="{{ mail }}" onInput="{{ onMail }}" placeholder="you@example.com" aria-label="Email address" style="flex:1 1 180px;border:1px solid rgba(233,228,215,.2);border-radius:2px;background:rgba(233,228,215,.03);padding:12px 14px;font-size:15.5px;outline:none;transition:border-color .2s" style-focus="border-color:var(--kl-accent,#D99A3C)">
+            <button type="button" onClick="{{ subscribe }}" style="border:0;border-radius:2px;background:var(--kl-accent,#D99A3C);color:#12190F;padding:12px 20px;font-size:15px;font-weight:600;transition:filter .18s" style-hover="filter:brightness(1.07)">{{ mailBtn }}</button>
+          </div>
+          <sc-if value="{{ mailErr }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size:13px;color:#E8A387">{{ mailErr }}</span>
+          </sc-if>
+        </div>
+      </sc-if>
+      <sc-if value="{{ mailDone }}" hint-placeholder-val="{{ false }}">
+        <div style="border:1px solid var(--kl-accent,#D99A3C);border-radius:2px;padding:14px 16px;font-size:15px;color:rgba(233,228,215,.8)">{{ mailDoneText }}</div>
+      </sc-if>
+    </div>
+  </div>
+  <div style="max-width:1360px;margin:0 auto;padding:22px clamp(20px,4vw,48px) 34px;border-top:1px solid rgba(233,228,215,.1);display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;font-size:13.5px;color:rgba(233,228,215,.45)">
+    <span>2026 Keel Insurance Group. Registered in Wellington.</span>
+    <div style="display:flex;gap:20px">
+      <a href="#news" style="color:rgba(233,228,215,.6)">LinkedIn</a>
+      <a href="#news" style="color:rgba(233,228,215,.6)">Instagram</a>
+      <a href="#news" style="color:rgba(233,228,215,.6)">Privacy</a>
+    </div>
+  </div>
+</footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#D99A3C&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#D99A3C&quot;,&quot;#C4643C&quot;,&quot;#8FB08A&quot;,&quot;#7FB2C9&quot;],&quot;section&quot;:&quot;Brand&quot;},&quot;showPrices&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;stickyNav&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behaviour&quot;}}">
+class Component extends DCLogic {
+  state = {
+    cov: 'home', nav: false, wide: true, step: 0, level: 'Standard',
+    f: { postcode: '', start: 'Within 30 days', name: '', email: '', phone: '' },
+    err: {}, status: 'idle', ref: '',
+    slide: 0, faq: 0, mail: '', mailState: 'idle', mailErr: ''
+  };
+
+  // Mock product data for the prototype.
+  COV = [
+    { id: 'home', name: 'Home', short: 'home', price: 34, img: 'keel-cov-home', alt: 'A living room in late afternoon light',
+      title: 'Buildings and contents, under one policy',
+      blurb: 'Structure, contents and accidental damage, with somewhere to live if the house cannot be occupied while it is repaired.',
+      inc: [{ k: 'Buildings', v: 'Up to $850,000' }, { k: 'Contents', v: 'Up to $120,000' }, { k: 'Escape of water', v: 'Included, $500 excess' }, { k: 'Alternative housing', v: '12 months' }] },
+    { id: 'auto', name: 'Auto', short: 'auto', price: 52, img: 'keel-cov-auto', alt: 'A car on a wet road at night',
+      title: 'Comprehensive cover for one or two cars',
+      blurb: 'Repairs at any shop you choose, windscreen work with no excess, and a car to drive while yours is off the road.',
+      inc: [{ k: 'Windscreen', v: 'No excess' }, { k: 'Courtesy car', v: '21 days' }, { k: 'Uninsured driver', v: 'Excess refunded' }, { k: 'Driving abroad', v: '34 countries' }] },
+    { id: 'life', name: 'Life', short: 'life', price: 18, img: 'keel-cov-life', alt: 'Two people walking a coastal path',
+      title: 'A fixed payout to the people you name',
+      blurb: 'You choose the term and the sum. The premium is locked for the whole term, so it does not move as you get older.',
+      inc: [{ k: 'Term', v: '10 to 40 years' }, { k: 'Sum insured', v: '$100,000 to $2m' }, { k: 'Terminal illness', v: 'Paid early' }, { k: 'Medical exam', v: 'Not needed under 40' }] },
+    { id: 'travel', name: 'Travel', short: 'travel', price: 11, img: 'keel-cov-travel', alt: 'An airport window at dawn',
+      title: 'Single trips and annual cover',
+      blurb: 'Medical costs abroad, cancellation, delays and the cost of getting you home early if something happens back here.',
+      inc: [{ k: 'Trip length', v: 'Up to 60 days' }, { k: 'Medical', v: 'Unlimited' }, { k: 'Cancellation', v: 'Up to $25,000' }, { k: 'Baggage', v: '$5,000' }] },
+    { id: 'business', name: 'Business', short: 'business', price: 79, img: 'keel-cov-business', alt: 'A small workshop interior',
+      title: 'Liability and interruption for small teams',
+      blurb: 'Public and product liability, contents at your premises, and lost income if you cannot trade after an insured event.',
+      inc: [{ k: 'Liability', v: 'Up to $5m' }, { k: 'Team size', v: 'Under 50 people' }, { k: 'Interruption', v: '18 months income' }, { k: 'Premises', v: 'Owned or leased' }] },
+    { id: 'health', name: 'Health', short: 'health', price: 64, img: 'keel-cov-health', alt: 'A hospital corridor',
+      title: 'Private diagnosis and treatment',
+      blurb: 'Surgery, specialists and diagnostics without the public wait, with an outpatient budget you set at the start.',
+      inc: [{ k: 'Surgical', v: 'Full cover' }, { k: 'Outpatient', v: '$2,500 to $10,000' }, { k: 'Excess', v: 'From $0' }, { k: 'Waiting period', v: '90 days' }] }
+  ];
+
+  REVIEWS = [
+    { text: 'A storm took half the roof off. The assessor came on the Tuesday and the builder was paid before the invoice was due.', name: 'Priya Raghunathan', meta: 'homeowner, Dunedin' },
+    { text: 'I moved three policies across in one call and it still came out under what I was paying for the car alone.', name: 'Marek Dvorak', meta: 'policyholder since 2021, Wellington' },
+    { text: 'They paid the hospital directly while I was still in Bangkok. I never saw a bill, which is the whole point.', name: 'Yolanda Fitzgerald', meta: 'cafe owner, Napier' }
+  ];
+
+  FAQS = [
+    { q: 'How fast do you pay a claim?', a: 'The median is 6.2 days from the first call to money leaving our account. Total loss claims on a house take longer because the rebuild is priced first.' },
+    { q: 'Can I cancel part way through the year?', a: 'Yes. You get the unused months back, less a $25 administration fee. There is no cancellation charge on life policies.' },
+    { q: 'Do you cover working from home?', a: 'Office equipment up to $10,000 sits inside the standard home policy. If clients visit the house you need the liability extension, which is $6 a month.' },
+    { q: 'What is not covered?', a: 'Wear and tear, gradual damage, anything left outside for more than 48 hours, and damage caused while a driver is unlicensed. The full exclusion list runs to one page and we send it before you buy.' },
+    { q: 'Is the price fixed for the year?', a: 'Yes for the 12 month term. At renewal we show last year\u2019s price next to the new one, with the reason for any change.' }
+  ];
+
+  headerRef = React.createRef();
+
+  componentDidMount() {
+    this.mq = window.matchMedia('(min-width: 900px)');
+    this.onMq = e => this.setState({ wide: e.matches });
+    if (this.mq.addEventListener) this.mq.addEventListener('change', this.onMq);
+    this.setState({ wide: this.mq.matches });
+    this.reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.apply();
+    if (!this.reduce) this.reveal();
+  }
+
+  componentDidUpdate() { this.apply(); }
+
+  componentWillUnmount() {
+    if (this.mq && this.mq.removeEventListener) this.mq.removeEventListener('change', this.onMq);
+    if (this.io) this.io.disconnect();
+    if (this.onVis) document.removeEventListener('visibilitychange', this.onVis);
+    if (this.t1) clearTimeout(this.t1);
+    if (this.t2) clearTimeout(this.t2);
+    if (this.t3) clearTimeout(this.t3);
+  }
+
+  apply() {
+    document.documentElement.style.setProperty('--kl-accent', this.props.accent || '#D99A3C');
+    const img = document.querySelector('[data-kl-cov]');
+    const src = './img/' + this.current().img + '.jpg';
+    if (img && img.getAttribute('src') !== src) img.setAttribute('src', src);
+    const h = document.querySelector('[data-kl-header]');
+    if (h) h.style.position = (this.props.stickyNav === false) ? 'relative' : 'sticky';
+  }
+
+  // Scroll reveal: IntersectionObserver, no scroll listeners. Fails open.
+  show(el) {
+    el.style.opacity = '';
+    el.style.transform = '';
+    el.style.transitionDelay = '';
+  }
+
+  showAll = () => {
+    Array.from(document.querySelectorAll('[data-rv]')).forEach(el => this.show(el));
+    if (this.io) this.io.disconnect();
+  };
+
+  reveal() {
+    if (document.hidden) return;
+    const els = Array.from(document.querySelectorAll('[data-rv]')).filter(
+      el => el.getBoundingClientRect().top > window.innerHeight * 0.92
+    );
+    els.forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(18px)';
+      el.style.transition = 'opacity .75s cubic-bezier(.16,1,.3,1), transform .75s cubic-bezier(.16,1,.3,1)';
+    });
+    this.onVis = () => { if (document.hidden) this.showAll(); };
+    document.addEventListener('visibilitychange', this.onVis);
+    this.t3 = setTimeout(() => { if (!this.ioFired) this.showAll(); }, 900);
+    this.io = new IntersectionObserver(ents => {
+      this.ioFired = true;
+      ents.forEach(en => {
+        if (!en.isIntersecting) return;
+        const d = Number(en.target.getAttribute('data-rv')) || 0;
+        en.target.style.transitionDelay = (d * 80) + 'ms';
+        en.target.style.opacity = '1';
+        en.target.style.transform = 'none';
+        this.io.unobserve(en.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    els.forEach(el => this.io.observe(el));
+  }
+
+  jump(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - 76;
+    window.scrollTo({ top: y, behavior: this.reduce ? 'auto' : 'smooth' });
+  }
+
+  current() { return this.COV.find(c => c.id === this.state.cov) || this.COV[0]; }
+
+  estimate() {
+    const c = this.current();
+    const m = { Essential: 0.78, Standard: 1, Full: 1.34 }[this.state.level] || 1;
+    return { lo: Math.round(c.price * m), hi: Math.round(c.price * m * 1.27) };
+  }
+
+  next = () => {
+    const s = this.state;
+    if (s.step === 0) { this.setState({ step: 1, err: {} }); return; }
+    if (s.step === 1) {
+      if (!s.f.postcode || s.f.postcode.trim().length < 4) {
+        this.setState({ err: { postcode: 'Enter a four digit postcode so we can price the area.' } });
+        return;
+      }
+      this.setState({ step: 2, err: {} });
+      return;
+    }
+    const err = {};
+    if (!s.f.name.trim()) err.name = 'We need a name for the quote.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s.f.email.trim())) err.email = 'Check the email address.';
+    if (Object.keys(err).length) { this.setState({ err: err }); return; }
+    this.setState({ status: 'sending', err: {} });
+    this.t1 = setTimeout(() => {
+      this.setState({ status: 'done', ref: 'KL-' + (1000 + Math.floor(Math.random() * 8999)) });
+    }, 1150);
+  };
+
+  back = () => this.setState({ step: Math.max(0, this.state.step - 1), err: {} });
+
+  reset = () => this.setState({
+    step: 0, status: 'idle', ref: '', err: {},
+    f: { postcode: '', start: 'Within 30 days', name: '', email: '', phone: '' }
+  });
+
+  setF(k, v) { this.setState({ f: Object.assign({}, this.state.f, { [k]: v }) }); }
+
+  subscribe = () => {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(this.state.mail.trim())) {
+      this.setState({ mailErr: 'That address does not look right.' });
+      return;
+    }
+    this.setState({ mailState: 'sending', mailErr: '' });
+    this.t2 = setTimeout(() => this.setState({ mailState: 'done' }), 800);
+  };
+
+  renderVals() {
+    const s = this.state;
+    const prices = this.props.showPrices !== false;
+    const c = this.current();
+    const est = this.estimate();
+    const acc = this.props.accent || '#D99A3C';
+    const review = this.REVIEWS[s.slide % this.REVIEWS.length];
+
+    return {
+      wide: s.wide, narrow: !s.wide, nav: s.nav,
+      toggleNav: () => this.setState({ nav: !s.nav }),
+      goQuote: () => { this.setState({ nav: false }); setTimeout(() => this.jump('quote'), 60); },
+      prices: prices,
+
+      covList: this.COV.map(x => ({
+        name: x.name,
+        priceText: prices ? '$' + x.price + ' /mo' : '',
+        bl: x.id === s.cov ? acc : 'transparent',
+        bg: x.id === s.cov ? 'rgba(217,154,60,.07)' : 'transparent',
+        fg: x.id === s.cov ? '#E9E4D7' : 'rgba(233,228,215,.62)',
+        onSelect: () => this.setState({ cov: x.id })
+      })),
+      cov: {
+        name: c.name, short: c.short, title: c.title, blurb: c.blurb, inc: c.inc, alt: c.alt,
+        priceMono: '$' + c.price
+      },
+      addToQuote: () => this.jump('quote'),
+
+      isForm: s.status === 'idle', isSending: s.status === 'sending', isDone: s.status === 'done',
+      isStep0: s.step === 0, isStep1: s.step === 1, isStep2: s.step === 2,
+      canBack: s.step > 0,
+      nextLabel: s.step === 2 ? 'Get my price' : 'Continue',
+      stepLabel: (s.step + 1) + ' of 3 ' + ['Cover', 'Details', 'Contact'][s.step],
+      stepBars: [0, 1, 2].map(i => ({ bg: i <= s.step ? acc : 'rgba(233,228,215,.16)' })),
+      chips: this.COV.map(x => ({
+        name: x.name,
+        bd: x.id === s.cov ? acc : 'rgba(233,228,215,.2)',
+        bg: x.id === s.cov ? acc : 'transparent',
+        fg: x.id === s.cov ? '#12190F' : 'rgba(233,228,215,.8)',
+        onSelect: () => this.setState({ cov: x.id })
+      })),
+      levels: ['Essential', 'Standard', 'Full'].map(l => ({
+        label: l,
+        bd: l === s.level ? acc : 'rgba(233,228,215,.2)',
+        bg: l === s.level ? 'rgba(217,154,60,.12)' : 'transparent',
+        fg: l === s.level ? '#E9E4D7' : 'rgba(233,228,215,.7)',
+        onPick: () => this.setState({ level: l })
+      })),
+      levelNote: {
+        Essential: 'Higher excess, the core cover only.',
+        Standard: 'What most people take. Excess $500.',
+        Full: 'Low excess and the optional extensions included.'
+      }[s.level],
+      level: s.level,
+      f: s.f,
+      onPostcode: e => this.setF('postcode', e.target.value),
+      onStart: e => this.setF('start', e.target.value),
+      onName: e => this.setF('name', e.target.value),
+      onEmail: e => this.setF('email', e.target.value),
+      onPhone: e => this.setF('phone', e.target.value),
+      errPostcode: s.err.postcode || '', errName: s.err.name || '', errEmail: s.err.email || '',
+      next: this.next, back: this.back, reset: this.reset,
+      postcodeText: s.f.postcode ? s.f.postcode : 'Not set',
+      estRange: prices ? '$' + est.lo + ' to $' + est.hi : '',
+      ref: s.ref,
+      doneHead: prices ? c.name + ' cover, $' + est.lo + ' to $' + est.hi + ' a month' : c.name + ' cover, held for 30 days',
+      doneBody: 'Held for 30 days. We sent the full schedule to ' + (s.f.email || 'your inbox') + '. If you want it explained, ' + (s.f.phone ? 'we will call the number you gave us' : 'call 0800 535 335') + ' and ask for ' + (s.f.name.split(' ')[0] || 'the quote') + '.',
+
+      review: review,
+      dots: this.REVIEWS.map((r, i) => ({
+        label: 'Review ' + (i + 1),
+        bg: i === s.slide ? acc : 'rgba(233,228,215,.22)',
+        onPick: () => this.setState({ slide: i })
+      })),
+      prevSlide: () => this.setState({ slide: (s.slide - 1 + this.REVIEWS.length) % this.REVIEWS.length }),
+      nextSlide: () => this.setState({ slide: (s.slide + 1) % this.REVIEWS.length }),
+
+      faqs: this.FAQS.map((q, i) => ({
+        q: q.q, a: q.a,
+        open: s.faq === i,
+        sign: s.faq === i ? '\u2212' : '+',
+        fg: s.faq === i ? acc : '#E9E4D7',
+        mh: s.faq === i ? '540px' : '0px',
+        op: s.faq === i ? '1' : '0',
+        onToggle: () => this.setState({ faq: s.faq === i ? -1 : i })
+      })),
+
+      mailOpen: s.mailState !== 'done', mailDone: s.mailState === 'done',
+      mail: s.mail, mailErr: s.mailErr,
+      mailBtn: s.mailState === 'sending' ? 'Sending' : 'Subscribe',
+      mailDoneText: 'Confirmed. The next note goes out on the first of the month.',
+      onMail: e => this.setState({ mail: e.target.value, mailErr: '' }),
+      subscribe: this.subscribe
+    };
+  }
+}
+</script>
+</body>
+</html>

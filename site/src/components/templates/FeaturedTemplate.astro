@@ -1,8 +1,10 @@
 ---
 import { templates } from "../../data/templates.mjs";
-import { demoExists, thumbSrc, THUMB_W, THUMB_H } from "../../data/template-assets.mjs";
+import { demoExists, thumbIsLocal, thumbSrc, THUMB_W, THUMB_H } from "../../data/template-assets.mjs";
 
-const t = templates.find((x) => x.featured) ?? templates[0];
+const t = [templates.find((x) => x.featured), templates[0]].find(
+  (x) => x && thumbIsLocal(x.slug),
+);
 const live = t && demoExists(t.slug);
 ---
 

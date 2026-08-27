@@ -9,14 +9,15 @@ const publicDir = fileURLToPath(new URL("../../public/", import.meta.url));
 export const demoExists = (slug) =>
   existsSync(`${publicDir}demos/${slug}/index.html`);
 
-// Local screenshot when the thumbnail pipeline has run for this slug,
-// otherwise a seeded placeholder photo at the same aspect ratio.
+// Screenshots are produced by `npm run thumbs`. A template can be listed
+// before its demo and screenshot land: thumbSrc returns null until the file
+// exists, and the card draws a waiting frame at the same proportions rather
+// than reaching for a stand in image from another site.
 export const THUMB_W = 1280;
 export const THUMB_H = 960;
-export const thumbSrc = (slug) =>
-  existsSync(`${publicDir}images/templates/${slug}.png`)
-    ? `/images/templates/${slug}.png`
-    : `https://picsum.photos/seed/insurepages-${slug}/${THUMB_W}/${THUMB_H}`;
 
 export const thumbIsLocal = (slug) =>
   existsSync(`${publicDir}images/templates/${slug}.png`);
+
+export const thumbSrc = (slug) =>
+  thumbIsLocal(slug) ? `/images/templates/${slug}.png` : null;
