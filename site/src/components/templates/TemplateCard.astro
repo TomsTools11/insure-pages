@@ -9,7 +9,6 @@ interface Props {
     tagline: string;
     tags: string[];
     accent: string;
-    size: string;
   };
   index: number;
 }
@@ -17,13 +16,12 @@ const { t, index } = Astro.props;
 const live = demoExists(t.slug);
 ---
 
-<article
-  class={`t-card t-${t.size} accent-${t.accent}`}
-  data-reveal
-  style={`--ri: ${index}`}
->
+<article class={`t-card accent-${t.accent}`} data-reveal style={`--ri: ${index}`}>
   <div class="t-frame">
-    <div class="t-bar">{t.domain}</div>
+    <div class="t-bar">
+      <span class="t-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="t-domain">{t.domain}</span>
+    </div>
     <img
       src={thumbSrc(t.slug)}
       alt={`Screenshot of the ${t.name} template homepage`}
@@ -77,21 +75,35 @@ const live = demoExists(t.slug);
     transform: translate(-3px, -3px);
     box-shadow: 9px 9px 0 var(--ink);
   }
-  .t-wide { grid-column: span 2; }
-  .t-tall { grid-row: span 2; }
   .t-frame {
     border-bottom: 2px solid var(--ink);
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
   }
   .t-bar {
-    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 16px;
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.02em;
     border-bottom: 2px solid var(--ink);
+  }
+  .t-dots {
+    display: inline-flex;
+    gap: 5px;
+    flex: none;
+  }
+  .t-dots i {
+    width: 9px;
+    height: 9px;
+    border: 1.5px solid var(--ink);
+    border-radius: 100px;
+    background: #fff;
+  }
+  .t-domain {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   /* Ink on red: 5.6:1, white on red would fail AA at this size. */
   .accent-red .t-bar { background: var(--red); }
@@ -99,14 +111,12 @@ const live = demoExists(t.slug);
   .accent-green .t-bar { background: var(--green); }
   .accent-blue .t-bar { background: var(--blue); }
   .accent-lavender .t-bar { background: var(--lavender); }
+  /* The screenshot is shown whole. Its intrinsic 4:3 is the frame's shape,
+     so nothing is cropped and no aspect box can squeeze it out of shape. */
   .t-frame img {
     display: block;
     width: 100%;
-    height: 100%;
-    min-height: 0;
-    flex-grow: 1;
-    object-fit: cover;
-    object-position: top center;
+    height: auto;
   }
   .t-meta {
     padding: 24px 26px 26px;
@@ -114,6 +124,7 @@ const live = demoExists(t.slug);
     flex-direction: column;
     gap: 12px;
     align-items: flex-start;
+    flex-grow: 1;
   }
   .t-title-row {
     display: flex;
@@ -124,7 +135,7 @@ const live = demoExists(t.slug);
   .t-name {
     font-family: "Unbounded", sans-serif;
     font-weight: 700;
-    font-size: 22px;
+    font-size: 24px;
     letter-spacing: -0.02em;
   }
   .t-tags {
@@ -142,7 +153,7 @@ const live = demoExists(t.slug);
     background: var(--cream);
   }
   .t-tagline {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 500;
     color: #3a3a3a;
     max-width: 40ch;
@@ -150,13 +161,13 @@ const live = demoExists(t.slug);
   .t-btn {
     padding: 13px 24px;
     font-size: 14px;
-    margin-top: 6px;
+    margin-top: auto;
   }
   .t-soon {
     display: inline-flex;
     align-items: center;
     padding: 13px 24px;
-    margin-top: 6px;
+    margin-top: auto;
     border: 2px dashed var(--ink);
     border-radius: 100px;
     font-weight: 700;
@@ -174,13 +185,5 @@ const live = demoExists(t.slug);
     clip: rect(0 0 0 0);
     white-space: nowrap;
     border: 0;
-  }
-  @media (max-width: 900px) {
-    .t-wide { grid-column: auto; }
-    .t-tall { grid-row: auto; }
-    .t-frame img {
-      height: auto;
-      aspect-ratio: 4 / 3;
-    }
   }
 </style>

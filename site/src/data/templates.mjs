@@ -18,8 +18,11 @@
 //   tagline  one card-sized sentence about the design's personality
 //   tags     2-3 style words
 //   accent   one of: red | yellow | green | blue | lavender
-//   size     bento span: wide (2 cols) | tall (2 rows) | std (1x1)
 //   featured true for the one template the deep-dive section spotlights
+//
+// There is no layout field: the gallery lays entries out two across in the
+// order written, so every screenshot gets the same landscape frame and a
+// new template never needs the grid rebalanced.
 
 export const templates = [
   {
@@ -29,7 +32,6 @@ export const templates = [
     tagline: "Confident type and a proud family history, front and center.",
     tags: ["Bold", "Heritage"],
     accent: "red",
-    size: "wide",
     featured: true,
   },
   {
@@ -39,7 +41,6 @@ export const templates = [
     tagline: "Soft greens and friendly photos that put people at ease.",
     tags: ["Warm", "Friendly"],
     accent: "green",
-    size: "tall",
     featured: false,
   },
   {
@@ -49,7 +50,6 @@ export const templates = [
     tagline: "Crisp shapes and plain numbers that earn trust fast.",
     tags: ["Modern", "Precise"],
     accent: "blue",
-    size: "std",
     featured: false,
   },
   {
@@ -59,7 +59,6 @@ export const templates = [
     tagline: "Editorial calm in deep green, with a serif voice.",
     tags: ["Editorial", "Classic"],
     accent: "yellow",
-    size: "std",
     featured: false,
   },
 ];

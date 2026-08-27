@@ -9,7 +9,7 @@ import TemplateCard from "./TemplateCard.astro";
       <span class="section-eyebrow" style="background: var(--blue);"
         >The gallery</span
       >
-      <h2 class="section-title">Four sites, four personalities.</h2>
+      <h2 class="section-title">Meet the lineup.</h2>
       <p class="section-sub">
         Every one opens as a real, working website. Click around the way a
         customer would.
@@ -39,10 +39,19 @@ import TemplateCard from "./TemplateCard.astro";
   .gallery {
     padding: 110px 0 120px;
   }
+  /* Two across, so every screenshot lands in a wide frame at close to
+     half the container. The old three-across bento gave one template a
+     narrow two-row cell, which cropped a landscape homepage down to an
+     unreadable strip. Rhythm now comes from the stagger below, never from
+     cell shapes that fight the artwork. */
   .t-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 28px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 40px 36px;
+  }
+  .t-grid > :global(.t-card:nth-child(even)) {
+    margin-top: 64px;
   }
   .gallery-empty {
     border: 2px dashed var(--ink);
@@ -66,6 +75,12 @@ import TemplateCard from "./TemplateCard.astro";
   }
   @media (max-width: 900px) {
     .gallery { padding: 72px 0; }
-    .t-grid { grid-template-columns: 1fr; }
+    .t-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .t-grid > :global(.t-card:nth-child(even)) {
+      margin-top: 0;
+    }
   }
 </style>
