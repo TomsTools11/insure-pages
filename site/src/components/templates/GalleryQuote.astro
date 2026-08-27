@@ -1,0 +1,65 @@
+<section class="g-quote">
+  <div class="container g-quote-inner" data-reveal>
+    <blockquote>
+      <p>
+        &ldquo;A template is where your site <em>starts</em>, never where it
+        ends.&rdquo;
+      </p>
+    </blockquote>
+    <p class="g-quote-by">The InsurePages studio</p>
+    <span class="g-quote-stamp" aria-hidden="true">our promise ✦</span>
+  </div>
+</section>
+
+<style>
+  .g-quote {
+    padding: 130px 0;
+    /* The rotated stamp's corner can poke past the viewport on phones. */
+    overflow: hidden;
+  }
+  .g-quote-inner {
+    position: relative;
+    max-width: 980px;
+  }
+  blockquote p {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 4.2vw, 54px);
+    line-height: 1.18;
+    letter-spacing: -0.03em;
+  }
+  blockquote em {
+    font-style: italic;
+    padding-bottom: 4px;
+    background-image: linear-gradient(var(--red), var(--red));
+    background-repeat: no-repeat;
+    background-size: 100% 6px;
+    background-position: 0 96%;
+  }
+  .g-quote-by {
+    margin-top: 28px;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--muted);
+  }
+  .g-quote-stamp {
+    position: absolute;
+    top: -34px;
+    right: 4%;
+    background: var(--red);
+    border: 2px solid var(--ink);
+    border-radius: 100px;
+    padding: 10px 18px;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 4px 4px 0 var(--ink);
+    transform: rotate(6deg);
+  }
+  @media (max-width: 900px) {
+    .g-quote { padding: 80px 0; }
+    .g-quote-stamp {
+      top: -48px;
+      right: 0;
+    }
+  }
+</style>

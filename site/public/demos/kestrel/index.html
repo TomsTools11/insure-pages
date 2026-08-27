@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<!--
+  Kestrel Insurance template, exported from the Claude Design project
+  "Kestrel Insurance" and served here as a working preview.
+
+  The export is a dc-runtime template: support.js (verbatim from the project,
+  byte identical to the copy under demos/keel) renders it with React at load
+  time, so the plan tabs, claims accordion and premium sliders stay live.
+  Three changes were made to the export so it runs with no third party
+  requests:
+    1. window.__resources, the runtime's own offline hook, points its React
+       and ReactDOM lookups at ./vendor instead of unpkg.
+    2. The Google Fonts link became ./fonts.css, with the woff2 files in
+       ./fonts (roman and italic, latin and latin-ext subsets).
+    3. The picsum.photos images, in the markup and in the component data,
+       became ./img/<seed>.jpg.
+  Re-export from the design project and re-apply those three if it changes.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kestrel Insurance</title>
+<script>
+  window.__resources = {
+    "https://unpkg.com/react@18.3.1/umd/react.production.min.js": "./vendor/react.production.min.js",
+    "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js": "./vendor/react-dom.production.min.js"
+  };
+</script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="./fonts.css" />
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #f4f5f7; color: #14161a; font-family: "Instrument Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #1f3bc4; text-decoration: none; }
+  a:hover { color: #172c96; }
+  * { box-sizing: border-box; }
+  input[type="range"] { accent-color: #1f3bc4; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      @keyframes km-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+      [data-reveal] {
+        animation: km-rise linear both;
+        animation-timeline: view();
+        animation-range: entry 5% cover 22%;
+      }
+    }
+  }
+</style>
+</helmet>
+
+<div style="background:#f4f5f7">
+
+  <header style="position:sticky;top:0;z-index:40;background:rgba(244,245,247,0.88);backdrop-filter:blur(12px);border-bottom:1px solid #dfe2e8">
+    <div style="max-width:1280px;margin:0 auto;height:70px;padding:0 24px;display:flex;align-items:center;gap:32px">
+      <a href="#top" style="display:flex;align-items:center;gap:9px;color:#14161a;flex:0 0 auto">
+        <span style="display:block;width:22px;height:22px;border-radius:50%;background:#1f3bc4"></span>
+        <span style="font-size:19px;font-weight:600;letter-spacing:-0.02em">Kestrel</span>
+      </a>
+      <nav style="display:flex;align-items:center;gap:26px;flex:1 1 auto;white-space:nowrap;overflow:hidden">
+        <a href="#cover" style="color:#5d626d;font-size:14.5px;font-weight:500">Cover</a>
+        <a href="#claims" style="color:#5d626d;font-size:14.5px;font-weight:500">Claims</a>
+        <a href="#estimate" style="color:#5d626d;font-size:14.5px;font-weight:500">Estimate</a>
+        <a href="#writing" style="color:#5d626d;font-size:14.5px;font-weight:500">Writing</a>
+      </nav>
+      <a href="#estimate" style="flex:0 0 auto;display:inline-flex;align-items:center;height:42px;padding:0 22px;border-radius:999px;background:#1f3bc4;color:#ffffff;font-size:14.5px;font-weight:600;white-space:nowrap;transition:background .2s ease,transform .2s ease" style-hover="background:#172c96" style-active="transform:translateY(1px)">Get a quote</a>
+    </div>
+  </header>
+
+  <section id="top" style="max-width:1280px;margin:0 auto;padding:clamp(40px,6vw,88px) 24px clamp(48px,5vw,72px)">
+    <div style="display:flex;flex-wrap:wrap;gap:clamp(32px,4vw,64px);align-items:center">
+      <div data-reveal="1" style="flex:1 1 440px;min-width:300px">
+        <h1 style="margin:0;max-width:15ch;font-size:clamp(38px,4.9vw,66px);line-height:1.03;letter-spacing:-0.035em;font-weight:600;text-wrap:balance">Insurance that answers on the first call.</h1>
+        <p style="margin:22px 0 0;max-width:44ch;font-size:clamp(16px,1.3vw,18.5px);line-height:1.6;color:#5d626d">Life, health and home cover in one policy pack, with a named adviser who handles the claim for you.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:34px">
+          <a href="#estimate" style="display:inline-flex;align-items:center;height:52px;padding:0 30px;border-radius:999px;background:#1f3bc4;color:#ffffff;font-size:16px;font-weight:600;white-space:nowrap;transition:background .2s ease,transform .2s ease" style-hover="background:#172c96" style-active="transform:translateY(1px)">Get a quote</a>
+          <a href="#cover" style="display:inline-flex;align-items:center;height:52px;padding:0 30px;border-radius:999px;background:transparent;border:1px solid #c8ccd6;color:#14161a;font-size:16px;font-weight:600;white-space:nowrap;transition:border-color .2s ease,background .2s ease" style-hover="border-color:#14161a;background:#ffffff">See what's covered</a>
+        </div>
+      </div>
+      <div data-reveal="1" style="flex:1 1 380px;min-width:290px">
+        <div style="position:relative;border-radius:14px;overflow:hidden;background:#e8eaef;aspect-ratio:4 / 3.4">
+          <img src="./img/kestrel-family-front-door.jpg" alt="A family outside their home" style="display:block;width:100%;height:100%;object-fit:cover" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="border-top:1px solid #dfe2e8;border-bottom:1px solid #dfe2e8;background:#ffffff">
+    <div style="max-width:1280px;margin:0 auto;padding:26px 24px;display:flex;flex-wrap:wrap;align-items:center;gap:clamp(20px,4vw,56px)">
+      <p style="margin:0;flex:0 0 auto;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;color:#8b90a0">Underwriting partners</p>
+      <div style="flex:1 1 420px;display:flex;flex-wrap:wrap;align-items:center;gap:clamp(20px,3.4vw,44px);opacity:0.72">
+        <svg width="112" height="26" viewBox="0 0 112 26" aria-label="Marsh Halliday" role="img" style="display:block"><circle cx="12" cy="13" r="11" fill="none" stroke="#14161a" stroke-width="1.4"></circle><text x="12" y="17.5" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="#14161a">MH</text><text x="31" y="17" font-family="Instrument Sans, sans-serif" font-size="14" font-weight="600" fill="#14161a">Marsh Halliday</text></svg>
+        <svg width="118" height="26" viewBox="0 0 118 26" aria-label="Ordnance Mutual" role="img" style="display:block"><rect x="1.5" y="2.5" width="21" height="21" rx="3" fill="none" stroke="#14161a" stroke-width="1.4"></rect><text x="12" y="17.5" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="#14161a">OM</text><text x="31" y="17" font-family="Instrument Sans, sans-serif" font-size="14" font-weight="600" fill="#14161a">Ordnance Mutual</text></svg>
+        <svg width="102" height="26" viewBox="0 0 102 26" aria-label="Trelawney Group" role="img" style="display:block"><path d="M12 2.5 L22.5 21.5 H1.5 Z" fill="none" stroke="#14161a" stroke-width="1.4"></path><text x="30" y="17" font-family="Instrument Sans, sans-serif" font-size="14" font-weight="600" fill="#14161a">Trelawney</text></svg>
+        <svg width="96" height="26" viewBox="0 0 96 26" aria-label="Bower Health" role="img" style="display:block"><circle cx="12" cy="13" r="11" fill="#14161a"></circle><text x="12" y="17.5" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="#ffffff">BH</text><text x="31" y="17" font-family="Instrument Sans, sans-serif" font-size="14" font-weight="600" fill="#14161a">Bower</text></svg>
+        <svg width="104" height="26" viewBox="0 0 104 26" aria-label="Vance and Co" role="img" style="display:block"><rect x="1.5" y="2.5" width="21" height="21" rx="10.5" fill="none" stroke="#14161a" stroke-width="1.4"></rect><text x="12" y="17.5" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="#14161a">V</text><text x="31" y="17" font-family="Instrument Sans, sans-serif" font-size="14" font-weight="600" fill="#14161a">Vance &amp; Co</text></svg>
+      </div>
+    </div>
+  </section>
+
+  <section id="cover" style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,104px) 24px">
+    <p style="margin:0 0 14px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;color:#8b90a0">What we cover</p>
+    <h2 data-reveal="1" style="margin:0;max-width:22ch;font-size:clamp(30px,3.6vw,48px);line-height:1.08;letter-spacing:-0.03em;font-weight:600">Three policies, written in plain English.</h2>
+
+    <div style="display:flex;flex-wrap:wrap;gap:clamp(28px,3.5vw,56px);margin-top:clamp(32px,4vw,56px);align-items:flex-start">
+      <div style="flex:1 1 400px;min-width:300px">
+        <div style="display:flex;flex-direction:column;border-top:1px solid #dfe2e8">
+          <sc-for list="{{ plans }}" as="p" hint-placeholder-count="3">
+            <button type="button" onClick="{{ p.select }}" style="{{ p.tabStyle }}" style-hover="background:#ffffff">
+              <span style="display:flex;align-items:baseline;gap:14px">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#8b90a0">{{ p.num }}</span>
+                <span style="font-size:clamp(20px,2vw,26px);font-weight:600;letter-spacing:-0.02em">{{ p.name }}</span>
+              </span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#5d626d;white-space:nowrap">{{ p.from }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="margin-top:26px;min-height:130px">
+          <p style="margin:0;font-size:clamp(16px,1.3vw,18px);line-height:1.6;color:#14161a;max-width:46ch">{{ activePlan.blurb }}</p>
+          <ul style="margin:20px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ activePlan.points }}" as="pt" hint-placeholder-count="3">
+              <li style="display:flex;gap:12px;align-items:flex-start;font-size:15.5px;line-height:1.5;color:#5d626d">
+                <span style="flex:0 0 auto;margin-top:7px;width:6px;height:6px;border-radius:50%;background:#1f3bc4"></span>
+                <span>{{ pt }}</span>
+              </li>
+            </sc-for>
+          </ul>
+        </div>
+      </div>
+      <div style="flex:1 1 360px;min-width:280px">
+        <div role="img" aria-label="{{ activePlan.imageAlt }}" style="border-radius:14px;background:#e8eaef center / cover no-repeat;aspect-ratio:5 / 4.6;background-image:url('{{ activePlan.image }}')"></div>
+        <p style="margin:14px 0 0;font-size:14.5px;line-height:1.55;color:#8b90a0">{{ activePlan.caption }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#14161a;color:#f4f5f7">
+    <div style="max-width:1280px;margin:0 auto;padding:clamp(40px,4.5vw,64px) 24px;display:flex;flex-wrap:wrap;gap:clamp(28px,4vw,64px);align-items:flex-end">
+      <div style="flex:1 1 230px">
+        <p style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:44px;line-height:1;letter-spacing:-0.02em;color:#ffffff">19,480</p>
+        <p style="margin:10px 0 0;font-size:14.5px;color:#9aa0ae">Policies in force across the book</p>
+      </div>
+      <div style="flex:1 1 230px">
+        <p style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:44px;line-height:1;letter-spacing:-0.02em;color:#ffffff">97.4%</p>
+        <p style="margin:10px 0 0;font-size:14.5px;color:#9aa0ae">Claims approved in the last four years</p>
+      </div>
+      <div style="flex:1 1 230px">
+        <p style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:44px;line-height:1;letter-spacing:-0.02em;color:#ffffff">11 days</p>
+        <p style="margin:10px 0 0;font-size:14.5px;color:#9aa0ae">Median time from claim to payment</p>
+      </div>
+      <p style="flex:1 1 200px;margin:0;font-size:13px;line-height:1.5;color:#6d7382">Sample figures for this prototype. Replace with audited numbers before launch.</p>
+    </div>
+  </section>
+
+  <section id="claims" style="background:#ffffff;border-bottom:1px solid #dfe2e8">
+    <div style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,104px) 24px">
+      <div style="max-width:34ch;margin-bottom:clamp(28px,3.5vw,48px)">
+        <h2 data-reveal="1" style="margin:0;font-size:clamp(30px,3.6vw,48px);line-height:1.08;letter-spacing:-0.03em;font-weight:600">Making a claim takes four steps.</h2>
+        <p style="margin:16px 0 0;font-size:17px;line-height:1.6;color:#5d626d">Your adviser opens the file the day you call and stays on it until the money lands.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;border-top:1px solid #dfe2e8">
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+          <div style="border-bottom:1px solid #dfe2e8">
+            <button type="button" onClick="{{ s.toggle }}" aria-expanded="{{ s.expanded }}" style="width:100%;display:flex;align-items:center;gap:18px;padding:22px 4px;background:transparent;border:0;cursor:pointer;text-align:left;color:inherit;font-family:inherit" style-hover="background:#f4f5f7">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#1f3bc4;flex:0 0 auto">{{ s.num }}</span>
+              <span style="flex:1 1 auto;font-size:clamp(19px,1.9vw,24px);font-weight:600;letter-spacing:-0.02em">{{ s.title }}</span>
+              <span style="flex:0 0 auto;font-family:'IBM Plex Mono',monospace;font-size:18px;color:#8b90a0;transition:transform .2s ease">{{ s.sign }}</span>
+            </button>
+            <sc-if value="{{ s.open }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:0 4px 26px 44px;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+                <p style="margin:0;flex:1 1 320px;max-width:52ch;font-size:16px;line-height:1.6;color:#5d626d">{{ s.body }}</p>
+                <p style="margin:0;flex:0 1 200px;font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.5;color:#14161a">{{ s.meta }}</p>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <sc-if value="{{ showQuoteTool }}" hint-placeholder-val="{{ true }}">
+    <section id="estimate" style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,104px) 24px">
+      <div style="display:flex;flex-wrap:wrap;gap:clamp(32px,4vw,64px);align-items:flex-start">
+        <div style="flex:1 1 380px;min-width:300px">
+          <p style="margin:0 0 14px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;color:#8b90a0">Estimate</p>
+          <h2 style="margin:0;font-size:clamp(30px,3.6vw,48px);line-height:1.08;letter-spacing:-0.03em;font-weight:600">Price it yourself in ten seconds.</h2>
+          <p style="margin:18px 0 0;max-width:44ch;font-size:17px;line-height:1.6;color:#5d626d">Move the three sliders. The figure updates as you go, and no one calls you unless you ask.</p>
+          <div style="margin-top:30px;padding:26px;border-radius:14px;background:#14161a;color:#ffffff">
+            <p style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa0ae">Indicative monthly premium</p>
+            <p style="margin:12px 0 0;display:flex;align-items:baseline;gap:8px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:clamp(38px,4.4vw,58px);line-height:1;letter-spacing:-0.02em">{{ premium }}</span>
+              <span style="font-size:15px;color:#9aa0ae">per month</span>
+            </p>
+            <p style="margin:16px 0 0;font-size:14px;line-height:1.55;color:#9aa0ae">{{ premiumNote }}</p>
+            <a href="#top" style="margin-top:22px;display:inline-flex;align-items:center;height:48px;padding:0 26px;border-radius:999px;background:#ffffff;color:#14161a;font-size:15.5px;font-weight:600;transition:opacity .2s ease" style-hover="opacity:0.86">Get a quote</a>
+          </div>
+        </div>
+
+        <div style="flex:1 1 380px;min-width:300px;padding:clamp(22px,2.4vw,32px);background:#ffffff;border:1px solid #dfe2e8;border-radius:14px">
+          <div style="display:flex;flex-direction:column;gap:28px">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <label for="k-cover" style="font-size:14.5px;font-weight:600;color:#14161a">Cover amount</label>
+              <p style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:24px;color:#14161a">{{ coverLabel }}</p>
+              <input id="k-cover" type="range" min="50000" max="1000000" step="10000" value="{{ cover }}" onInput="{{ onCover }}" style="width:100%;height:26px" />
+              <p style="margin:0;font-size:13px;color:#5d626d">Paid as a single lump sum to the people you name.</p>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <label for="k-term" style="font-size:14.5px;font-weight:600;color:#14161a">Policy term</label>
+              <p style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:24px;color:#14161a">{{ termLabel }}</p>
+              <input id="k-term" type="range" min="5" max="40" step="1" value="{{ term }}" onInput="{{ onTerm }}" style="width:100%;height:26px" />
+              <p style="margin:0;font-size:13px;color:#5d626d">Most people match this to the years left on their mortgage.</p>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <label for="k-age" style="font-size:14.5px;font-weight:600;color:#14161a">Your age</label>
+              <p style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:24px;color:#14161a">{{ ageLabel }}</p>
+              <input id="k-age" type="range" min="21" max="66" step="1" value="{{ age }}" onInput="{{ onAge }}" style="width:100%;height:26px" />
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;padding-top:4px;border-top:1px solid #dfe2e8">
+              <p style="margin:0;flex:1 1 100%;padding-top:18px;font-size:14.5px;font-weight:600;color:#14161a">Have you smoked in the last 12 months?</p>
+              <sc-for list="{{ smokerOptions }}" as="o" hint-placeholder-count="2">
+                <button type="button" onClick="{{ o.select }}" style="{{ o.style }}">{{ o.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <section style="background:#e8eaef;border-top:1px solid #dfe2e8;border-bottom:1px solid #dfe2e8">
+    <div style="max-width:1080px;margin:0 auto;padding:clamp(56px,7vw,96px) 24px;text-align:center">
+      <blockquote data-reveal="1" style="margin:0;font-size:clamp(24px,3.2vw,40px);line-height:1.22;letter-spacing:-0.025em;font-weight:500;text-wrap:pretty">“I called on a Tuesday and spoke to the same adviser every time after that. The payment cleared before the funeral bill arrived.”</blockquote>
+      <div style="margin-top:28px;display:flex;align-items:center;justify-content:center;gap:14px">
+        <img src="./img/kestrel-client-portrait-pr.jpg" alt="Priya Raghunathan" style="display:block;width:46px;height:46px;border-radius:50%;object-fit:cover" />
+        <p style="margin:0;text-align:left;font-size:14.5px;line-height:1.4;color:#5d626d"><span style="display:block;color:#14161a;font-weight:600">Priya Raghunathan</span>Life cover holder, Sheffield</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="writing" style="max-width:1280px;margin:0 auto;padding:clamp(56px,7vw,104px) 24px">
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end;justify-content:space-between;margin-bottom:clamp(28px,3.5vw,44px)">
+      <h2 style="margin:0;font-size:clamp(30px,3.6vw,48px);line-height:1.08;letter-spacing:-0.03em;font-weight:600">Writing</h2>
+      <a href="#writing" style="font-size:15.5px;font-weight:600">All articles</a>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:clamp(24px,3vw,44px)">
+      <a href="#writing" data-reveal="1" style="flex:1 1 480px;min-width:300px;color:#14161a;display:block" style-hover="color:#14161a">
+        <div style="border-radius:14px;overflow:hidden;background:#e8eaef;aspect-ratio:16 / 10">
+          <img src="./img/kestrel-article-kitchen-table.jpg" alt="Two people reading paperwork at a kitchen table" style="display:block;width:100%;height:100%;object-fit:cover;transition:transform .5s ease" />
+        </div>
+        <p style="margin:18px 0 0;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#8b90a0">14 Feb 2026 &nbsp; 6 min</p>
+        <h3 style="margin:10px 0 0;max-width:26ch;font-size:clamp(22px,2.2vw,30px);line-height:1.15;letter-spacing:-0.025em;font-weight:600">How much life cover a household with a mortgage actually needs</h3>
+        <p style="margin:12px 0 0;max-width:52ch;font-size:16px;line-height:1.6;color:#5d626d">A worked example on a £280,000 mortgage, two incomes and one child at nursery.</p>
+      </a>
+      <div style="flex:1 1 320px;min-width:280px;display:flex;flex-direction:column;gap:22px">
+        <sc-for list="{{ posts }}" as="post" hint-placeholder-count="2">
+          <a href="#writing" style="display:flex;gap:18px;align-items:flex-start;padding-bottom:22px;border-bottom:1px solid #dfe2e8;color:#14161a">
+            <div role="img" aria-label="{{ post.alt }}" style="flex:0 0 108px;border-radius:10px;background:#e8eaef center / cover no-repeat;aspect-ratio:1 / 1;background-image:url('{{ post.image }}')"></div>
+            <div>
+              <p style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#8b90a0">{{ post.date }}</p>
+              <h3 style="margin:8px 0 0;font-size:18.5px;line-height:1.25;letter-spacing:-0.015em;font-weight:600">{{ post.title }}</h3>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#1f3bc4;color:#ffffff">
+    <div style="max-width:1280px;margin:0 auto;padding:clamp(52px,6vw,88px) 24px;display:flex;flex-wrap:wrap;gap:32px;align-items:center;justify-content:space-between">
+      <div style="flex:1 1 420px">
+        <h2 style="margin:0;max-width:24ch;font-size:clamp(28px,3.4vw,44px);line-height:1.1;letter-spacing:-0.03em;font-weight:600">Twenty minutes with an adviser, then a policy you can read.</h2>
+      </div>
+      <a href="#estimate" style="flex:0 0 auto;display:inline-flex;align-items:center;height:54px;padding:0 32px;border-radius:999px;background:#ffffff;color:#14161a;font-size:16px;font-weight:600;white-space:nowrap;transition:opacity .2s ease,transform .2s ease" style-hover="opacity:0.88" style-active="transform:translateY(1px)">Get a quote</a>
+    </div>
+  </section>
+
+  <footer style="background:#14161a;color:#9aa0ae">
+    <div style="max-width:1280px;margin:0 auto;padding:clamp(48px,5vw,72px) 24px 28px;display:flex;flex-wrap:wrap;gap:clamp(28px,4vw,64px)">
+      <div style="flex:1 1 260px">
+        <a href="#top" style="display:flex;align-items:center;gap:9px;color:#ffffff">
+          <span style="display:block;width:20px;height:20px;border-radius:50%;background:#1f3bc4"></span>
+          <span style="font-size:18px;font-weight:600;letter-spacing:-0.02em">Kestrel</span>
+        </a>
+        <p style="margin:16px 0 0;max-width:34ch;font-size:14.5px;line-height:1.6">Life, health and home cover for households in England, Scotland and Wales.</p>
+      </div>
+      <div style="flex:1 1 150px">
+        <p style="margin:0 0 14px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;color:#6d7382">Cover</p>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14.5px">
+          <a href="#cover" style="color:#c9cdd6">Life</a>
+          <a href="#cover" style="color:#c9cdd6">Health</a>
+          <a href="#cover" style="color:#c9cdd6">Home</a>
+        </div>
+      </div>
+      <div style="flex:1 1 150px">
+        <p style="margin:0 0 14px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;color:#6d7382">Company</p>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14.5px">
+          <a href="#claims" style="color:#c9cdd6">Claims</a>
+          <a href="#writing" style="color:#c9cdd6">Writing</a>
+          <a href="#top" style="color:#c9cdd6">Advisers</a>
+        </div>
+      </div>
+      <div style="flex:1 1 200px">
+        <p style="margin:0 0 14px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;color:#6d7382">Talk to us</p>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14.5px">
+          <a href="mailto:advice@kestrel.example" style="color:#c9cdd6">advice@kestrel.example</a>
+          <a href="tel:+441142870190" style="color:#c9cdd6">+44 114 287 0190</a>
+          <p style="margin:0">Weekdays 8am to 7pm</p>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1280px;margin:0 auto;padding:20px 24px 40px;border-top:1px solid #24272e;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;font-size:13px">
+      <p style="margin:0">Prototype built for portfolio display. Not a live insurer.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:20px">
+        <a href="#top" style="color:#9aa0ae">Privacy</a>
+        <a href="#top" style="color:#9aa0ae">Terms</a>
+        <a href="#top" style="color:#9aa0ae">Complaints</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showQuoteTool&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Sections&quot;}}">
+class Component extends DCLogic {
+  state = { plan: 0, openStep: 0, cover: 250000, term: 25, age: 38, smoker: false };
+
+  planData() {
+    return [
+      {
+        name: "Life",
+        from: "from £8.40 / mo",
+        blurb: "A lump sum for the people you name, paid within days of the claim being approved.",
+        points: [
+          "Cover between £50,000 and £1,000,000",
+          "Terminal illness benefit included at no extra cost",
+          "Premiums fixed for the whole term"
+        ],
+        image: "./img/kestrel-cover-life-garden.jpg",
+        imageAlt: "A grandparent and child in a garden",
+        caption: "Sarah and Dan hold £340,000 of joint cover against 22 years of mortgage."
+      },
+      {
+        name: "Health",
+        from: "from £31.20 / mo",
+        blurb: "Private diagnosis and treatment when the wait on a referral is longer than you can carry.",
+        points: [
+          "Consultation within five working days",
+          "Physiotherapy and mental health sessions in every tier",
+          "Add children to a parent's policy for £9 each"
+        ],
+        image: "./img/kestrel-cover-health-clinic.jpg",
+        imageAlt: "A clinician talking with a patient",
+        caption: "Claims go straight to the hospital. You never front the cost."
+      },
+      {
+        name: "Home",
+        from: "from £14.90 / mo",
+        blurb: "Buildings and contents on one policy, with an emergency repair line that answers at night.",
+        points: [
+          "Escape of water and subsidence included as standard",
+          "Contents covered away from home up to £3,000",
+          "Approved trades booked for you, not reimbursed later"
+        ],
+        image: "./img/kestrel-cover-home-terrace.jpg",
+        imageAlt: "A row of terraced houses",
+        caption: "Rebuild valuations reviewed every year against local build costs."
+      }
+    ];
+  }
+
+  stepData() {
+    return [
+      { title: "Tell us what happened", body: "One phone call or a form. You give the policy number and a short account of the event, nothing more.", meta: "About 6 minutes" },
+      { title: "Send the paperwork", body: "Your adviser lists exactly which documents the underwriter needs and chases the third parties for you.", meta: "Usually 2 items" },
+      { title: "We assess the claim", body: "An in-house assessor reviews the file. You get a named contact and a written decision date on day one.", meta: "4 working days" },
+      { title: "The money lands", body: "Payment goes out by bank transfer the day after approval. Nothing is held back pending further checks.", meta: "11 days, median" }
+    ];
+  }
+
+  fmtMoney(n) { return "£" + Math.round(n).toLocaleString("en-GB"); }
+
+  renderVals() {
+    const s = this.state;
+    const plans = this.planData().map((p, i) => ({
+      ...p,
+      num: "0" + (i + 1),
+      select: () => this.setState({ plan: i }),
+      tabStyle: [
+        "display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;padding:20px 16px 20px 4px",
+        "background:" + (i === s.plan ? "#ffffff" : "transparent"),
+        "border:0;border-bottom:1px solid #dfe2e8",
+        "box-shadow:" + (i === s.plan ? "inset 3px 0 0 #1f3bc4" : "none"),
+        "cursor:pointer;text-align:left;font-family:inherit",
+        "color:" + (i === s.plan ? "#14161a" : "#5d626d"),
+        "transition:background .2s ease,color .2s ease"
+      ].join(";")
+    }));
+
+    const steps = this.stepData().map((st, i) => ({
+      ...st,
+      num: "0" + (i + 1),
+      open: s.openStep === i,
+      expanded: s.openStep === i ? "true" : "false",
+      sign: s.openStep === i ? "–" : "+",
+      toggle: () => this.setState({ openStep: s.openStep === i ? -1 : i })
+    }));
+
+    const smokerOptions = [false, true].map((v) => ({
+      label: v ? "Yes" : "No",
+      select: () => this.setState({ smoker: v }),
+      style: [
+        "flex:1 1 120px;height:46px;border-radius:999px;cursor:pointer;font-family:inherit;font-size:15px;font-weight:600",
+        "background:" + (s.smoker === v ? "#1f3bc4" : "#ffffff"),
+        "color:" + (s.smoker === v ? "#ffffff" : "#14161a"),
+        "border:1px solid " + (s.smoker === v ? "#1f3bc4" : "#c8ccd6"),
+        "transition:background .2s ease,color .2s ease,border-color .2s ease"
+      ].join(";")
+    }));
+
+    const units = s.cover / 1000;
+    const ageFactor = 0.052 + Math.pow(Math.max(0, s.age - 21), 1.55) * 0.0031;
+    const monthly = units * ageFactor * (1 + s.term / 90) * (s.smoker ? 1.94 : 1);
+
+    return {
+      plans,
+      activePlan: this.planData()[s.plan],
+      steps,
+      smokerOptions,
+      showQuoteTool: this.props.showQuoteTool ?? true,
+      cover: s.cover,
+      term: s.term,
+      age: s.age,
+      coverLabel: this.fmtMoney(s.cover),
+      termLabel: s.term + " years",
+      ageLabel: s.age,
+      premium: "£" + monthly.toFixed(2),
+      premiumNote: this.fmtMoney(s.cover) + " of level term cover over " + s.term + " years. Confirmed after a short health questionnaire.",
+      onCover: (e) => this.setState({ cover: Number(e.target.value) }),
+      onTerm: (e) => this.setState({ term: Number(e.target.value) }),
+      onAge: (e) => this.setState({ age: Number(e.target.value) }),
+      posts: [
+        { title: "What underwriters ask about, and why none of it is a trap", date: "2 Feb 2026", image: "./img/kestrel-post-underwriting.jpg", alt: "Paperwork on a desk" },
+        { title: "Joint policy or two single ones: the case for splitting", date: "19 Jan 2026", image: "./img/kestrel-post-joint-policy.jpg", alt: "A couple reviewing documents" }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

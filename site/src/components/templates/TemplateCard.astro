@@ -1,0 +1,272 @@
+---
+import { demoExists, thumbSrc, THUMB_W, THUMB_H } from "../../data/template-assets.mjs";
+
+interface Props {
+  t: {
+    slug: string;
+    name: string;
+    domain: string;
+    tagline: string;
+    tags: string[];
+    accent: string;
+  };
+  index: number;
+  total: number;
+}
+const { t, index, total } = Astro.props;
+const live = demoExists(t.slug);
+// The grid runs two across. An odd count would strand the last card beside
+// an empty slot, so that one spans the full width instead.
+const wide = total % 2 === 1 && index === total - 1;
+const thumb = thumbSrc(t.slug);
+---
+
+<article
+  class={`t-card accent-${t.accent}${wide ? " is-wide" : ""}`}
+  data-reveal
+  style={`--ri: ${index}`}
+>
+  <div class="t-frame">
+    <div class="t-bar">
+      <span class="t-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="t-domain">{t.domain}</span>
+    </div>
+    {
+      thumb ? (
+        <img
+          src={thumb}
+          alt={`Screenshot of the ${t.name} template homepage`}
+          width={THUMB_W}
+          height={THUMB_H}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <div class="t-waiting">
+          <span>Screenshot on the way</span>
+        </div>
+      )
+    }
+  </div>
+  <div class="t-meta">
+    <div class="t-title-row">
+      <h3 class="t-name">{t.name}</h3>
+      <div class="t-tags">
+        {t.tags.map((tag) => <span class="t-tag">{tag}</span>)}
+      </div>
+    </div>
+    <p class="t-tagline">{t.tagline}</p>
+    {
+      live ? (
+        <a
+          class="btn btn-yellow t-btn"
+          href={`/demos/${t.slug}/`}
+          target="_blank"
+          rel="noopener"
+        >
+          Preview site
+          <span class="sr-only">
+            : the {t.name} template (opens in a new tab)
+          </span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      ) : (
+        <span class="t-soon">Demo landing soon</span>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .t-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 2px solid var(--ink);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 6px 6px 0 var(--ink);
+    transition: all 0.2s ease;
+  }
+  .t-card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0 var(--ink);
+  }
+  .t-frame {
+    border-bottom: 2px solid var(--ink);
+  }
+  .t-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    border-bottom: 2px solid var(--ink);
+  }
+  .t-dots {
+    display: inline-flex;
+    gap: 5px;
+    flex: none;
+  }
+  .t-dots i {
+    width: 9px;
+    height: 9px;
+    border: 1.5px solid var(--ink);
+    border-radius: 100px;
+    background: #fff;
+  }
+  .t-domain {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  /* Ink on red: 5.6:1, white on red would fail AA at this size. */
+  .accent-red .t-bar { background: var(--red); }
+  .accent-yellow .t-bar { background: var(--yellow); }
+  .accent-green .t-bar { background: var(--green); }
+  .accent-blue .t-bar { background: var(--blue); }
+  .accent-lavender .t-bar { background: var(--lavender); }
+  /* The screenshot is shown whole. Its intrinsic 4:3 is the frame's shape,
+     so nothing is cropped and no aspect box can squeeze it out of shape. */
+  .t-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  /* Full width means the screenshot would be roughly 900px tall at its own
+     proportions, which dwarfs the rest of the grid. Cropping the foot of the
+     page keeps the card in scale, while still reaching past the hero buttons.
+     Nothing is lost sideways: this frame shows
+     the page wider than any other card on the grid, so it reads more easily,
+     not less. */
+  .is-wide .t-frame img {
+    aspect-ratio: 15 / 8;
+    object-fit: cover;
+    object-position: top center;
+  }
+  /* Same proportions as a real screenshot, so adding a template to the data
+     before its files land does not move the grid around later. */
+  .t-waiting {
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      repeating-linear-gradient(
+        -45deg,
+        var(--cream) 0 14px,
+        var(--cream-deep) 14px 28px
+      );
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .is-wide .t-waiting {
+    aspect-ratio: 15 / 8;
+  }
+  .t-meta {
+    padding: 24px 26px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+    flex-grow: 1;
+  }
+  /* At full width the stacked meta would leave most of the row empty, so it
+     runs across instead. */
+  .is-wide .t-meta {
+    flex-direction: row;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    padding: 22px 26px;
+  }
+  .is-wide .t-tagline {
+    margin-right: auto;
+  }
+  .is-wide .t-btn {
+    margin-top: 0;
+  }
+  .t-title-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .t-name {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: -0.02em;
+  }
+  .t-tags {
+    display: flex;
+    gap: 8px;
+  }
+  .t-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 2px solid var(--ink);
+    border-radius: 100px;
+    background: var(--cream);
+  }
+  .t-tagline {
+    font-size: 16px;
+    font-weight: 500;
+    color: #3a3a3a;
+    max-width: 40ch;
+  }
+  .t-btn {
+    padding: 13px 24px;
+    font-size: 14px;
+    margin-top: auto;
+  }
+  .t-soon {
+    display: inline-flex;
+    align-items: center;
+    padding: 13px 24px;
+    margin-top: auto;
+    border: 2px dashed var(--ink);
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--muted);
+    background: var(--cream);
+  }
+  @media (max-width: 900px) {
+    /* One column, so the wide card is no wider than the rest and goes back
+       to showing the whole screenshot. */
+    .is-wide .t-frame img {
+      aspect-ratio: auto;
+      object-fit: fill;
+    }
+    .is-wide .t-waiting {
+      aspect-ratio: 4 / 3;
+    }
+    .is-wide .t-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 24px 26px 26px;
+    }
+    .is-wide .t-btn {
+      margin-top: auto;
+    }
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

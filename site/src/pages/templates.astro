@@ -1,0 +1,72 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import GalleryHero from "../components/templates/GalleryHero.astro";
+import StyleTicker from "../components/templates/StyleTicker.astro";
+import TemplateGrid from "../components/templates/TemplateGrid.astro";
+import FeaturedTemplate from "../components/templates/FeaturedTemplate.astro";
+import FiveDayPath from "../components/templates/FiveDayPath.astro";
+import IncludedSpec from "../components/templates/IncludedSpec.astro";
+import GalleryQuote from "../components/templates/GalleryQuote.astro";
+import PricingBridge from "../components/templates/PricingBridge.astro";
+import GalleryCta from "../components/templates/GalleryCta.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Base
+  title="Insurance Agency Website Templates | InsurePages"
+  description="Browse ready to launch website templates for independent insurance agencies. Preview a full working site, pick your favorite, and go live in five days."
+>
+  <Header />
+  <main id="main">
+    <GalleryHero />
+    <StyleTicker />
+    <TemplateGrid />
+    <FeaturedTemplate />
+    <FiveDayPath />
+    <IncludedSpec />
+    <GalleryQuote />
+    <PricingBridge />
+    <GalleryCta />
+  </main>
+  <Footer />
+</Base>
+
+<style is:global>
+  /* Scroll-reveal states. .will-reveal is only ever added by the script
+     below, and only when the visitor has not asked for reduced motion, so
+     without JavaScript (or with reduced motion) nothing is hidden. */
+  .will-reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+      opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--ri, 0) * 70ms);
+  }
+  .will-reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (!reduce.matches && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-in");
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.1 },
+    );
+    for (const el of document.querySelectorAll("[data-reveal]")) {
+      el.classList.add("will-reveal");
+      io.observe(el);
+    }
+  }
+</script>

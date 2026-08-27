@@ -1,0 +1,94 @@
+---
+const rows = [
+  {
+    label: "Accessible to everyone",
+    body: "Built to the WCAG 2.1 AA standard, so every visitor can read, browse, and reach you.",
+  },
+  {
+    label: "Fast on any connection",
+    body: "Pages load before people lose interest, even on a phone in a parking lot.",
+  },
+  {
+    label: "Built to ring your phone",
+    body: "Tap to call buttons and quote forms sit right where visitors look first.",
+  },
+  {
+    label: "Found on Google",
+    body: "Clean structure and local search basics are wired in from day one.",
+  },
+  {
+    label: "Yours to keep",
+    body: "You own the site, the domain, and every word on it. No lock in.",
+  },
+];
+---
+
+<section class="spec">
+  <div class="container">
+    <h2 class="spec-title">Every template comes loaded.</h2>
+    <dl class="spec-list">
+      {
+        rows.map((r) => (
+          <div class="spec-row">
+            <dt>{r.label}</dt>
+            <dd>{r.body}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .spec {
+    background: var(--cream-deep);
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    padding: 100px 0;
+  }
+  .spec-title {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: clamp(30px, 3.6vw, 48px);
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+    margin-bottom: 56px;
+    max-width: 620px;
+  }
+  .spec-list {
+    max-width: 920px;
+  }
+  .spec-row {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+    gap: 32px;
+    padding: 26px 0;
+    align-items: baseline;
+  }
+  .spec-row + .spec-row {
+    border-top: 2px solid rgba(26, 26, 26, 0.18);
+  }
+  .spec-row:hover { background: rgba(200, 182, 255, 0.16); }
+  dt {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    padding-left: 16px;
+    border-left: 6px solid var(--lavender);
+  }
+  dd {
+    font-size: 16px;
+    line-height: 1.6;
+    font-weight: 500;
+    color: #3a3a3a;
+    max-width: 52ch;
+  }
+  @media (max-width: 900px) {
+    .spec { padding: 64px 0; }
+    .spec-row {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+  }
+</style>
