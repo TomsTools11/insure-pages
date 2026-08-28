@@ -56,7 +56,14 @@ npm run preview  # preview the production build locally
 
 ### Conversion
 
-A lazy-loaded FormRobin embed sits in the `#contact` section, backed by the hosted form at https://formrobin.com/f/344no93, which every "Schedule a call" CTA also links to directly.
+A lazy-loaded Kiwiform embed sits in the `#contact` section. It is configured on Kiwiform's side as a
+**popup** embed, so it renders a trigger button that opens the form in a modal; `ContactCta.astro`
+restyles that button into the site's button system and adds the dialog semantics, Escape-to-close,
+and focus handling the vendor modal ships without. The same form is hosted at
+https://share.kiwiform.com/to/ofwodo6p, which the `<noscript>` fallback links to.
+
+The "Schedule a call" CTAs (hero, footer, CTA band, templates gallery) still link to the older
+FormRobin form at https://formrobin.com/f/344no93, as do the campaign emails in `email/`.
 
 ### Deployment
 
