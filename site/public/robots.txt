@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /demos/
 
-Sitemap: https://insure-pages.vercel.app/sitemap-index.xml
+Sitemap: https://www.insurepages.com/sitemap-index.xml
