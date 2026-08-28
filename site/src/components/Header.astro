@@ -17,7 +17,9 @@
       <a class="sticker nav-link" href="/#method">Method</a>
       <a class="sticker nav-link" href="/templates/">Templates</a>
       <a class="sticker nav-link" href="/#pricing">Packages</a>
-      <a class="sticker nav-cta" href="/#contact">Start now <span aria-hidden="true">✨</span></a>
+      <a class="sticker nav-cta" href="/#contact"
+        >Start now <span class="cta-star" aria-hidden="true">✦</span></a
+      >
     </nav>
   </div>
 </header>
@@ -65,13 +67,18 @@
     align-items: center;
   }
   .primary-nav a { text-decoration: none; color: var(--ink); }
-  /* Spec fix 1a: centered label. Emoji sits in its own span so the text
+  /* Spec fix 1a: centered label. The star sits in its own span so the text
      block itself stays optically centered inside the pill. */
   .nav-cta {
     background: var(--yellow);
     gap: 6px;
     justify-content: center;
   }
+  /* This was ✨, which renders from the color-emoji font: gold on a yellow
+     pill, and no color property can reach it. ✦ is a plain glyph, like every
+     other star on the site, so it takes the brand red. Decorative and
+     aria-hidden, so it carries no meaning the label doesn't already. */
+  .cta-star { color: var(--red); }
   @media (max-width: 900px) {
     .nav-link { display: none; }
   }
