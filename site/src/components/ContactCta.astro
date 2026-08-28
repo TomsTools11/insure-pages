@@ -17,11 +17,17 @@
     </div>
     <div class="form-shell">
       <h3 class="form-title">Or tell us about your project</h3>
-      <div class="formrobin-embed" data-path="/f/344no93"></div>
+      <p class="form-copy">
+        A few quick questions — your agency, the lines you write, what the site
+        has to do. We come back with a plan and a price.
+      </p>
+      <div class="kiwi-embed" data-kiwiform-live="cmtd4evv70ap0dqpgd3y66f2w"></div>
       <noscript>
         <p class="form-fallback">
-          Our contact form needs JavaScript. You can also reach us directly at
-          <a href="https://formrobin.com/f/344no93">formrobin.com/f/344no93</a>.
+          Our contact form needs JavaScript. You can also fill it in directly at
+          <a href="https://share.kiwiform.com/to/ofwodo6p"
+            >share.kiwiform.com/to/ofwodo6p</a
+          >.
         </p>
       </noscript>
     </div>
@@ -30,24 +36,89 @@
 
 <script is:inline>
   (function () {
+    var ORIGIN = "https://share.kiwiform.com";
     var loaded = false;
+
     function loadEmbed() {
       if (loaded) return;
       loaded = true;
       var s = document.createElement("script");
-      s.src = "https://formrobin.com/js/embed.js";
+      s.src = ORIGIN + "/embed.js";
       s.async = true;
       document.body.appendChild(s);
-      s.onload = function () {
-        var t = setInterval(function () {
-          var f = document.querySelector(".formrobin-embed iframe");
-          if (f) { if (!f.title) f.title = "InsurePages contact form"; clearInterval(t); }
-        }, 200);
-        setTimeout(function () { clearInterval(t); }, 10000);
-      };
     }
-    var target = document.getElementById("contact");
-    if (!target || !("IntersectionObserver" in window)) {
+
+    /* The embed opens the form in a modal it appends to <body>. That modal
+       ships without dialog semantics, a labelled close control, a titled
+       iframe, or Escape-to-dismiss, so add them as it appears. */
+    var behind = [];
+    var dialog = null;
+    var trigger = null;
+
+    function isEmbedOverlay(node) {
+      if (!node || node.nodeType !== 1 || node.tagName !== "DIV") return false;
+      var frame = node.querySelector("iframe");
+      return !!frame && frame.src.indexOf(ORIGIN) === 0;
+    }
+
+    function onKeydown(e) {
+      if (e.key !== "Escape" || !dialog) return;
+      var close = dialog.querySelector("button");
+      if (close) close.click();
+      else if (dialog.parentNode) dialog.parentNode.removeChild(dialog);
+    }
+
+    function openDialog(overlay) {
+      dialog = overlay;
+      trigger = document.activeElement;
+      var panel = overlay.firstElementChild || overlay;
+      panel.setAttribute("role", "dialog");
+      panel.setAttribute("aria-modal", "true");
+      panel.setAttribute("aria-label", "Tell us about your project");
+      panel.setAttribute("data-kiwi-dialog", "");
+      var frame = overlay.querySelector("iframe");
+      if (frame && !frame.title) frame.title = "InsurePages contact form";
+      var close = panel.querySelector("button");
+      if (close && !close.getAttribute("aria-label")) {
+        close.setAttribute("aria-label", "Close the contact form");
+      }
+      /* Nothing behind the modal should take focus while it is open. */
+      for (var el = document.body.firstElementChild; el; el = el.nextElementSibling) {
+        if (el !== overlay && !el.hasAttribute("inert")) {
+          el.setAttribute("inert", "");
+          behind.push(el);
+        }
+      }
+      document.addEventListener("keydown", onKeydown, true);
+      if (close) close.focus({ preventScroll: true });
+    }
+
+    function closeDialog() {
+      document.removeEventListener("keydown", onKeydown, true);
+      for (var i = 0; i < behind.length; i++) behind[i].removeAttribute("inert");
+      behind = [];
+      dialog = null;
+      if (trigger && trigger.isConnected) trigger.focus({ preventScroll: true });
+      trigger = null;
+    }
+
+    new MutationObserver(function (records) {
+      for (var i = 0; i < records.length; i++) {
+        var added = records[i].addedNodes;
+        for (var a = 0; a < added.length; a++) {
+          if (!dialog && isEmbedOverlay(added[a])) openDialog(added[a]);
+        }
+        var gone = records[i].removedNodes;
+        for (var r = 0; r < gone.length; r++) {
+          if (gone[r] === dialog) closeDialog();
+        }
+      }
+    }).observe(document.body, { childList: true });
+
+    /* Load embed.js only as the band comes into view, so it stays off the
+       critical path. */
+    var band = document.getElementById("contact");
+    if (!band || !("IntersectionObserver" in window)) {
       loadEmbed();
       return;
     }
@@ -60,7 +131,7 @@
       },
       { rootMargin: "600px" }
     );
-    io.observe(target);
+    io.observe(band);
   })();
 </script>
 
@@ -151,10 +222,48 @@
     font-size: 20px;
     margin-bottom: 16px;
   }
+  .form-copy {
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 500;
+    max-width: 48ch;
+    margin: 0 0 28px;
+  }
   .form-fallback { color: var(--ink); font-weight: 600; }
   .form-fallback a { color: var(--ink); }
+  /* The embed injects its own inline-styled trigger button; pull it back into
+     the site's button system. Inline styles lose to !important here. */
+  .kiwi-embed :global(button) {
+    width: auto !important;
+    height: auto !important;
+    padding: 18px 30px !important;
+    background: var(--ink) !important;
+    color: #fff !important;
+    border: 2px solid var(--ink) !important;
+    border-radius: 100px !important;
+    box-shadow: 5px 5px 0 var(--red) !important;
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 15px !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: all 0.15s ease !important;
+  }
+  .kiwi-embed :global(button:hover) {
+    transform: translate(-2px, -2px) !important;
+    box-shadow: 7px 7px 0 var(--red) !important;
+  }
   @media (max-width: 900px) {
     .cta-band { padding: 72px 0; }
     .cta-deco { display: none; }
+  }
+</style>
+
+<style is:global>
+  /* Focus ring for the modal's close control, which sits on a dark scrim
+     where the site's default ink outline would disappear. */
+  [data-kiwi-dialog] button:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
   }
 </style>
