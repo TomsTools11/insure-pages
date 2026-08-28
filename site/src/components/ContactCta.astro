@@ -5,38 +5,66 @@
   <span class="cta-deco cta-deco-4" aria-hidden="true"></span>
   <div class="container">
     <h2>Ready to look as good as you are?</h2>
-    <p>A conversation costs nothing. Let's see what your site could do.</p>
-    <div class="cta-actions">
-      <a
-        href="https://formrobin.com/f/344no93"
-        target="_blank"
-        rel="noopener"
-        class="btn btn-yellow cta-btn"
-        >Schedule a call →</a
-      >
-    </div>
-    <div class="form-shell">
-      <h3 class="form-title">Or tell us about your project</h3>
-      <p class="form-copy">
-        A few quick questions — your agency, the lines you write, what the site
-        has to do. We come back with a plan and a price.
-      </p>
-      <div class="kiwi-embed" data-kiwiform-live="cmtd4evv70ap0dqpgd3y66f2w"></div>
-      <noscript>
-        <p class="form-fallback">
-          Our contact form needs JavaScript. You can also fill it in directly at
-          <a href="https://share.kiwiform.com/to/ofwodo6p"
-            >share.kiwiform.com/to/ofwodo6p</a
-          >.
+    <p class="cta-lede">
+      A conversation costs nothing. Pick whichever way you'd rather start.
+    </p>
+
+    <div class="paths">
+      <div class="path-card">
+        <span class="path-tag tag-form">60 seconds</span>
+        <h3 class="path-title">Tell us about your project</h3>
+        <p class="path-copy">
+          A few quick questions — your agency, the lines you write, what the
+          site has to do. We come back with a plan and a price.
         </p>
-      </noscript>
+        <a
+          href="https://share.kiwiform.com/to/ofwodo6p"
+          target="_blank"
+          rel="noopener"
+          class="btn btn-ink path-btn"
+          data-kiwi-trigger
+          >Get Started Now →</a
+        >
+        <!-- The embed builds its own trigger button. It stays hidden and the
+             card's button forwards the click, so the card keeps the site's own
+             markup and still reaches the form as a plain link when the embed
+             is blocked or JavaScript is off. -->
+        <div
+          class="kiwi-embed"
+          data-kiwiform-live="cmtd4evv70ap0dqpgd3y66f2w"
+          hidden
+        >
+        </div>
+      </div>
+
+      <div class="path-card">
+        <span class="path-tag tag-call">30 minutes</span>
+        <h3 class="path-title">Rather talk it through?</h3>
+        <p class="path-copy">
+          Book a call and we'll look at your current site, what your agency
+          writes, and what it would take to fix it.
+        </p>
+        <a
+          href="https://formrobin.com/f/344no93"
+          target="_blank"
+          rel="noopener"
+          class="btn btn-yellow path-btn"
+          >Schedule a call →</a
+        >
+      </div>
     </div>
+
+    <p class="cta-reassure">
+      Straight answer either way — we'll tell you if we're not the right fit.
+    </p>
   </div>
 </section>
 
 <script is:inline>
   (function () {
     var ORIGIN = "https://share.kiwiform.com";
+    var host = document.querySelector("[data-kiwiform-live]");
+    var trigger = document.querySelector("[data-kiwi-trigger]");
     var loaded = false;
 
     function loadEmbed() {
@@ -48,12 +76,25 @@
       document.body.appendChild(s);
     }
 
-    /* The embed opens the form in a modal it appends to <body>. That modal
-       ships without dialog semantics, a labelled close control, a titled
-       iframe, or Escape-to-dismiss, so add them as it appears. */
+    /* Open the popup from the card's own button. Until embed.js has built its
+       hidden trigger the click falls through to the href, which is the same
+       form on its own page. */
+    if (host && trigger) {
+      trigger.addEventListener("click", function (e) {
+        var embedBtn = host.querySelector("button");
+        if (!embedBtn) return;
+        e.preventDefault();
+        trigger.focus({ preventScroll: true });
+        embedBtn.click();
+      });
+    }
+
+    /* The popup the embed appends to <body> ships without dialog semantics, a
+       labelled close control, a titled iframe, or Escape-to-dismiss, so add
+       them as it appears. */
     var behind = [];
     var dialog = null;
-    var trigger = null;
+    var opener = null;
 
     function isEmbedOverlay(node) {
       if (!node || node.nodeType !== 1 || node.tagName !== "DIV") return false;
@@ -70,7 +111,7 @@
 
     function openDialog(overlay) {
       dialog = overlay;
-      trigger = document.activeElement;
+      opener = document.activeElement;
       var panel = overlay.firstElementChild || overlay;
       panel.setAttribute("role", "dialog");
       panel.setAttribute("aria-modal", "true");
@@ -98,8 +139,8 @@
       for (var i = 0; i < behind.length; i++) behind[i].removeAttribute("inert");
       behind = [];
       dialog = null;
-      if (trigger && trigger.isConnected) trigger.focus({ preventScroll: true });
-      trigger = null;
+      if (opener && opener.isConnected) opener.focus({ preventScroll: true });
+      opener = null;
     }
 
     new MutationObserver(function (records) {
@@ -137,7 +178,7 @@
 
 <style>
   .cta-band {
-    padding: 140px 0;
+    padding: 120px 0;
     background: var(--red);
     border-top: 2px solid var(--ink);
     border-bottom: 2px solid var(--ink);
@@ -187,71 +228,83 @@
   h2 {
     font-family: "Unbounded", sans-serif;
     font-weight: 700;
-    font-size: clamp(40px, 6vw, 80px);
+    font-size: clamp(40px, 5.4vw, 72px);
     line-height: 1.02;
     letter-spacing: -0.03em;
     color: #fff;
-    max-width: 980px;
-    margin: 0 auto 28px;
+    max-width: 900px;
+    margin: 0 auto 24px;
     position: relative;
   }
-  p {
+  .cta-lede {
+    position: relative;
     font-size: 19px;
     color: #fff;
-    font-weight: 700; /* bold => AA large-text threshold on red */
-    max-width: 540px;
-    margin: 0 auto 44px;
-    position: relative;
+    font-weight: 700; /* 19px bold clears the AA large-text threshold on red */
+    max-width: 560px;
+    margin: 0 auto 56px;
   }
-  .cta-actions { position: relative; margin-bottom: 56px; }
-  .cta-btn { font-size: 17px; padding: 22px 36px; }
-  .form-shell {
+  .paths {
     position: relative;
-    max-width: 720px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 28px;
+    max-width: 940px;
     margin: 0 auto;
+    text-align: left;
+  }
+  .path-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
     background: var(--cream);
     border: 2px solid var(--ink);
     border-radius: 24px;
     box-shadow: 6px 6px 0 var(--ink);
     padding: 32px;
-    text-align: left;
   }
-  .form-title {
+  .path-tag {
+    position: absolute;
+    top: -14px;
+    left: 24px;
+    border: 2px solid var(--ink);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .tag-form { background: var(--lavender); }
+  .tag-call { background: var(--green); }
+  .path-title {
     font-family: "Unbounded", sans-serif;
     font-weight: 700;
-    font-size: 20px;
-    margin-bottom: 16px;
+    font-size: 22px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 10px 0 14px;
   }
-  .form-copy {
-    color: var(--ink);
+  .path-copy {
     font-size: 16px;
     font-weight: 500;
-    max-width: 48ch;
+    color: var(--muted);
     margin: 0 0 28px;
+    text-wrap: pretty;
   }
-  .form-fallback { color: var(--ink); font-weight: 600; }
-  .form-fallback a { color: var(--ink); }
-  /* The embed injects its own inline-styled trigger button; pull it back into
-     the site's button system. Inline styles lose to !important here. */
-  .kiwi-embed :global(button) {
-    width: auto !important;
-    height: auto !important;
-    padding: 18px 30px !important;
-    background: var(--ink) !important;
-    color: #fff !important;
-    border: 2px solid var(--ink) !important;
-    border-radius: 100px !important;
-    box-shadow: 5px 5px 0 var(--red) !important;
-    font-family: "Plus Jakarta Sans", system-ui, sans-serif !important;
-    font-weight: 700 !important;
-    font-size: 15px !important;
-    opacity: 1 !important;
-    transform: none !important;
-    transition: all 0.15s ease !important;
-  }
-  .kiwi-embed :global(button:hover) {
-    transform: translate(-2px, -2px) !important;
-    box-shadow: 7px 7px 0 var(--red) !important;
+  .path-btn { align-self: flex-start; margin-top: auto; }
+  .kiwi-embed[hidden] { display: none; }
+  .cta-reassure {
+    position: relative;
+    max-width: 600px;
+    margin: 36px auto 0;
+    font-size: 15px;
+    font-weight: 700;
+    /* The design sets this line in white. At 15px bold that is 3.1:1 on red,
+       under the 4.5:1 AA needs below the large-text threshold, so it takes ink
+       (5.5:1) and keeps the design's type scale. */
+    color: var(--ink);
   }
   @media (max-width: 900px) {
     .cta-band { padding: 72px 0; }
