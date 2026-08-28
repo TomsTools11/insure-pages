@@ -56,14 +56,19 @@ npm run preview  # preview the production build locally
 
 ### Conversion
 
-A lazy-loaded Kiwiform embed sits in the `#contact` section. It is configured on Kiwiform's side as a
-**popup** embed, so it renders a trigger button that opens the form in a modal; `ContactCta.astro`
-restyles that button into the site's button system and adds the dialog semantics, Escape-to-close,
-and focus handling the vendor modal ships without. The same form is hosted at
-https://share.kiwiform.com/to/ofwodo6p, which the `<noscript>` fallback links to.
+The `#contact` band offers two paths side by side: **Get Started Now**, which opens the Kiwiform
+form in a popup, and **Schedule a call**, which opens the FormRobin call form in a new tab.
 
-The "Schedule a call" CTAs (hero, footer, CTA band, templates gallery) still link to the older
-FormRobin form at https://formrobin.com/f/344no93, as do the campaign emails in `email/`.
+The Kiwiform embed (`data-kiwiform-live`) is configured on Kiwiform's side as a **popup** embed, so
+it builds its own trigger button. That host div stays `hidden` and the card's own button forwards
+the click to it — the card keeps the site's markup and copy, and its `href` still reaches the hosted
+form at https://share.kiwiform.com/to/ofwodo6p when JavaScript is off or the embed is blocked.
+`embed.js` is injected only as the band nears the viewport. The vendor modal ships without dialog
+semantics, a labelled close control, a titled iframe, Escape-to-close, or focus handling;
+`ContactCta.astro` adds those as it appears and unwinds them on close.
+
+The "Schedule a call" CTAs (hero, footer, CTA band, templates gallery) link to the FormRobin form at
+https://formrobin.com/f/344no93, as do the campaign emails in `email/`.
 
 ### Deployment
 

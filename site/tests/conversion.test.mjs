@@ -15,20 +15,26 @@ test("pricing: three tiers, prices, fixed copy, Begin CTAs to #contact", () => {
   assert.ok(begins.length >= 3, `expected ≥3 Begin buttons targeting #contact, got ${begins.length}`);
 });
 
-test("contact: Kiwiform embed with lazy loader and noscript fallback", () => {
+test("contact: two paths, hidden embed driven by the card's own button", () => {
   const html = page();
   assert.match(html, /id="contact"/);
-  assert.match(html, /data-kiwiform-live="cmtd4evv70ap0dqpgd3y66f2w"/);
+  // the embed host is hidden — it only exists to build the popup trigger
+  assert.match(
+    html,
+    /data-kiwiform-live="cmtd4evv70ap0dqpgd3y66f2w"[^>]*hidden|hidden[^>]*data-kiwiform-live="cmtd4evv70ap0dqpgd3y66f2w"/
+  );
+  // the visible button is a real link to the hosted form, so no JS still reaches it
+  assert.match(
+    html,
+    /href="https:\/\/share\.kiwiform\.com\/to\/ofwodo6p"[^>]*data-kiwi-trigger|data-kiwi-trigger[^>]*href="https:\/\/share\.kiwiform\.com\/to\/ofwodo6p"/
+  );
+  assert.match(html, /Get Started Now →/);
   // embed.js is NOT statically present — the lazy loader injects it
   assert.doesNotMatch(html, /<script[^>]*src="https:\/\/share\.kiwiform\.com/);
   assert.match(html, /"https:\/\/share\.kiwiform\.com"/); // origin held by the loader
   assert.match(html, /"\/embed\.js"/); // …joined on at load time
   // the embed's modal gets dialog semantics bolted on before it is shown
   assert.match(html, /aria-modal/);
-  assert.match(
-    html,
-    /<noscript>[\s\S]*?href="https:\/\/share\.kiwiform\.com\/to\/ofwodo6p"[\s\S]*?<\/noscript>/
-  );
-  // CTA-band Schedule a call → hosted form
+  // second path → the hosted call form
   assert.match(html, /href="https:\/\/formrobin\.com\/f\/344no93"[^>]*>[\s\S]{0,40}?Schedule a call →/);
 });
