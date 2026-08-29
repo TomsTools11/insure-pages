@@ -23,12 +23,12 @@ Two links to retarget per campaign:
 
 | What | Where it points |
 | --- | --- |
-| Primary button | `https://insure-pages.vercel.app/templates` |
+| Primary button | `https://www.insurepages.com/templates` |
 | "Fill out the form" | `https://formrobin.com/f/344no93` |
 
 The only remote asset is the logo, served from the live site at
-`https://insure-pages.vercel.app/images/insurepages-logo.png`. If the site ever
-moves to a custom domain, update that URL (and the two links above) — mail
+`https://www.insurepages.com/images/insurepages-logo.png`. If the site ever
+changes hosts again, update that URL (and the two links above) — mail
 already in inboxes will keep hitting the old host.
 
 ## Image-only fallback
@@ -43,7 +43,7 @@ node email/build-image-fallback.mjs
 ```
 
 It is served from the marketing site at
-`https://insure-pages.vercel.app/images/email/insurepages-templates-email.png`,
+`https://www.insurepages.com/images/email/insurepages-templates-email.png`,
 so the email references a URL we control rather than a Canva export link (those
 are signed and expire within hours).
 
