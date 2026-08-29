@@ -72,4 +72,4 @@ https://formrobin.com/f/344no93, as do the campaign emails in `email/`.
 
 ### Deployment
 
-Deployed on Vercel, building static output from `site/dist` (production URL: see Vercel project).
+Deployed on Vercel, building static output from `site/dist` (production URL: [https://www.insurepages.com](https://www.insurepages.com); the `insure-pages.vercel.app` alias 308-redirects there).

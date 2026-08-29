@@ -5,7 +5,7 @@
 //   node email/build-image-fallback.mjs
 //
 // Output: site/public/images/email/insurepages-templates-email.png
-// (served at https://insure-pages.vercel.app/images/email/insurepages-templates-email.png)
+// (served at https://www.insurepages.com/images/email/insurepages-templates-email.png)
 //
 // The HTML is the source of truth. Never hand-edit the PNG — change the
 // template and rerun this.
