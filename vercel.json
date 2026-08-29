@@ -5,20 +5,20 @@
   "trailingSlash": true,
   "redirects": [
     {
-      "source": "/:path*",
+      "source": "/:path(.*)",
       "has": [
         {
           "type": "host",
           "value": "insure-pages.vercel.app"
         }
       ],
-      "destination": "https://www.insurepages.com/:path*",
+      "destination": "https://www.insurepages.com/:path",
       "permanent": true
     }
   ],
   "headers": [
     {
-      "source": "/demos/:path*",
+      "source": "/demos/:path(.*)",
       "headers": [
         {
           "key": "X-Robots-Tag",
