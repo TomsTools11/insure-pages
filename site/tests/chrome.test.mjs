@@ -66,6 +66,48 @@ test("footer carries the Startup Fame badge, self-hosted and linked back", () =>
   );
 });
 
+const SOCIAL = [
+  ["Twitter", "https://x.com/insurepages"],
+  ["LinkedIn", "https://www.linkedin.com/company/insurepages"],
+  ["Bluesky", "https://bsky.app/profile/insurepages.bsky.social"],
+  ["Instagram", "https://www.instagram.com/insurepages"],
+];
+const rx = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+test("footer social row: one icon link per platform, each with an accessible name", () => {
+  const html = page();
+  const list = html.match(/<ul class="footer-social"[^>]*>[\s\S]*?<\/ul>/)?.[0];
+  assert.ok(list, "footer should render the social row");
+
+  for (const [name, href] of SOCIAL) {
+    const a = list.match(new RegExp(`<a[^>]*href="${rx(href)}"[^>]*>`))?.[0];
+    assert.ok(a, `social row should link to ${name} at ${href}`);
+    // Icon-only link: the aria-label is its whole accessible name.
+    assert.match(a, new RegExp(`aria-label="InsurePages on ${name}"`));
+    assert.match(a, /target="_blank"/);
+    assert.match(a, /rel="noopener"/);
+  }
+  assert.equal((list.match(/<li[\s>]/g) ?? []).length, SOCIAL.length, "one item per platform");
+});
+
+test("footer social icons are inline SVG, hidden from the accessibility tree", () => {
+  const html = page();
+  const list = html.match(/<ul class="footer-social"[^>]*>[\s\S]*?<\/ul>/)?.[0];
+  const svgs = list.match(/<svg[^>]*>/g) ?? [];
+  assert.equal(svgs.length, SOCIAL.length, "each link should carry its own inline svg");
+  for (const svg of svgs) {
+    // The anchor's aria-label already names the link; the glyph must not
+    // be announced again, and must stay out of the tab order in IE-era engines.
+    assert.match(svg, /aria-hidden="true"/);
+    assert.match(svg, /focusable="false"/);
+  }
+  // Twitter keeps the bird, not the X mark: the bird path starts at 23.953 4.57.
+  const twitter = list.match(/<a[^>]*x\.com[^>]*>[\s\S]*?<\/a>/)?.[0];
+  assert.match(twitter, /d="M23\.953 4\.57/);
+  // Icons ship in the markup — no icon font or sprite CDN is fetched for them.
+  assert.doesNotMatch(html, /fontawesome|cdn\.simpleicons|<use[^>]*href="http/i);
+});
+
 test("footer: no dead links, correct brand, accessibility link", () => {
   const html = page();
   assert.doesNotMatch(html, />About</);
