@@ -37,21 +37,22 @@ to the art's bounding box (655×259) and palette-quantized:
 Both derived files are generated, not hand-edited. If the master changes, rerun
 `python3 design/build-logo-assets.py` from the repo root rather than editing them.
 
-Third-party badges: a grid of startup-directory badges sits under the nav
-columns of the footer (three across at desktop, wrapping as directories are
-added), driven by the `badges` array in `Footer.astro`. The default rule is to
-serve each directory's artwork from `public/images/` so the footer costs no
-third-party request, and to keep the link back followed (no `rel="nofollow"`),
-which is what Startup Fame verifies. Maidensail is the exception: its crawler
-looks for its own embed, the image served from
-`https://maidensail.com/badge/insurepages.svg` with `rel="dofollow"`, and a
-self-hosted copy was not picked up, so that badge is hot-linked on purpose (a
-~1 KB SVG with no scripts, loaded eagerly so the request fires) and is the
-footer's one outside image request. Every badge renders 44px tall so mixed
-artwork lines up, and `tests/chrome.test.mjs` checks each one against the
-array's rows, including which images may be hot-linked. To add a directory,
-add an entry to `badges` (self-host unless its verification needs its own
-URL) and the same row to `BADGES` in the test. Don't edit
+Third-party badges: a grid of startup-directory badges sits under the
+Resources and Hello columns of the footer, beside the Site list (two across
+at desktop, wrapping as directories are added), driven by the `badges` array
+in `Footer.astro`. Each entry is that directory's embed as given, its image
+URL, its rel and its alt text, because that is what the directory's checker
+looks for, and it is why the entries differ: Maidensail wants
+`rel="dofollow"`, SitePatent ships `nofollow noopener noreferrer`, and
+Startup Fame is verified with a followed link and a self-hosted copy of its
+artwork. Self-hosting is the preference (it costs the footer no third-party
+request) but only where the directory has confirmed it counts: a self-hosted
+copy of the Maidensail badge was not picked up, so the hot-linked ones stay
+hot-linked (small SVGs, no scripts) and load eagerly so the request fires.
+Every badge renders 44px tall so mixed artwork lines up, and
+`tests/chrome.test.mjs` checks each one against the array's rows, including
+which images may be hot-linked. To add a directory, add its snippet as an
+entry in `badges` and the same row to `BADGES` in the test. Don't edit
 `startup-fame-badge.webp` (468×148); re-download it from
 `https://startupfa.me/badges/featured-badge.webp` if Startup Fame changes it.
 
