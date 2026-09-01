@@ -1,11 +1,16 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { page } from "./support/page.mjs";
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), "..", "dist");
+const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+const shippedDemos = () => {
+  const demosDir = join(dist, "demos");
+  return existsSync(demosDir) ? readdirSync(demosDir) : [];
+};
 const html = () => page("templates/index.html");
 
 // Astro escapes interpolated text, so data strings must be compared in
@@ -149,4 +154,61 @@ test("motion is guarded and never driven by scroll listeners", () => {
   const h = html();
   assert.match(h, /prefers-reduced-motion/);
   assert.doesNotMatch(h, /addEventListener\(["']scroll["']/);
+});
+
+test("every demo is kept out of search at both layers, and never blocked", () => {
+  // The demos live on the root domain, so two independent signals keep them
+  // out of the index: a noindex meta in each file, and the X-Robots-Tag
+  // header Vercel adds on the /demos/ prefix. Nothing else asserts either, so
+  // a re-exported demo could drop the tag and nothing would notice.
+  const shipped = shippedDemos();
+  assert.ok(shipped.length > 0, "no demos shipped");
+  for (const slug of shipped) {
+    const demo = page(join("demos", slug, "index.html"));
+    const head = demo.slice(0, demo.indexOf("</head>"));
+    assert.match(
+      head,
+      /<meta name="robots" content="noindex">/,
+      `${slug} lost its noindex meta`,
+    );
+  }
+  const vercel = JSON.parse(readFileSync(join(repoRoot, "vercel.json"), "utf-8"));
+  const rule = (vercel.headers ?? []).find((h) => /^\/demos\//.test(h.source));
+  assert.ok(rule, "vercel.json lost the /demos/ header rule");
+  assert.ok(
+    rule.headers.some((h) => h.key === "X-Robots-Tag" && /\bnoindex\b/.test(h.value)),
+    "the /demos/ rule no longer sends X-Robots-Tag: noindex",
+  );
+  // Google can only honor a noindex on a page it is allowed to fetch, so the
+  // demos stay crawlable and out of the sitemap, never disallowed.
+  assert.doesNotMatch(page("robots.txt"), /Disallow:\s*\/demos/i, "robots.txt blocks /demos/");
+  assert.doesNotMatch(page("sitemap-0.xml"), /\/demos\//, "a demo reached the sitemap");
+});
+
+test("demo contact numbers read as US numbers", () => {
+  // The buyer is a US agent, and the phone number is one of the first things
+  // they check for "could this be mine". Design-tool exports have shipped
+  // with UK and NZ numbers before.
+  const shipped = shippedDemos();
+  assert.ok(shipped.length > 0, "no demos shipped");
+  for (const slug of shipped) {
+    const demo = page(join("demos", slug, "index.html"));
+    // Every click-to-call link dials a US number in full international form,
+    // whichever country the next export comes from. The bundled demos keep
+    // their markup inside a JS string with escaped quotes, so match the URI
+    // itself rather than the attribute around it.
+    const tels = demo.match(/\btel:[^"'\s\\<)]+/g) ?? [];
+    for (const href of tels) {
+      assert.match(href, /^tel:\+1\d{10}$/, `${slug} has a tel: link that is not a US number: ${href}`);
+    }
+    // And the visible text uses the US shape, never the UK or NZ shapes seen
+    // in earlier exports.
+    assert.doesNotMatch(
+      demo,
+      /\+44 \d{3} \d{3} \d{4}|\b0800 \d{3} \d{3}\b|\b02\d \d{3} \d{4}\b/,
+      `${slug} shows a non-US phone number`,
+    );
+    const shown = demo.match(/\(\d{3}\) \d{3}-\d{4}/g) ?? [];
+    assert.ok(shown.length >= 1, `${slug} shows no US-format phone number`);
+  }
 });

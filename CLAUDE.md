@@ -22,7 +22,7 @@ Structure:
 - `src/components/` — one component per page section (`Header`, `Hero`, `TrustStrip`, `Pillars`, `Method`, `Pricing`, `ContactCta`, `Footer`).
 - `src/layouts/Base.astro` — shared page shell; `src/styles/global.css` — design tokens (color, type, spacing).
 - `src/pages/` — the four published pages: `index.astro`, `accessibility.astro`, `templates.astro`, `tools.astro`.
-- `tests/*.test.mjs` — 43 `node:test` assertions against the built HTML. The shared `page()` helper lives in `tests/support/page.mjs`, which is imported by every test file. **Test files must never import from each other**: `node --test` globs `tests/*.mjs`, so a test file that imports another test file re-registers that file's tests, silently duplicating them. Keep shared helpers under `tests/support/` (outside the glob) and have each test file import only from there.
+- `tests/*.test.mjs` — 49 `node:test` assertions against the built HTML. The shared `page()` helper lives in `tests/support/page.mjs`, which is imported by every test file. **Test files must never import from each other**: `node --test` globs `tests/*.mjs`, so a test file that imports another test file re-registers that file's tests, silently duplicating them. Keep shared helpers under `tests/support/` (outside the glob) and have each test file import only from there.
 
 Brand mark: the master lockup lives at repo root as `ip-logo.png` (800×350 RGBA,
 transparent). Two derived assets are what the site actually serves, both trimmed
@@ -79,6 +79,60 @@ checker and robots.txt tester have no accessible name (no `<label>`,
 `aria-label`, or `aria-labelledby`, only a placeholder). That is content we do
 not control. Do not try to reach into the frame to fix it, and do not soften
 the statement to match.
+
+## Template demos (`/demos/`)
+
+The six preview sites behind the "Preview site" buttons on `/templates/` are
+static exports under `site/public/demos/<slug>/`, outside the Astro layout.
+Four (`fernbrook`, `marsden`, `northgate`, `page-insurance`) are single-file
+bundle exports whose boot script replaces `document.documentElement` at load;
+`keel` and `kestrel` are dc-runtime exports rendered by their `support.js`.
+The demos sit on the root domain on purpose (a subdomain would move nothing:
+they are already invisible to Google, and a preview converts the same on any
+hostname), and three conventions hold on every one of them. Tests in
+`tests/templates.test.mjs` and `tests/analytics.test.mjs` fail if any is
+dropped, which matters because a re-exported demo starts without all three.
+
+1. **Out of search at two layers, and never blocked.** Every demo's outer
+   `<head>` carries `<meta name="robots" content="noindex">`, and
+   `vercel.json` adds `X-Robots-Tag: noindex` on `/demos/:path(.*)`. Do not
+   add `Disallow: /demos/` to `robots.txt` (Google can only honor a noindex on
+   a page it is allowed to fetch) and do not add `rel="nofollow"` to the
+   preview links (a hint at best, and the target is already noindex). The
+   sitemap only ever lists Astro pages, so the demos stay out of it by
+   construction.
+2. **Plausible on every demo, exactly once.** The demos are outside
+   `Base.astro`, so each carries the same script tag by hand in its outer
+   `<head>`: same site, same property, so a demo open shows up next to
+   `/templates/`. One tag per demo, or an open counts twice. In the bundled
+   demos the swap detaches that `<head>`, but a detached async script still
+   executes when its fetch completes; `npm run check:demos` proves it in a
+   real browser by stubbing the script, delaying it past the swap, and
+   counting exactly one run per demo. Plausible ignores `localhost` and
+   `file:` origins, so local previews and `npm run thumbs` never reach the
+   numbers.
+3. **US phone numbers only.** Design-tool exports have shipped with a UK
+   landline and a New Zealand mobile. Every `tel:` href in a demo dials
+   `+1` plus ten digits, and visible numbers use the `(XXX) XXX-XXXX` shape,
+   one contact number per demo (a form field may still carry a
+   `(555) 000-0000` format hint). For new numbers use `(XXX) 555-01XX`, the
+   fictional range. Card domains in `src/data/templates.mjs` follow the same
+   rule (no `.co.uk`). Only the numbers were localized: Keel still labels its
+   quote field "Postcode" and cites a New Zealand regulator, and Kestrel's
+   estimator prices in pounds. Localizing the rest is a content decision, not
+   a copy edit.
+
+The four bundled demos are large (Marsden is 3 MB of inline script) and only
+the bundles are in the repo, not their source. Rebuilding them as static
+pages is a separate decision, to be made on demo bounce data once Plausible
+has a couple of weeks of it.
+
+`site/public/llms.txt` is served at `/llms.txt`. It restates the page list,
+the packages and prices, and the contact paths, in the llmstxt.org shape
+(prose and the package list above the first H2, link lists only below it, no
+demo links since the bundled demos have no readable text without JavaScript
+and are noindexed). `tests/llms.test.mjs` pins it to the built pages, so a
+price or contact change fails there until llms.txt is updated too.
 
 Campaign email lives in `email/` (see `email/README.md`), outside the Astro
 build. Email clients are not browsers: tables for layout, inline styles only,

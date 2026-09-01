@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "test": "node --test tests/*.mjs",
-    "thumbs": "node scripts/build-template-thumbs.mjs"
+    "thumbs": "node scripts/build-template-thumbs.mjs",
+    "check:demos": "node scripts/check-demo-analytics.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.0.0",

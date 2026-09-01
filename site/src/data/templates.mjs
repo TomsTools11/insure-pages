@@ -78,7 +78,7 @@ export const templates = [
   {
     slug: "kestrel",
     name: "Kestrel",
-    domain: "kestrelcover.co.uk",
+    domain: "kestrelcover.com",
     tagline: "Cool grey and blue, with a quote estimator right up front.",
     tags: ["Clean", "Direct"],
     accent: "blue",
