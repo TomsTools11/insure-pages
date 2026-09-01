@@ -1,7 +1,7 @@
 ---
 // Social profiles. The glyphs are inlined as path data rather than pulled from
 // an icon font or a sprite CDN: the footer already avoids third-party requests
-// (self-hosted fonts, logos and badge). Twitter keeps the bird mark by choice —
+// (self-hosted fonts, logos and badge). Twitter keeps the bird mark by choice;
 // the link itself points at the x.com URL.
 const socials = [
   {
@@ -45,11 +45,12 @@ const socials = [
           decoding="async"
         />
         <p class="footer-tag">
-          Considered websites and brand work for independent insurance agents.
+          Websites for independent insurance agents. Built in five days, yours
+          to keep.
         </p>
         <div class="footer-house">InsurePages by S3 Labs</div>
         {/* An icon-only link has no text, so each anchor carries the
-            accessible name and each <svg> is aria-hidden — the glyph must not
+            accessible name and each <svg> is aria-hidden: the glyph must not
             be announced on top of it. */}
         <ul class="footer-social">
           {
@@ -162,11 +163,11 @@ const socials = [
   }
   .footer-house {
     font-size: 12px;
-    color: #8fc7ff; /* was #2e9df180 in prototype — fails contrast on ink */
+    color: #8fc7ff; /* was #2e9df180 in prototype, which fails contrast on ink */
     font-weight: 600;
   }
   /* Social row. 42px tiles clear the 24x24 minimum target size (WCAG 2.5.8)
-     with room to spare, and the four of them plus gaps come to 198px — inside
+     with room to spare, and the four of them plus gaps come to 198px, inside
      the 240px a 320px viewport leaves after the container's side padding, so
      the row never forces the footer grid wider than the screen. */
   .footer-social {
