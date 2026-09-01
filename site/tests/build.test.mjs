@@ -10,7 +10,7 @@ const dist = join(dirname(fileURLToPath(import.meta.url)), "..", "dist");
 test("build produced index.html with the InsurePages title", () => {
   assert.ok(existsSync(join(dist, "index.html")), "dist/index.html missing — run npm run build");
   const html = page();
-  assert.match(html, /<title>InsurePages — Websites for independent insurance agents<\/title>/);
+  assert.match(html, /<title>Websites for independent insurance agents \| InsurePages<\/title>/);
 });
 
 test("no stale branding or placeholder contact info anywhere", () => {

@@ -6,7 +6,7 @@ test("hero: headline, lede, and CTA link map", () => {
   const html = page();
   assert.match(html, /If they can't find you, they'll find/);
   assert.match(html, /another agent\./);
-  assert.match(html, /href="#pricing"[^>]*>View packages/);
+  assert.match(html, /href="#pricing"[^>]*>See pricing →/);
   // Schedule a call goes to the hosted form in a new tab (spec CTA link map)
   assert.match(
     html,
@@ -17,7 +17,7 @@ test("hero: headline, lede, and CTA link map", () => {
 test("trust strip has all four items", () => {
   const html = page();
   for (const item of [
-    "Launch in days",
+    "Live in a couple weeks",
     "SEO from day one",
     "You own the site",
     "No long-term contracts",
