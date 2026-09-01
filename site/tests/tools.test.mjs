@@ -62,10 +62,14 @@ test("every tool keeps the Keywords Everywhere attribution", () => {
   assert.ok(links >= tools.length, "each attribution needs its link");
 });
 
-test("every tool has a no-JS way out", () => {
+test("every tool has a way out that does not depend on the frame", () => {
   const h = html();
   const blocks = (h.match(/<noscript>/g) ?? []).length;
   assert.equal(blocks, tools.length, "each tool needs a noscript fallback");
+  // A cross-origin frame that fails fires no usable error, so the link out
+  // is always rendered, not only inside <noscript>.
+  const persistent = (h.match(/data-tool-out/g) ?? []).length;
+  assert.equal(persistent, tools.length, "each tool needs a visible link out");
   for (const t of tools) {
     assert.match(
       h,

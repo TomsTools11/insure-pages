@@ -60,6 +60,15 @@ import {
                     <a href="https://keywordseverywhere.com/" rel="noopener">
                       Keywords Everywhere
                     </a>
+                    <span aria-hidden="true">&middot;</span>
+                    {/* Always visible, not only in noscript. A frame that
+                        fails to load cross-origin fires no usable error, so
+                        if Keywords Everywhere ever disables embedding or the
+                        daily quota is spent, this link is what the visitor
+                        still has. */}
+                    <a href={toolUrl(tool.slug)} rel="noopener" data-tool-out>
+                      Open {tool.name} on their site
+                    </a>
                   </p>
                 </div>
               </details>
