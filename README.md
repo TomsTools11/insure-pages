@@ -2,14 +2,14 @@
 
 finalized name: **InsurePages** 
 
-A productized service that delivers modern, conversion-optimized, **WCAG 2.1 AA-compliant** websites for insurance agencies — live in **under one week** (target ≤ 5 business days from intake completion).
+A productized service that delivers modern, conversion-optimized, **accessible** websites for insurance agencies — live in **under one week** (target ≤ 5 business days from intake completion).
 
 The product is two systems shipping as one:
 
 - **Client-facing service** — structured intake → design → one consolidated revision round → launch, on a fixed scope and sub-1-week SLA.
 - **Internal build platform (the "speed engine")** — a templated, token-themable, accessibility-tested design system + AI-assisted content generation + pre-built insurance integrations + automated QA + provisioning/deploy automation.
 
-The wedge is **speed + conversion + compliance**, with recurring revenue from a monthly care plan.
+The wedge is **speed + conversion + accessibility**, with recurring revenue from a monthly care plan.
 
 ## Status
 
@@ -30,12 +30,12 @@ InsurePages' own marketing site — the site that sells the productized service 
 
 ### `site/` layout
 
-- `src/components/` — one component per page section: `Header`, `Hero`, `TrustStrip`, `Pillars`, `Method`, `Pricing`, `ContactCta`, `Footer`.
+- `src/components/` — one component per page section: `Header`, `Hero`, `TrustStrip`, `Pillars`, `Method`, `Pricing`, `ContactCta`, `Footer`, plus `templates/` and `tools/` for the two secondary pages.
 - `src/layouts/Base.astro` — shared page shell (head, meta, layout wrapper).
 - `src/styles/global.css` — design tokens (color, type, spacing) and global styles.
-- `src/pages/index.astro` — the home page; `src/pages/accessibility.astro` — the published accessibility statement.
+- `src/pages/` — the four published pages: `index.astro` (home), `templates.astro` (the template gallery), `tools.astro` (the free tools page), and `accessibility.astro` (the published accessibility statement).
 - `public/fonts/` — self-hosted Unbounded and Plus Jakarta Sans (latin, variable woff2). `public/images/og.png` — Open Graph image.
-- `tests/` — 14 `node:test` assertions that check the built HTML in `dist/`; shared helper at `tests/support/page.mjs`.
+- `tests/` — 44 `node:test` assertions that check the built HTML in `dist/`; shared helper at `tests/support/page.mjs`.
 
 ### Commands (run from `site/`)
 
@@ -49,10 +49,15 @@ npm run preview  # preview the production build locally
 
 ### Quality gates (passing)
 
-- 14/14 tests green
-- Lighthouse: 100 across all four categories, both pages
-- axe: clean on both pages
-- WCAG 2.1 AA conformance
+- 44/44 tests green
+- axe: zero violations on all four pages
+- Lighthouse on a local production build, all four pages: accessibility **100**, SEO **100**,
+  best practices **96**, performance **95 to 100**
+
+Accessibility is built in and scanned automatically before every release. The site does
+not advertise a conformance level; see the accessibility statement at
+[/accessibility/](https://www.insurepages.com/accessibility/). The internal engineering
+standard is recorded in [CLAUDE.md](CLAUDE.md).
 
 ### Conversion
 

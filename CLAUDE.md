@@ -114,8 +114,10 @@ These are product invariants, not nice-to-haves. Any code or design must hold to
   standard above**: keep building to WCAG 2.1 AA, keep the axe scans, keep
   publishing the statement. `tests/accessibility-page.test.mjs` asserts no
   built page carries the claim, so re-adding it is a decision to make with
-  the owner, not a copy edit. The service-level claim in `README.md` and the
-  PRD was left as-is and is a separate call.
+  the owner, not a copy edit. `README.md` was brought in line on the same
+  date and now names no conformance level either. The PRD still describes the
+  service as WCAG 2.1 AA-compliant and was deliberately left as-is; so does
+  the GitHub repository description. Both are separate calls.
 - **Conversion-first** — templates exist to turn paid/organic traffic into quote requests and calls (click-to-call, sticky CTAs, above-the-fold quote forms, trust signals). "Looks good" is insufficient.
 - **Core Web Vitals "Good"** at launch is a target metric — performance is a hard requirement, not a polish step.
 - **Productized, not bespoke** — fixed scope, token-based brand theming, reusable templates/components. Anything that forces per-client bespoke engineering is explicitly **out of v1 scope** (PRD §9.5, §6.2). Favor configuration/theming over one-off code.
