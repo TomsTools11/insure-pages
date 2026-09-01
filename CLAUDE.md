@@ -106,6 +106,16 @@ The PRD is the source of truth for scope, personas, the day-by-day delivery work
 These are product invariants, not nice-to-haves. Any code or design must hold to them:
 
 - **WCAG 2.1 AA by default** — accessibility is a core selling wedge (de-risking ADA lawsuits), not an add-on. Automated accessibility scans must pass at launch; every site publishes an accessibility statement. Never write code that regresses this, and never promise legal *immunity* — the product reduces risk and conforms to the standard, it does not guarantee against suits (PRD §9.3).
+  **Marketing-site exception, decided 2026-09-01:** the marketing site in
+  `site/` no longer advertises a conformance level. The public "WCAG 2.1 AA"
+  claim was removed from `/templates/` (`IncludedSpec.astro`), `/tools/`
+  (`ToolsBridge.astro`), and the accessibility statement, at the owner's
+  direction. This changed the **public claim only, not the engineering
+  standard above**: keep building to WCAG 2.1 AA, keep the axe scans, keep
+  publishing the statement. `tests/accessibility-page.test.mjs` asserts no
+  built page carries the claim, so re-adding it is a decision to make with
+  the owner, not a copy edit. The service-level claim in `README.md` and the
+  PRD was left as-is and is a separate call.
 - **Conversion-first** — templates exist to turn paid/organic traffic into quote requests and calls (click-to-call, sticky CTAs, above-the-fold quote forms, trust signals). "Looks good" is insufficient.
 - **Core Web Vitals "Good"** at launch is a target metric — performance is a hard requirement, not a polish step.
 - **Productized, not bespoke** — fixed scope, token-based brand theming, reusable templates/components. Anything that forces per-client bespoke engineering is explicitly **out of v1 scope** (PRD §9.5, §6.2). Favor configuration/theming over one-off code.
