@@ -13,6 +13,9 @@
     3. The picsum.photos images, both the static tags and the coverage tab's
        built src, became ./img/<seed>.jpg.
   Re-export from the design project and re-apply those three if it changes.
+  Two things were then added by hand and must be re-applied too: the noindex
+  meta and the Plausible analytics tag in <head>. The tag is the one third
+  party request the page makes, on purpose (see the comment beside it).
 -->
 <html>
 <head>
@@ -22,13 +25,23 @@
 <title>Keel Insurance</title>
 <script>
   // dc-runtime reads window.__resources to resolve its CDN scripts. Pointing
-  // them at local copies keeps this demo free of third party requests.
+  // them at local copies keeps the runtime itself off third party hosts; the
+  // Plausible tag further down is the page's one outside request.
   window.__resources = {
     "https://unpkg.com/react@18.3.1/umd/react.production.min.js": "./vendor/react.production.min.js",
     "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js": "./vendor/react-dom.production.min.js"
   };
 </script>
 <script src="./support.js"></script>
+<!-- Privacy-friendly analytics by Plausible. Same site and script as the
+     marketing pages (src/layouts/Base.astro), so a demo open shows up in the
+     same property as /templates/. Keep exactly one copy per demo. -->
+<script async src="https://plausible.io/js/pa-lK6M6sRXqqg_n0MS_nKuV.js"></script>
+<script>
+  window.plausible = window.plausible || function () { (plausible.q = plausible.q || []).push(arguments); };
+  plausible.init = plausible.init || function (i) { plausible.o = i || {}; };
+  plausible.init();
+</script>
 </head>
 <body>
 <x-dc>
@@ -268,7 +281,7 @@
                 </div>
                 <div style="flex:1 1 180px;display:flex;flex-direction:column;gap:8px">
                   <label for="klPhone" style="font-size:13.5px;font-weight:600">Phone <span style="font-weight:400;color:rgba(233,228,215,.42)">(optional)</span></label>
-                  <input id="klPhone" value="{{ f.phone }}" onInput="{{ onPhone }}" placeholder="021 847 1928" style="border:1px solid rgba(233,228,215,.2);border-radius:2px;background:rgba(233,228,215,.03);padding:13px 14px;font-size:16px;outline:none;transition:border-color .2s" style-focus="border-color:var(--kl-accent,#D99A3C)">
+                  <input id="klPhone" value="{{ f.phone }}" onInput="{{ onPhone }}" placeholder="(555) 000-0000" style="border:1px solid rgba(233,228,215,.2);border-radius:2px;background:rgba(233,228,215,.03);padding:13px 14px;font-size:16px;outline:none;transition:border-color .2s" style-focus="border-color:var(--kl-accent,#D99A3C)">
                 </div>
               </div>
             </div>
@@ -731,7 +744,7 @@ class Component extends DCLogic {
       estRange: prices ? '$' + est.lo + ' to $' + est.hi : '',
       ref: s.ref,
       doneHead: prices ? c.name + ' cover, $' + est.lo + ' to $' + est.hi + ' a month' : c.name + ' cover, held for 30 days',
-      doneBody: 'Held for 30 days. We sent the full schedule to ' + (s.f.email || 'your inbox') + '. If you want it explained, ' + (s.f.phone ? 'we will call the number you gave us' : 'call 0800 535 335') + ' and ask for ' + (s.f.name.split(' ')[0] || 'the quote') + '.',
+      doneBody: 'Held for 30 days. We sent the full schedule to ' + (s.f.email || 'your inbox') + '. If you want it explained, ' + (s.f.phone ? 'we will call the number you gave us' : 'call (503) 555-0127') + ' and ask for ' + (s.f.name.split(' ')[0] || 'the quote') + '.',
 
       review: review,
       dots: this.REVIEWS.map((r, i) => ({

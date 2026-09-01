@@ -1,0 +1,25 @@
+# InsurePages
+
+> InsurePages builds websites for insurance agents. A site goes live in a couple weeks, starting at $499, and the agent owns the site and the domain.
+
+InsurePages is a productized website service for insurance agencies. Every site is built to do three jobs: be found on Google, with a page for every line the agency writes and its town where Google looks for it; look like a real agency in the first few seconds; and ring the phone, with tap-to-call buttons and quote forms where visitors look first. Pages are built to load fast on a phone and to work with a keyboard and a screen reader.
+
+The build runs in five steps: a conversation first, a style guide before anything is built, the build itself with the copy written for you, a review of a working draft, and launch, when the site and the domain are handed over.
+
+Three packages, same build and same turnaround. The price shown is the price paid.
+
+- Starter: $499 one time. Five to seven pages written for you, a custom design to your brand, a layout that reads right on a phone, search setup, and a contact form with integrations.
+- Silver: $599 setup, then $25 a month. Everything in Starter, advanced SEO setup, hosting and updates, edits any month, and email support.
+- Gold: $699 setup, then $75 a month. Everything in Starter, monthly SEO-focused content, a call every quarter, a monthly note on traffic and requests, and priority support.
+
+## Pages
+
+- [Home](https://www.insurepages.com/): What every site does, the five-step build, and the three packages.
+- [Templates](https://www.insurepages.com/templates/): Six complete website templates for insurance agencies. Each one opens as a working demo.
+- [Free tools](https://www.insurepages.com/tools/): Four free checks for an agency website: an SEO analyzer, a traffic checker, a robots.txt tester, and an llms.txt generator. No account needed.
+- [Accessibility statement](https://www.insurepages.com/accessibility/): How this site and the sites built for clients are designed and tested for accessibility, and how to report a barrier.
+
+## Contact
+
+- [Tell us about your agency](https://share.kiwiform.com/to/ofwodo6p): A 60-second intake form. We come back with a plan and a price.
+- [Schedule a call](https://formrobin.com/f/344no93): A 30-minute conversation about your site and what your agency writes.

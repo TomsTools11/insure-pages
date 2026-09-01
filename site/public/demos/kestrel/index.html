@@ -15,6 +15,9 @@
     3. The picsum.photos images, in the markup and in the component data,
        became ./img/<seed>.jpg.
   Re-export from the design project and re-apply those three if it changes.
+  Two things were then added by hand and must be re-applied too: the noindex
+  meta and the Plausible analytics tag in <head>. The tag is the one third
+  party request the page makes, on purpose (see the comment beside it).
 -->
 <html>
 <head>
@@ -29,6 +32,15 @@
   };
 </script>
 <script src="./support.js"></script>
+<!-- Privacy-friendly analytics by Plausible. Same site and script as the
+     marketing pages (src/layouts/Base.astro), so a demo open shows up in the
+     same property as /templates/. Keep exactly one copy per demo. -->
+<script async src="https://plausible.io/js/pa-lK6M6sRXqqg_n0MS_nKuV.js"></script>
+<script>
+  window.plausible = window.plausible || function () { (plausible.q = plausible.q || []).push(arguments); };
+  plausible.init = plausible.init || function (i) { plausible.o = i || {}; };
+  plausible.init();
+</script>
 </head>
 <body>
 <x-dc>
@@ -309,7 +321,7 @@
         <p style="margin:0 0 14px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;color:#6d7382">Talk to us</p>
         <div style="display:flex;flex-direction:column;gap:10px;font-size:14.5px">
           <a href="mailto:advice@kestrel.example" style="color:#c9cdd6">advice@kestrel.example</a>
-          <a href="tel:+441142870190" style="color:#c9cdd6">+44 114 287 0190</a>
+          <a href="tel:+17205550163" style="color:#c9cdd6">(720) 555-0163</a>
           <p style="margin:0">Weekdays 8am to 7pm</p>
         </div>
       </div>
