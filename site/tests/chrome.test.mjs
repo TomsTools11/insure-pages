@@ -40,16 +40,18 @@ test("footer brand uses the on-dark logo variant", () => {
   assert.match(img, /loading="lazy"/);
 });
 
-// One row per startup directory the site is listed in: name, the link the
-// directory verifies, the rel that link carries, the artwork src, and its
-// intrinsic size. Artwork is self-hosted unless a directory's crawler needs
-// its own embed: Maidensail checks for its image URL and rel="dofollow".
+// One row per startup directory the site is listed in, mirroring the badges
+// array in Footer.astro: name, the link, the rel that link carries, the
+// artwork src, its alt text, and its intrinsic size. Each is the directory's
+// embed as given, which is why the rels differ; artwork is self-hosted only
+// where the directory has confirmed it counts (Startup Fame).
 const BADGES = [
   [
     "Startup Fame",
     "https://startupfa.me/s/insurepages?utm_source=insurepages.com",
     "noopener",
     "/images/startup-fame-badge.webp",
+    "Featured on Startup Fame",
     468,
     148,
   ],
@@ -58,8 +60,18 @@ const BADGES = [
     "https://maidensail.com/startup/insurepages",
     "dofollow",
     "https://maidensail.com/badge/insurepages.svg",
+    "Featured on Maidensail",
     190,
     44,
+  ],
+  [
+    "SitePatent",
+    "https://sitepatent.com/?utm_source=insurepages.com&utm_medium=badge",
+    "nofollow noopener noreferrer",
+    "https://sitepatent.com/api/badge?style=classic",
+    "Found on SitePatent",
+    220,
+    56,
   ],
 ];
 
@@ -78,17 +90,17 @@ test("footer carries every directory badge, linked back the way each directory c
   // in its own row under the columns.
   assert.ok(top.lastIndexOf("</nav>") < top.indexOf('class="footer-badges"'), "badge grid follows the nav columns");
 
-  for (const [name, href, rel, src, width, height] of BADGES) {
+  for (const [name, href, rel, src, alt, width, height] of BADGES) {
     const a = list.match(new RegExp(`<a[^>]*href="${rx(href)}"[^>]*>`))?.[0];
     assert.ok(a, `badge grid should link to ${name}`);
-    // The followed link back is what every directory verifies -- never nofollow.
-    assert.doesNotMatch(a, /nofollow/);
     assert.match(a, /target="_blank"/);
+    // The rel is the directory's own: a followed link where that is what it
+    // verifies, nofollow where its snippet says so. Exact, so neither drifts.
     assert.match(a, new RegExp(`rel="${rx(rel)}"`), `${name} link should carry rel="${rel}"`);
 
     const img = list.match(new RegExp(`<img[^>]*src="${rx(src)}"[^>]*>`))?.[0];
     assert.ok(img, `${name} badge should point at ${src}`);
-    assert.match(img, new RegExp(`alt="Featured on ${rx(name)}"`));
+    assert.match(img, new RegExp(`alt="${rx(alt)}"`));
     // Intrinsic dimensions reserve the box before decode (no layout shift).
     assert.match(img, new RegExp(`width="${width}"`));
     assert.match(img, new RegExp(`height="${height}"`));
