@@ -35,7 +35,7 @@ InsurePages' own marketing site — the site that sells the productized service 
 - `src/styles/global.css` — design tokens (color, type, spacing) and global styles.
 - `src/pages/` — the four published pages: `index.astro` (home), `templates.astro` (the template gallery), `tools.astro` (the free tools page), and `accessibility.astro` (the published accessibility statement).
 - `public/fonts/` — self-hosted Unbounded and Plus Jakarta Sans (latin, variable woff2). `public/images/og.png` — Open Graph image.
-- `tests/` — 49 `node:test` assertions that check the built HTML in `dist/`; shared helper at `tests/support/page.mjs`.
+- `tests/` — 50 `node:test` assertions that check the built HTML in `dist/`; shared helper at `tests/support/page.mjs`.
 
 ### Commands (run from `site/`)
 
@@ -49,7 +49,7 @@ npm run preview  # preview the production build locally
 
 ### Quality gates (passing)
 
-- 49/49 tests green
+- 50/50 tests green
 - axe: zero violations on all four pages
 - Lighthouse on a local production build, all four pages: accessibility **100**, SEO **100**,
   best practices **96**, performance **95 to 100**
