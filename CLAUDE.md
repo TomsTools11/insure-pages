@@ -22,7 +22,7 @@ Structure:
 - `src/components/` — one component per page section (`Header`, `Hero`, `TrustStrip`, `Pillars`, `Method`, `Pricing`, `ContactCta`, `Footer`).
 - `src/layouts/Base.astro` — shared page shell; `src/styles/global.css` — design tokens (color, type, spacing).
 - `src/pages/` — the four published pages: `index.astro`, `accessibility.astro`, `templates.astro`, `tools.astro`.
-- `tests/*.test.mjs` — 49 `node:test` assertions against the built HTML. The shared `page()` helper lives in `tests/support/page.mjs`, which is imported by every test file. **Test files must never import from each other**: `node --test` globs `tests/*.mjs`, so a test file that imports another test file re-registers that file's tests, silently duplicating them. Keep shared helpers under `tests/support/` (outside the glob) and have each test file import only from there.
+- `tests/*.test.mjs` — 50 `node:test` assertions against the built HTML. The shared `page()` helper lives in `tests/support/page.mjs`, which is imported by every test file. **Test files must never import from each other**: `node --test` globs `tests/*.mjs`, so a test file that imports another test file re-registers that file's tests, silently duplicating them. Keep shared helpers under `tests/support/` (outside the glob) and have each test file import only from there.
 
 Brand mark: the master lockup lives at repo root as `ip-logo.png` (800×350 RGBA,
 transparent). Two derived assets are what the site actually serves, both trimmed
@@ -37,11 +37,19 @@ to the art's bounding box (655×259) and palette-quantized:
 Both derived files are generated, not hand-edited. If the master changes, rerun
 `python3 design/build-logo-assets.py` from the repo root rather than editing them.
 
-Third-party badge: `site/public/images/startup-fame-badge.webp` is Startup Fame's
-own artwork (468×148), served from `public/` rather than hot-linked from
-startupfa.me so the footer costs no third-party request — the dofollow link back
-in `Footer.astro` is what the directory verifies. Re-download it from
-`https://startupfa.me/badges/featured-badge.webp` if it changes; don't edit it.
+Third-party badges: the footer's brand column carries a row of startup-directory
+badges, driven by the `badges` array in `Footer.astro`. Each is the directory's
+own artwork served from `public/images/` rather than hot-linked, so the footer
+costs no third-party request; the followed link back (no `rel="nofollow"`) is
+what each directory verifies. Every badge renders 44px tall so mixed artwork
+lines up, and `tests/chrome.test.mjs` checks each one. Don't edit the files;
+re-download them if a directory changes its artwork:
+
+- `startup-fame-badge.webp` (468×148) from `https://startupfa.me/badges/featured-badge.webp`.
+- `maidensail-badge.svg` (190×44) from `https://maidensail.com/badge/insurepages.svg`.
+
+To add a directory, drop its artwork in `public/images/`, add an entry to
+`badges`, and add the same row to `BADGES` in the test.
 
 ## Free tools page (`/tools/`)
 

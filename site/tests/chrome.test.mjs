@@ -1,6 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { page } from "./support/page.mjs";
+
+const dist = join(dirname(fileURLToPath(import.meta.url)), "..", "dist");
+const rx = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 test("header has nav links and a centered Start now sticker", () => {
   const html = page();
@@ -34,36 +40,64 @@ test("footer brand uses the on-dark logo variant", () => {
   assert.match(img, /loading="lazy"/);
 });
 
-test("footer carries the Startup Fame badge, self-hosted and linked back", () => {
+// One row per startup directory the site is listed in: name, the link the
+// directory verifies, the self-hosted artwork, and its intrinsic size.
+const BADGES = [
+  [
+    "Startup Fame",
+    "https://startupfa.me/s/insurepages?utm_source=insurepages.com",
+    "/images/startup-fame-badge.webp",
+    468,
+    148,
+  ],
+  ["Maidensail", "https://maidensail.com/startup/insurepages", "/images/maidensail-badge.svg", 190, 44],
+];
+
+const brandColumn = (html) =>
+  html.match(/<div class="footer-brand"[^>]*>[\s\S]*?<\/div>\s*<nav/)?.[0];
+
+test("footer carries every directory badge, self-hosted and linked back", () => {
   const html = page();
-  const a = html.match(/<a[^>]*class="[^"]*footer-badge[^"]*"[^>]*>/)?.[0];
-  assert.ok(a, "footer should render the Startup Fame badge link");
-  // The dofollow link back is what the directory verifies -- no rel="nofollow".
-  assert.match(a, /href="https:\/\/startupfa\.me\/s\/insurepages\?utm_source=insurepages\.com"/);
-  assert.doesNotMatch(a, /nofollow/);
+  const brand = brandColumn(html);
+  assert.ok(brand, "footer should render the brand column");
+  const list = brand.match(/<ul class="footer-badges"[^>]*>[\s\S]*?<\/ul>/)?.[0];
+  assert.ok(list, "brand column should render the badge row");
+  // A listing is not site navigation: the row sits outside every <nav>.
+  assert.doesNotMatch(brand, /<nav[\s>]/);
 
-  const img = html.match(/<img[^>]*startup-fame-badge[^>]*>/)?.[0];
-  assert.ok(img, "badge should render an image");
-  // Served from public/, not hot-linked from startupfa.me.
-  assert.match(img, /src="\/images\/startup-fame-badge\.webp"/);
-  assert.match(img, /alt="Featured on Startup Fame"/);
-  // Intrinsic dimensions reserve the box before decode (no layout shift).
-  assert.match(img, /width="468"/);
-  assert.match(img, /height="148"/);
-  assert.match(img, /loading="lazy"/);
+  for (const [name, href, src, width, height] of BADGES) {
+    const a = list.match(new RegExp(`<a[^>]*href="${rx(href)}"[^>]*>`))?.[0];
+    assert.ok(a, `badge row should link to ${name}`);
+    // The followed link back is what the directory verifies -- no rel="nofollow".
+    assert.doesNotMatch(a, /nofollow/);
+    assert.match(a, /target="_blank"/);
+    assert.match(a, /rel="noopener"/);
 
-  // Placement: the badge sits in the Hello column, after "Schedule a call",
-  // and outside the <nav> -- it is not one of that nav's links.
-  const hello = html.match(/<div class="footer-hello"[^>]*>[\s\S]*?<\/div>\s*<\/div>/)?.[0];
-  assert.ok(hello, "footer should render the Hello column wrapper");
-  assert.ok(
-    hello.indexOf("Schedule a call") < hello.indexOf("footer-badge"),
-    "badge should follow the Schedule a call link",
-  );
-  assert.ok(
-    hello.indexOf("</nav>") < hello.indexOf("footer-badge"),
-    "badge should sit outside the Get in touch nav",
-  );
+    const img = list.match(new RegExp(`<img[^>]*src="${rx(src)}"[^>]*>`))?.[0];
+    assert.ok(img, `${name} badge should be served from public/, not hot-linked`);
+    assert.match(img, new RegExp(`alt="Featured on ${rx(name)}"`));
+    // Intrinsic dimensions reserve the box before decode (no layout shift).
+    assert.match(img, new RegExp(`width="${width}"`));
+    assert.match(img, new RegExp(`height="${height}"`));
+    assert.match(img, /loading="lazy"/);
+    assert.ok(existsSync(join(dist, src)), `${src} is missing from dist`);
+  }
+  assert.equal((list.match(/<li[\s>]/g) ?? []).length, BADGES.length, "one item per directory");
+  // Nothing in the page is hot-linked from a directory.
+  assert.doesNotMatch(html, /<img[^>]*src="https?:\/\/(startupfa\.me|maidensail\.com)/);
+});
+
+test("footer brand column is the mark, the badge row and the social row, in that order", () => {
+  const html = page();
+  const brand = brandColumn(html);
+  assert.ok(brand, "footer should render the brand column");
+  // The tagline and the house line made way for the badges.
+  assert.doesNotMatch(html, /class="footer-tag"/);
+  assert.doesNotMatch(html, /class="footer-house"/);
+  const at = (cls) => brand.indexOf(cls);
+  assert.ok(at("footer-logo") > -1 && at("footer-badges") > -1 && at("footer-social") > -1);
+  assert.ok(at("footer-logo") < at("footer-badges"), "badges follow the mark");
+  assert.ok(at("footer-badges") < at("footer-social"), "social row closes the column");
 });
 
 const SOCIAL = [
@@ -72,8 +106,6 @@ const SOCIAL = [
   ["Bluesky", "https://bsky.app/profile/insurepages.bsky.social"],
   ["Instagram", "https://www.instagram.com/insurepages"],
 ];
-const rx = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
 test("footer social row: one icon link per platform, each with an accessible name", () => {
   const html = page();
   const list = html.match(/<ul class="footer-social"[^>]*>[\s\S]*?<\/ul>/)?.[0];
