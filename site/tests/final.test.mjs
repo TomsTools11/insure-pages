@@ -17,6 +17,7 @@ test("all internal anchors have matching ids", () => {
     "index.html": page(),
     "accessibility/index.html": page("accessibility/index.html"),
     "templates/index.html": page("templates/index.html"),
+    "tools/index.html": page("tools/index.html"),
   };
   const index = pages["index.html"];
   for (const [name, html] of Object.entries(pages)) {

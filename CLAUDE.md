@@ -21,8 +21,8 @@ Structure:
 
 - `src/components/` — one component per page section (`Header`, `Hero`, `TrustStrip`, `Pillars`, `Method`, `Pricing`, `ContactCta`, `Footer`).
 - `src/layouts/Base.astro` — shared page shell; `src/styles/global.css` — design tokens (color, type, spacing).
-- `src/pages/index.astro` and `src/pages/accessibility.astro` — the two published pages.
-- `tests/*.test.mjs` — 14 `node:test` assertions against the built HTML. The shared `page()` helper lives in `tests/support/page.mjs`, which is imported by every test file. **Test files must never import from each other**: `node --test` globs `tests/*.mjs`, so a test file that imports another test file re-registers that file's tests, silently duplicating them. Keep shared helpers under `tests/support/` (outside the glob) and have each test file import only from there.
+- `src/pages/` — the four published pages: `index.astro`, `accessibility.astro`, `templates.astro`, `tools.astro`.
+- `tests/*.test.mjs` — 43 `node:test` assertions against the built HTML. The shared `page()` helper lives in `tests/support/page.mjs`, which is imported by every test file. **Test files must never import from each other**: `node --test` globs `tests/*.mjs`, so a test file that imports another test file re-registers that file's tests, silently duplicating them. Keep shared helpers under `tests/support/` (outside the glob) and have each test file import only from there.
 
 Brand mark: the master lockup lives at repo root as `ip-logo.png` (800×350 RGBA,
 transparent). Two derived assets are what the site actually serves, both trimmed
@@ -42,6 +42,43 @@ own artwork (468×148), served from `public/` rather than hot-linked from
 startupfa.me so the footer costs no third-party request — the dofollow link back
 in `Footer.astro` is what the directory verifies. Re-download it from
 `https://startupfa.me/badges/featured-badge.webp` if it changes; don't edit it.
+
+## Free tools page (`/tools/`)
+
+`/tools/` embeds four Keywords Everywhere tools. Data lives in
+`src/data/tools.mjs`; the page is `src/pages/tools.astro` with components under
+`src/components/tools/`. Three things are load-bearing and easy to break
+without noticing:
+
+1. **No frame may reach the built HTML.** `ToolAccordion.astro` ships zero
+   frames and builds one in JS on the first `toggle` of a `<details>`. This is
+   the page's whole performance and privacy story: nothing is requested from
+   keywordseverywhere.com until a visitor opens a tool.
+   `grep -c '<iframe' dist/tools/index.html` must return `0`, and a test
+   asserts it. Writing the tag as a literal string anywhere in the markup or
+   the inline script breaks this even if no frame ever loads.
+2. **The frame carries `data-ke-embed`, and never a CSS `min-height`.** The
+   resizer at `https://keywordseverywhere.com/tools/assets/js/embed.js` matches
+   `iframe[data-ke-embed]` by source window and origin, then writes
+   `style.height` inline. Drop the attribute and the frame never resizes; add a
+   `min-height` to the frame and it fights the resizer. Reserve space on the
+   `.tool-frame` wrapper instead, from `minHeight` in `tools.mjs`. The resizer
+   re-queries the DOM on every message, so one shared copy handles frames
+   opened later.
+3. **The "Powered by Keywords Everywhere" link stays on every tool.** Their
+   embed terms are explicit: that credit is the whole price, and they disable
+   embedding for sites that strip it. A test counts one attribution per tool.
+
+The page must never imply the tools are unlimited. Keywords Everywhere applies
+a free per-visitor daily quota and renders its own quota banner inside the
+frame; the hero says so, and a test asserts the disclosure is present.
+
+Known third-party accessibility gap, disclosed in the accessibility statement
+and deliberately not patched: six form inputs across the SEO analyzer, traffic
+checker and robots.txt tester have no accessible name (no `<label>`,
+`aria-label`, or `aria-labelledby`, only a placeholder). That is content we do
+not control. Do not try to reach into the frame to fix it, and do not soften
+the statement to match.
 
 Campaign email lives in `email/` (see `email/README.md`), outside the Astro
 build. Email clients are not browsers: tables for layout, inline styles only,
