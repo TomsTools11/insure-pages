@@ -1,0 +1,80 @@
+---
+import { tools } from "../../data/tools.mjs";
+---
+
+<section class="t-hero">
+  <div class="container t-hero-inner">
+    <span class="section-eyebrow">Free tools</span>
+    <h1>Check your site before you spend a dollar on it.</h1>
+    <p class="t-hero-lede">
+      Four tools that answer the questions we get asked most. No account, no
+      email, nothing to install. Open one and run your own address.
+    </p>
+    <ul class="t-chips">
+      {
+        tools.map((t) => (
+          <li>
+            <a class="sticker" href={`#tool-${t.slug}`} data-tool-chip>
+              {t.name}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="t-hero-note">
+      Keywords Everywhere runs these and sets a daily limit for each visitor.
+      Heavy days may need to wait until tomorrow.
+    </p>
+  </div>
+</section>
+
+<style>
+  .t-hero {
+    padding: 72px 0 40px;
+  }
+  .t-hero-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+  }
+  h1 {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: clamp(34px, 4.4vw, 58px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    max-width: 900px;
+  }
+  .t-hero-lede {
+    font-size: 19px;
+    line-height: 1.55;
+    color: #3a3a3a;
+    font-weight: 500;
+    max-width: 560px;
+  }
+  .t-chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    list-style: none;
+    margin-top: 8px;
+  }
+  .t-chips a {
+    text-decoration: none;
+  }
+  .t-hero-note {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    max-width: 520px;
+    margin-top: 4px;
+  }
+  @media (max-width: 900px) {
+    .t-hero {
+      padding: 44px 0 32px;
+    }
+  }
+</style>

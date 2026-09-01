@@ -1,0 +1,305 @@
+---
+import {
+  toolGroups,
+  DEFAULT_MIN_HEIGHT,
+  embedUrl,
+  toolUrl,
+  RESIZER_SRC,
+} from "../../data/tools.mjs";
+---
+
+<section class="t-tools" id="tools">
+  <div class="container">
+    {
+      toolGroups.map((group) => (
+        <div class="t-group" id={`group-${group.id}`}>
+          <h2 class="t-group-head">{group.heading}</h2>
+          <p class="t-group-blurb">{group.blurb}</p>
+          <div class="t-list">
+            {group.tools.map((tool) => (
+              <details
+                class="tool"
+                id={`tool-${tool.slug}`}
+                name="tool"
+                data-tool
+                data-src={embedUrl(tool.slug)}
+                data-min-height={String(tool.minHeight ?? DEFAULT_MIN_HEIGHT)}
+                data-name={tool.name}
+              >
+                <summary class="tool-summary">
+                  <span class={`tool-dot dot-${tool.accent}`} aria-hidden="true" />
+                  <span class="tool-text">
+                    <span class="tool-name">{tool.name}</span>
+                    <span class="tool-sum">{tool.summary}</span>
+                  </span>
+                  <span class="tool-chev" aria-hidden="true">
+                    +
+                  </span>
+                </summary>
+                <div class="tool-body">
+                  <div
+                    class="tool-frame"
+                    data-frame
+                    style={`min-height:${tool.minHeight ?? DEFAULT_MIN_HEIGHT}px`}
+                  >
+                    <p class="tool-fallback" data-fallback>
+                      Loading the tool.
+                    </p>
+                  </div>
+                  <noscript>
+                    <p class="tool-noscript">
+                      This tool needs JavaScript. Open it on
+                      <a href={toolUrl(tool.slug)} rel="noopener">
+                        keywordseverywhere.com
+                      </a>
+                      instead.
+                    </p>
+                  </noscript>
+                  <p class="tool-credit">
+                    Powered by
+                    <a href="https://keywordseverywhere.com/" rel="noopener">
+                      Keywords Everywhere
+                    </a>
+                    <span aria-hidden="true">&middot;</span>
+                    {/* Always visible, not only in noscript. A frame that
+                        fails to load cross-origin fires no usable error, so
+                        if Keywords Everywhere ever disables embedding or the
+                        daily quota is spent, this link is what the visitor
+                        still has. */}
+                    <a href={toolUrl(tool.slug)} rel="noopener" data-tool-out>
+                      Open {tool.name} on their site
+                    </a>
+                  </p>
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .t-tools {
+    padding: 24px 0 72px;
+  }
+  .t-group + .t-group {
+    margin-top: 64px;
+  }
+  .t-group-head {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: clamp(24px, 2.6vw, 34px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .t-group-blurb {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--muted);
+    max-width: 620px;
+    margin: 10px 0 28px;
+    text-wrap: pretty;
+  }
+  .t-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .tool {
+    background: #fff;
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    box-shadow: 5px 5px 0 var(--ink);
+    overflow: hidden;
+  }
+  .tool-summary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  /* Safari draws its own marker through list-style: none. */
+  .tool-summary::-webkit-details-marker {
+    display: none;
+  }
+  .tool-summary:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: -5px;
+    border-radius: 18px;
+  }
+  .tool-dot {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+  }
+  .dot-red {
+    background: var(--red);
+  }
+  .dot-blue {
+    background: var(--blue);
+  }
+  .dot-yellow {
+    background: var(--yellow);
+  }
+  .dot-green {
+    background: var(--green);
+  }
+  .dot-lavender {
+    background: var(--lavender);
+  }
+  .tool-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+  .tool-name {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+  .tool-sum {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+  .tool-chev {
+    flex: none;
+    margin-left: auto;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    background: var(--cream-deep);
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 1;
+  }
+  .tool[open] .tool-chev {
+    background: var(--yellow);
+  }
+  .tool[open] .tool-chev::after {
+    content: "";
+  }
+  .tool-body {
+    padding: 0 24px 24px;
+    border-top: 2px solid var(--ink);
+    padding-top: 20px;
+  }
+  .tool-frame {
+    /* Space is reserved HERE, never on the frame itself: the Keywords
+       Everywhere resizer writes style.height on the frame, and a min-height
+       on that element would fight it. */
+    position: relative;
+    width: 100%;
+  }
+  .tool-frame > :global(iframe) {
+    display: block;
+    width: 100%;
+    border: 0;
+  }
+  .tool-fallback,
+  .tool-noscript {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--muted);
+    padding: 16px 0;
+  }
+  .tool-credit {
+    margin-top: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .tool-credit a,
+  .tool-noscript a {
+    color: var(--ink);
+  }
+  @media (max-width: 600px) {
+    .tool-summary {
+      padding: 16px 18px;
+      gap: 12px;
+    }
+    .tool-body {
+      padding: 18px 14px 20px;
+    }
+    .tool-name {
+      font-size: 16px;
+    }
+  }
+</style>
+
+<script is:inline define:vars={{ RESIZER_SRC }}>
+  (function () {
+    var resizerLoaded = false;
+
+    /* One shared resizer for the whole page. It re-queries
+       iframe[data-ke-embed] on every message, so frames built later still
+       resize and this only ever needs to load once. */
+    function loadResizer() {
+      if (resizerLoaded) return;
+      resizerLoaded = true;
+      var s = document.createElement("script");
+      s.src = RESIZER_SRC;
+      s.async = true;
+      document.body.appendChild(s);
+    }
+
+    function build(details) {
+      var host = details.querySelector("[data-frame]");
+      if (!host || host.dataset.built) return;
+      host.dataset.built = "1";
+
+      var frame = document.createElement("iframe");
+      frame.setAttribute("data-ke-embed", "");
+      frame.setAttribute("title", details.dataset.name + ", by Keywords Everywhere");
+      frame.setAttribute("loading", "lazy");
+      frame.src = details.dataset.src;
+      /* A starting height so the tool is usable before the first resize
+         message lands. The resizer overwrites style.height from here on. */
+      frame.style.height = (details.dataset.minHeight || "560") + "px";
+
+      var fallback = host.querySelector("[data-fallback]");
+      if (fallback) fallback.remove();
+      host.appendChild(frame);
+      loadResizer();
+    }
+
+    var all = document.querySelectorAll("[data-tool]");
+    for (var i = 0; i < all.length; i++) {
+      all[i].addEventListener("toggle", function () {
+        if (this.open) build(this);
+      });
+    }
+
+    /* Deep links and the hero chips both land on a closed row otherwise. */
+    function openFromHash() {
+      var id = location.hash.slice(1);
+      if (!id) return;
+      var el = document.getElementById(id);
+      if (el && el.hasAttribute("data-tool") && !el.open) el.open = true;
+    }
+
+    openFromHash();
+    window.addEventListener("hashchange", openFromHash);
+    /* Clicking a chip for the tool already in the hash fires no hashchange. */
+    var chips = document.querySelectorAll("[data-tool-chip]");
+    for (var c = 0; c < chips.length; c++) {
+      chips[c].addEventListener("click", function () {
+        var el = document.querySelector(this.getAttribute("href"));
+        if (el && !el.open) el.open = true;
+      });
+    }
+  })();
+</script>
