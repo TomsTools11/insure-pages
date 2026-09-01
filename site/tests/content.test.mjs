@@ -6,9 +6,9 @@ test("pillars: three cards with headings", () => {
   const html = page();
   assert.match(html, /id="build"/);
   assert.match(html, /Found on Google\./);
-  assert.match(html, /Instant trust\./);
-  assert.match(html, /Lead capture\./);
-  assert.match(html, /really well\./);
+  assert.match(html, /Looks like a real agency\./);
+  assert.match(html, /Your phone rings\./);
+  assert.match(html, /three jobs\./);
 });
 
 test("method: five steps with copy fixes applied", () => {
@@ -17,6 +17,6 @@ test("method: five steps with copy fixes applied", () => {
   assert.match(html, /A conversation, first\./);
   assert.match(html, /style guide/);
   assert.doesNotMatch(html, /styled guide/);
-  assert.match(html, /color palette/);
+  assert.match(html, /your colors, your type/);
   assert.doesNotMatch(html, /color pallet\b/);
 });

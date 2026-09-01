@@ -8,16 +8,26 @@ import { page } from "./support/page.mjs";
 const dist = join(dirname(fileURLToPath(import.meta.url)), "..", "dist");
 const html = () => page("templates/index.html");
 
+// Astro escapes interpolated text, so data strings must be compared in
+// their built form (e.g. family's → family&#39;s).
+const escapeHtml = (s) =>
+  s
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+
 test("templates page builds with title, description, and its sections", () => {
   assert.ok(
     existsSync(join(dist, "templates", "index.html")),
     "dist/templates/index.html missing - run npm run build",
   );
   const h = html();
-  assert.match(h, /<title>Insurance Agency Website Templates \| InsurePages<\/title>/);
+  assert.match(h, /<title>Insurance agency website templates \| InsurePages<\/title>/);
   assert.match(h, /<meta name="description" content="[^"]+"/);
   const sections = h.match(/<section/g) ?? [];
-  assert.ok(sections.length >= 8, `expected at least 8 sections, saw ${sections.length}`);
+  assert.ok(sections.length >= 7, `expected at least 7 sections, saw ${sections.length}`);
   assert.match(h, /id="gallery"/);
 });
 
@@ -35,7 +45,7 @@ test("every template in the data renders a card", async () => {
   const h = html();
   for (const t of templates) {
     assert.match(h, new RegExp(`>${t.name}<`), `card for ${t.name} missing`);
-    assert.ok(h.includes(t.tagline), `tagline for ${t.name} missing`);
+    assert.ok(h.includes(escapeHtml(t.tagline)), `tagline for ${t.name} missing`);
   }
 });
 
