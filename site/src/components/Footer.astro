@@ -26,27 +26,39 @@ const socials = [
   },
 ];
 
-// Startup-directory badges. Same rule as the fonts, logos and social glyphs:
-// the artwork is served from public/images/ rather than hot-linked, so the
-// footer costs no third-party request, and the followed link back (no
-// rel="nofollow") is what each directory verifies. To add a directory, drop
-// its artwork in public/images/, add an entry here, and add it to the list in
+// Startup-directory badges, rendered as a grid under the nav columns. The
+// default rule is the same as for the fonts, logos and social glyphs: serve
+// the artwork from public/images/ so the footer costs no third-party request,
+// and keep the link back followed (no rel="nofollow"), which is what the
+// directory verifies. Each entry carries its own rel and src because one
+// directory needs more than that: Maidensail's crawler looks for its own
+// embed, the image served from maidensail.com and rel="dofollow", exactly as
+// their snippet gives it. A self-hosted copy of the same artwork was not
+// picked up, so that badge is hot-linked on purpose (a ~1 KB SVG with no
+// scripts) and is the footer's one outside image request. To add a
+// directory, add an entry here and the same row to BADGES in
 // tests/chrome.test.mjs. Every badge renders 44px tall so mixed artwork lines
-// up in one row.
+// up.
 const badges = [
   {
     name: "Startup Fame",
     href: "https://startupfa.me/s/insurepages?utm_source=insurepages.com",
+    rel: "noopener",
     src: "/images/startup-fame-badge.webp",
     width: 468,
     height: 148,
+    lazy: true,
   },
   {
     name: "Maidensail",
     href: "https://maidensail.com/startup/insurepages",
-    src: "/images/maidensail-badge.svg",
+    rel: "dofollow",
+    src: "https://maidensail.com/badge/insurepages.svg",
     width: 190,
     height: 44,
+    // Eager on purpose: the embed is what Maidensail checks, and lazy would
+    // keep the request from ever firing for a visitor who never scrolls here.
+    lazy: false,
   },
 ];
 ---
@@ -68,33 +80,6 @@ const badges = [
           loading="lazy"
           decoding="async"
         />
-        {/* Directory badges sit under the mark and outside every <nav>: a
-            listing is not site navigation, and folding it into a nav's link
-            list would announce it as one. Each link's accessible name is its
-            image's alt text. */}
-        <ul class="footer-badges">
-          {
-            badges.map((badge) => (
-              <li>
-                <a
-                  class="footer-badge"
-                  href={badge.href}
-                  target="_blank"
-                  rel="noopener"
-                >
-                  <img
-                    src={badge.src}
-                    alt={`Featured on ${badge.name}`}
-                    width={badge.width}
-                    height={badge.height}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </a>
-              </li>
-            ))
-          }
-        </ul>
         {/* An icon-only link has no text, so each anchor carries the
             accessible name and each <svg> is aria-hidden: the glyph must not
             be announced on top of it. */}
@@ -148,6 +133,28 @@ const badges = [
           >
         </div>
       </nav>
+      {/* Directory badges take the row under the nav columns, outside every
+          <nav>: a listing is not site navigation, and folding it into a nav's
+          link list would announce it as one. Each link's accessible name is
+          its image's alt text. */}
+      <ul class="footer-badges">
+        {
+          badges.map((badge) => (
+            <li>
+              <a class="footer-badge" href={badge.href} target="_blank" rel={badge.rel}>
+                <img
+                  src={badge.src}
+                  alt={`Featured on ${badge.name}`}
+                  width={badge.width}
+                  height={badge.height}
+                  loading={badge.lazy ? "lazy" : undefined}
+                  decoding="async"
+                />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
     <div class="footer-bar">
       <span>© 2026 InsurePages · by S3 Labs</span>
@@ -162,35 +169,38 @@ const badges = [
     color: #fff;
     padding: 80px 0 24px;
   }
+  /* Two rows: the brand column and the three nav columns, then the badge
+     grid under the nav columns. */
   .footer-top {
     display: grid;
     grid-template-columns: 1.6fr 1fr 1fr 1fr;
-    gap: 56px;
+    gap: 40px 56px;
     padding-bottom: 56px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   }
-  /* The mark used to sit over two lines of copy; with the badges under it
-     instead, 180px keeps it the heaviest thing in the column without
-     crowding them. */
+  /* The mark used to sit over two lines of copy; on its own above the social
+     row, 180px keeps it the heaviest thing in the column without dwarfing
+     the tiles. */
   .footer-logo {
     display: block;
     width: 180px;
     max-width: 100%;
     height: auto;
-    margin-bottom: 20px;
   }
-  /* Badge row. Each badge is its directory's own artwork, so they only line
-     up if every one renders at the same height; the wrapper's flex-wrap is
-     what makes room for the next directory (a third badge wraps to a second
-     row at desktop, all of them stack at phone widths). */
+  /* Badge grid. It spans the three nav columns and repeats their tracks
+     (same column gap), so each badge sits under a column header, three to a
+     row, and the next directory simply starts the next row. Each badge is its
+     directory's own artwork, so they only line up if every one renders at
+     the same height. */
   .footer-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    grid-column: 2 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px 56px;
     list-style: none;
   }
   .footer-badge {
-    display: block;
+    display: inline-block;
     border-radius: 10px;
     transition: transform 0.15s ease;
   }
@@ -215,7 +225,7 @@ const badges = [
     flex-wrap: wrap;
     gap: 10px;
     list-style: none;
-    margin-top: 20px;
+    margin-top: 24px;
   }
   .footer-social a {
     display: flex;
@@ -273,16 +283,24 @@ const badges = [
   }
   @media (max-width: 900px) {
     .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    /* Two nav columns per row here, so the grid takes the full width and
+       fits as many badges across as 190px columns allow. */
+    .footer-badges {
+      grid-column: 1 / -1;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 12px 32px;
+    }
   }
   /* Verification fix (Task 8): at narrow phone widths the 2-column grid's
      implicit auto-minimum track size (driven by the unbreakable "InsurePages"
      brand mark) forced the grid wider than the viewport, causing horizontal
      scroll. Stack to one column and shrink the logo so it never has to.
      200px clears the 240px content box a 320px viewport leaves after the
-     container's 40px side padding, and the badge row wraps to one badge per
-     line inside the same box. */
+     container's 40px side padding, and the badge grid drops to one badge
+     per line inside the same box. */
   @media (max-width: 560px) {
     .footer-top { grid-template-columns: 1fr; gap: 40px; }
     .footer-logo { width: 160px; }
+    .footer-badges { grid-template-columns: 1fr; }
   }
 </style>

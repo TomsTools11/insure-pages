@@ -41,63 +41,85 @@ test("footer brand uses the on-dark logo variant", () => {
 });
 
 // One row per startup directory the site is listed in: name, the link the
-// directory verifies, the self-hosted artwork, and its intrinsic size.
+// directory verifies, the rel that link carries, the artwork src, and its
+// intrinsic size. Artwork is self-hosted unless a directory's crawler needs
+// its own embed: Maidensail checks for its image URL and rel="dofollow".
 const BADGES = [
   [
     "Startup Fame",
     "https://startupfa.me/s/insurepages?utm_source=insurepages.com",
+    "noopener",
     "/images/startup-fame-badge.webp",
     468,
     148,
   ],
-  ["Maidensail", "https://maidensail.com/startup/insurepages", "/images/maidensail-badge.svg", 190, 44],
+  [
+    "Maidensail",
+    "https://maidensail.com/startup/insurepages",
+    "dofollow",
+    "https://maidensail.com/badge/insurepages.svg",
+    190,
+    44,
+  ],
 ];
 
 const brandColumn = (html) =>
   html.match(/<div class="footer-brand"[^>]*>[\s\S]*?<\/div>\s*<nav/)?.[0];
+const footerTop = (html) =>
+  html.match(/<div class="footer-top"[^>]*>[\s\S]*?<div class="footer-bar"/)?.[0];
 
-test("footer carries every directory badge, self-hosted and linked back", () => {
+test("footer carries every directory badge, linked back the way each directory checks", () => {
   const html = page();
-  const brand = brandColumn(html);
-  assert.ok(brand, "footer should render the brand column");
-  const list = brand.match(/<ul class="footer-badges"[^>]*>[\s\S]*?<\/ul>/)?.[0];
-  assert.ok(list, "brand column should render the badge row");
-  // A listing is not site navigation: the row sits outside every <nav>.
-  assert.doesNotMatch(brand, /<nav[\s>]/);
+  const top = footerTop(html);
+  assert.ok(top, "footer should render its top grid");
+  const list = top.match(/<ul class="footer-badges"[^>]*>[\s\S]*?<\/ul>/)?.[0];
+  assert.ok(list, "footer should render the badge grid");
+  // A listing is not site navigation: the grid comes after the last <nav>,
+  // in its own row under the columns.
+  assert.ok(top.lastIndexOf("</nav>") < top.indexOf('class="footer-badges"'), "badge grid follows the nav columns");
 
-  for (const [name, href, src, width, height] of BADGES) {
+  for (const [name, href, rel, src, width, height] of BADGES) {
     const a = list.match(new RegExp(`<a[^>]*href="${rx(href)}"[^>]*>`))?.[0];
-    assert.ok(a, `badge row should link to ${name}`);
-    // The followed link back is what the directory verifies -- no rel="nofollow".
+    assert.ok(a, `badge grid should link to ${name}`);
+    // The followed link back is what every directory verifies -- never nofollow.
     assert.doesNotMatch(a, /nofollow/);
     assert.match(a, /target="_blank"/);
-    assert.match(a, /rel="noopener"/);
+    assert.match(a, new RegExp(`rel="${rx(rel)}"`), `${name} link should carry rel="${rel}"`);
 
     const img = list.match(new RegExp(`<img[^>]*src="${rx(src)}"[^>]*>`))?.[0];
-    assert.ok(img, `${name} badge should be served from public/, not hot-linked`);
+    assert.ok(img, `${name} badge should point at ${src}`);
     assert.match(img, new RegExp(`alt="Featured on ${rx(name)}"`));
     // Intrinsic dimensions reserve the box before decode (no layout shift).
     assert.match(img, new RegExp(`width="${width}"`));
     assert.match(img, new RegExp(`height="${height}"`));
-    assert.match(img, /loading="lazy"/);
-    assert.ok(existsSync(join(dist, src)), `${src} is missing from dist`);
+    if (src.startsWith("/")) {
+      assert.ok(existsSync(join(dist, src)), `${src} is missing from dist`);
+      assert.match(img, /loading="lazy"/);
+    } else {
+      // The hot-linked embed is what the directory's crawler checks for, so it
+      // loads eagerly: lazy would keep the request from firing for a visitor
+      // who never scrolls to the footer.
+      assert.doesNotMatch(img, /loading="lazy"/, `${name} embed should not be lazy`);
+    }
   }
   assert.equal((list.match(/<li[\s>]/g) ?? []).length, BADGES.length, "one item per directory");
-  // Nothing in the page is hot-linked from a directory.
-  assert.doesNotMatch(html, /<img[^>]*src="https?:\/\/(startupfa\.me|maidensail\.com)/);
+  // Only the directories that need their own embed are hot-linked.
+  const hotlinked = [...html.matchAll(/<img[^>]*src="(https?:\/\/[^"]+)"/g)].map((m) => m[1]);
+  const allowed = BADGES.map(([, , , src]) => src).filter((s) => !s.startsWith("/"));
+  assert.deepEqual(hotlinked, allowed, "no image is hot-linked beyond the listed embeds");
 });
 
-test("footer brand column is the mark, the badge row and the social row, in that order", () => {
+test("footer brand column is the mark and the social row, nothing else", () => {
   const html = page();
   const brand = brandColumn(html);
   assert.ok(brand, "footer should render the brand column");
-  // The tagline and the house line made way for the badges.
+  // The tagline and the house line are gone, and the badges moved to their
+  // own row under the nav columns.
   assert.doesNotMatch(html, /class="footer-tag"/);
   assert.doesNotMatch(html, /class="footer-house"/);
-  const at = (cls) => brand.indexOf(cls);
-  assert.ok(at("footer-logo") > -1 && at("footer-badges") > -1 && at("footer-social") > -1);
-  assert.ok(at("footer-logo") < at("footer-badges"), "badges follow the mark");
-  assert.ok(at("footer-badges") < at("footer-social"), "social row closes the column");
+  assert.doesNotMatch(brand, /footer-badges/, "badges should not sit in the brand column");
+  assert.ok(brand.indexOf("footer-logo") > -1, "brand column should carry the mark");
+  assert.ok(brand.indexOf("footer-logo") < brand.indexOf("footer-social"), "social row follows the mark");
 });
 
 const SOCIAL = [

@@ -144,8 +144,12 @@ test("every card carries local imagery or a waiting frame", async () => {
     shots + waiting >= templates.length,
     `${templates.length} templates but ${shots} screenshots and ${waiting} waiting frames`,
   );
-  // No template imagery is fetched from another site.
-  for (const [, src] of h.matchAll(/<img[^>]*src="(https?:[^"]+)"/g)) {
+  // No template imagery is fetched from another site. The footer is shared
+  // chrome with its own rules (a directory badge may be hot-linked when that
+  // directory's crawler needs it), so the check stops where the footer starts.
+  const aboveFooter = h.slice(0, h.indexOf("<footer"));
+  assert.ok(aboveFooter.length > 0, "templates page should end in the shared footer");
+  for (const [, src] of aboveFooter.matchAll(/<img[^>]*src="(https?:[^"]+)"/g)) {
     assert.fail(`gallery image loaded from off site: ${src}`);
   }
 });

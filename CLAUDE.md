@@ -37,19 +37,23 @@ to the art's bounding box (655×259) and palette-quantized:
 Both derived files are generated, not hand-edited. If the master changes, rerun
 `python3 design/build-logo-assets.py` from the repo root rather than editing them.
 
-Third-party badges: the footer's brand column carries a row of startup-directory
-badges, driven by the `badges` array in `Footer.astro`. Each is the directory's
-own artwork served from `public/images/` rather than hot-linked, so the footer
-costs no third-party request; the followed link back (no `rel="nofollow"`) is
-what each directory verifies. Every badge renders 44px tall so mixed artwork
-lines up, and `tests/chrome.test.mjs` checks each one. Don't edit the files;
-re-download them if a directory changes its artwork:
-
-- `startup-fame-badge.webp` (468×148) from `https://startupfa.me/badges/featured-badge.webp`.
-- `maidensail-badge.svg` (190×44) from `https://maidensail.com/badge/insurepages.svg`.
-
-To add a directory, drop its artwork in `public/images/`, add an entry to
-`badges`, and add the same row to `BADGES` in the test.
+Third-party badges: a grid of startup-directory badges sits under the nav
+columns of the footer (three across at desktop, wrapping as directories are
+added), driven by the `badges` array in `Footer.astro`. The default rule is to
+serve each directory's artwork from `public/images/` so the footer costs no
+third-party request, and to keep the link back followed (no `rel="nofollow"`),
+which is what Startup Fame verifies. Maidensail is the exception: its crawler
+looks for its own embed, the image served from
+`https://maidensail.com/badge/insurepages.svg` with `rel="dofollow"`, and a
+self-hosted copy was not picked up, so that badge is hot-linked on purpose (a
+~1 KB SVG with no scripts, loaded eagerly so the request fires) and is the
+footer's one outside image request. Every badge renders 44px tall so mixed
+artwork lines up, and `tests/chrome.test.mjs` checks each one against the
+array's rows, including which images may be hot-linked. To add a directory,
+add an entry to `badges` (self-host unless its verification needs its own
+URL) and the same row to `BADGES` in the test. Don't edit
+`startup-fame-badge.webp` (468×148); re-download it from
+`https://startupfa.me/badges/featured-badge.webp` if Startup Fame changes it.
 
 ## Free tools page (`/tools/`)
 
