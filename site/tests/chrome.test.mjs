@@ -41,46 +41,32 @@ test("footer brand uses the on-dark logo variant", () => {
 });
 
 // One row per startup directory the site is listed in, mirroring the badges
-// array in Footer.astro: name, the link, the rel that link carries, the
-// artwork src, its alt text, and its intrinsic size. Each is the directory's
-// embed as given, which is why the rels differ; artwork is self-hosted only
-// where the directory has confirmed it counts (Startup Fame).
+// array in Footer.astro: the name and the directory's embed snippet, byte for
+// byte. The page must carry each snippet exactly, since that is what the
+// directory's checker looks for; artwork is self-hosted only where the
+// directory has confirmed it counts (Startup Fame).
 const BADGES = [
   [
     "Startup Fame",
-    "https://startupfa.me/s/insurepages?utm_source=insurepages.com",
-    "noopener",
-    "/images/startup-fame-badge.webp",
-    "Featured on Startup Fame",
-    468,
-    148,
+    '<a href="https://startupfa.me/s/insurepages?utm_source=insurepages.com" target="_blank" rel="noopener"><img src="/images/startup-fame-badge.webp" alt="Featured on Startup Fame" width="468" height="148" loading="lazy" decoding="async"></a>',
   ],
   [
     "Maidensail",
-    "https://maidensail.com/startup/insurepages",
-    "dofollow",
-    "https://maidensail.com/badge/insurepages.svg",
-    "Featured on Maidensail",
-    190,
-    44,
+    '<a href="https://maidensail.com/startup/insurepages" rel="dofollow"><img src="https://maidensail.com/badge/insurepages.svg" alt="Featured on Maidensail" height="44"></a>',
   ],
   [
     "SitePatent",
-    "https://sitepatent.com/?utm_source=insurepages.com&utm_medium=badge",
-    "nofollow noopener noreferrer",
-    "https://sitepatent.com/api/badge?style=classic",
-    "Found on SitePatent",
-    220,
-    56,
+    '<a href="https://sitepatent.com/?utm_source=insurepages.com&utm_medium=badge" target="_blank" rel="nofollow noopener noreferrer">\n  <img src="https://sitepatent.com/api/badge?style=classic" alt="Found on SitePatent" height="54" />\n</a>',
   ],
 ];
+const srcOf = (embed) => embed.match(/<img[^>]*src="([^"]+)"/)[1];
 
 const brandColumn = (html) =>
   html.match(/<div class="footer-brand"[^>]*>[\s\S]*?<\/div>\s*<nav/)?.[0];
 const footerTop = (html) =>
   html.match(/<div class="footer-top"[^>]*>[\s\S]*?<div class="footer-bar"/)?.[0];
 
-test("footer carries every directory badge, linked back the way each directory checks", () => {
+test("footer carries every directory badge, each embed byte for byte", () => {
   const html = page();
   const top = footerTop(html);
   assert.ok(top, "footer should render its top grid");
@@ -90,34 +76,27 @@ test("footer carries every directory badge, linked back the way each directory c
   // in its own row under the columns.
   assert.ok(top.lastIndexOf("</nav>") < top.indexOf('class="footer-badges"'), "badge grid follows the nav columns");
 
-  for (const [name, href, rel, src, alt, width, height] of BADGES) {
-    const a = list.match(new RegExp(`<a[^>]*href="${rx(href)}"[^>]*>`))?.[0];
-    assert.ok(a, `badge grid should link to ${name}`);
-    assert.match(a, /target="_blank"/);
-    // The rel is the directory's own: a followed link where that is what it
-    // verifies, nofollow where its snippet says so. Exact, so neither drifts.
-    assert.match(a, new RegExp(`rel="${rx(rel)}"`), `${name} link should carry rel="${rel}"`);
-
-    const img = list.match(new RegExp(`<img[^>]*src="${rx(src)}"[^>]*>`))?.[0];
-    assert.ok(img, `${name} badge should point at ${src}`);
-    assert.match(img, new RegExp(`alt="${rx(alt)}"`));
-    // Intrinsic dimensions reserve the box before decode (no layout shift).
-    assert.match(img, new RegExp(`width="${width}"`));
-    assert.match(img, new RegExp(`height="${height}"`));
+  for (const [name, embed] of BADGES) {
+    // Exactly the snippet, so a checker that string-matches it finds it, and
+    // one that parses it finds the same attributes the directory issued.
+    assert.ok(list.includes(embed), `${name} embed should appear verbatim in the badge grid`);
+    // Astro must not have touched it: no scoped-style attribute inside it.
+    const item = list.slice(list.indexOf(embed), list.indexOf(embed) + embed.length);
+    assert.doesNotMatch(item, /data-astro-cid/);
+    const src = srcOf(embed);
     if (src.startsWith("/")) {
       assert.ok(existsSync(join(dist, src)), `${src} is missing from dist`);
-      assert.match(img, /loading="lazy"/);
     } else {
-      // The hot-linked embed is what the directory's crawler checks for, so it
-      // loads eagerly: lazy would keep the request from firing for a visitor
-      // who never scrolls to the footer.
-      assert.doesNotMatch(img, /loading="lazy"/, `${name} embed should not be lazy`);
+      // A hot-linked embed is what that directory's checker looks for, so it
+      // must load eagerly: lazy would keep the request from firing for a
+      // visitor who never scrolls to the footer.
+      assert.doesNotMatch(embed, /loading="lazy"/, `${name} embed should not be lazy`);
     }
   }
   assert.equal((list.match(/<li[\s>]/g) ?? []).length, BADGES.length, "one item per directory");
   // Only the directories that need their own embed are hot-linked.
   const hotlinked = [...html.matchAll(/<img[^>]*src="(https?:\/\/[^"]+)"/g)].map((m) => m[1]);
-  const allowed = BADGES.map(([, , , src]) => src).filter((s) => !s.startsWith("/"));
+  const allowed = BADGES.map(([, embed]) => srcOf(embed)).filter((s) => !s.startsWith("/"));
   assert.deepEqual(hotlinked, allowed, "no image is hot-linked beyond the listed embeds");
 });
 

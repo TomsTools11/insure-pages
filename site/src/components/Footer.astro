@@ -27,48 +27,36 @@ const socials = [
 ];
 
 // Startup-directory badges, rendered as a grid beside the Site list. Each
-// entry is that directory's embed as given: its image URL, its rel, its alt
-// text. That is what a directory's checker looks for, and it is why the
-// entries differ (Maidensail wants rel="dofollow", SitePatent ships nofollow,
-// Startup Fame is verified with a followed link and a self-hosted copy of
-// its artwork). Self-hosting is the preference, since it costs the footer no
-// third-party request, but only where the directory has confirmed it counts:
-// a self-hosted copy of the Maidensail badge was not picked up, so the
-// hot-linked ones stay hot-linked (small SVGs, no scripts) and load eagerly,
-// so the request fires even for a visitor who never scrolls this far. To add
-// a directory, add an entry here and the same row to BADGES in
-// tests/chrome.test.mjs. Every badge renders 44px tall so mixed artwork lines
-// up.
+// entry is the directory's embed snippet, byte for byte, dropped into its
+// list item with set:html so the page carries exactly what the directory's
+// checker looks for: no re-emitted attributes, no scoped-style attributes,
+// no reformatting. That is why the entries differ (Maidensail wants
+// rel="dofollow", SitePatent ships nofollow and a target, Startup Fame is
+// verified with a followed link and a self-hosted copy of its artwork).
+// Self-hosting is the preference, since it costs the footer no third-party
+// request, but only where the directory has confirmed it counts: a
+// self-hosted copy of the Maidensail badge was not picked up, so the
+// hot-linked ones stay hot-linked (small SVGs, no scripts) and, with no
+// loading="lazy" in their snippets, load eagerly, so the request fires even
+// for a visitor who never scrolls this far. To add a directory, paste its
+// snippet as an entry here and the same row into BADGES in
+// tests/chrome.test.mjs. The CSS renders every badge 44px tall so mixed
+// artwork lines up.
 const badges = [
   {
     name: "Startup Fame",
-    href: "https://startupfa.me/s/insurepages?utm_source=insurepages.com",
-    rel: "noopener",
-    src: "/images/startup-fame-badge.webp",
-    alt: "Featured on Startup Fame",
-    width: 468,
-    height: 148,
-    lazy: true,
+    embed:
+      '<a href="https://startupfa.me/s/insurepages?utm_source=insurepages.com" target="_blank" rel="noopener"><img src="/images/startup-fame-badge.webp" alt="Featured on Startup Fame" width="468" height="148" loading="lazy" decoding="async"></a>',
   },
   {
     name: "Maidensail",
-    href: "https://maidensail.com/startup/insurepages",
-    rel: "dofollow",
-    src: "https://maidensail.com/badge/insurepages.svg",
-    alt: "Featured on Maidensail",
-    width: 190,
-    height: 44,
-    lazy: false,
+    embed:
+      '<a href="https://maidensail.com/startup/insurepages" rel="dofollow"><img src="https://maidensail.com/badge/insurepages.svg" alt="Featured on Maidensail" height="44"></a>',
   },
   {
     name: "SitePatent",
-    href: "https://sitepatent.com/?utm_source=insurepages.com&utm_medium=badge",
-    rel: "nofollow noopener noreferrer",
-    src: "https://sitepatent.com/api/badge?style=classic",
-    alt: "Found on SitePatent",
-    width: 220,
-    height: 56,
-    lazy: false,
+    embed:
+      '<a href="https://sitepatent.com/?utm_source=insurepages.com&utm_medium=badge" target="_blank" rel="nofollow noopener noreferrer">\n  <img src="https://sitepatent.com/api/badge?style=classic" alt="Found on SitePatent" height="54" />\n</a>',
   },
 ];
 ---
@@ -148,22 +136,7 @@ const badges = [
           navigation, and folding it into a nav's link list would announce it
           as one. Each link's accessible name is its image's alt text. */}
       <ul class="footer-badges">
-        {
-          badges.map((badge) => (
-            <li>
-              <a class="footer-badge" href={badge.href} target="_blank" rel={badge.rel}>
-                <img
-                  src={badge.src}
-                  alt={badge.alt}
-                  width={badge.width}
-                  height={badge.height}
-                  loading={badge.lazy ? "lazy" : undefined}
-                  decoding="async"
-                />
-              </a>
-            </li>
-          ))
-        }
+        {badges.map((badge) => <li set:html={badge.embed} />)}
       </ul>
     </div>
     <div class="footer-bar">
@@ -219,20 +192,22 @@ const badges = [
     gap: 16px 56px;
     list-style: none;
   }
-  .footer-badge {
+  /* The embeds arrive through set:html, so they carry no scoped-style
+     attribute; :global() reaches them from the scoped list. */
+  .footer-badges :global(a) {
     display: inline-block;
     border-radius: 10px;
     transition: transform 0.15s ease;
   }
-  .footer-badge:hover {
+  .footer-badges :global(a:hover) {
     transform: translate(-1px, -1px);
   }
-  .footer-badge img {
+  .footer-badges :global(img) {
     display: block;
     height: 44px;
     width: auto;
   }
-  .footer-badge:focus-visible {
+  .footer-badges :global(a:focus-visible) {
     outline: 3px solid var(--yellow);
     outline-offset: 3px;
   }
