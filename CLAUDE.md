@@ -40,19 +40,21 @@ Both derived files are generated, not hand-edited. If the master changes, rerun
 Third-party badges: a grid of startup-directory badges sits under the
 Resources and Hello columns of the footer, beside the Site list (two across
 at desktop, wrapping as directories are added), driven by the `badges` array
-in `Footer.astro`. Each entry is that directory's embed as given, its image
-URL, its rel and its alt text, because that is what the directory's checker
-looks for, and it is why the entries differ: Maidensail wants
-`rel="dofollow"`, SitePatent ships `nofollow noopener noreferrer`, and
-Startup Fame is verified with a followed link and a self-hosted copy of its
-artwork. Self-hosting is the preference (it costs the footer no third-party
-request) but only where the directory has confirmed it counts: a self-hosted
-copy of the Maidensail badge was not picked up, so the hot-linked ones stay
-hot-linked (small SVGs, no scripts) and load eagerly so the request fires.
-Every badge renders 44px tall so mixed artwork lines up, and
-`tests/chrome.test.mjs` checks each one against the array's rows, including
-which images may be hot-linked. To add a directory, add its snippet as an
-entry in `badges` and the same row to `BADGES` in the test. Don't edit
+in `Footer.astro`. Each entry is the directory's embed snippet, byte for
+byte, rendered with `set:html` so the built page carries exactly what the
+directory's checker looks for: no re-emitted attributes, no scoped-style
+attributes, no reformatting. That is why the entries differ (Maidensail
+wants `rel="dofollow"`, SitePatent ships `nofollow noopener noreferrer` and
+a target, Startup Fame is verified with a followed link and a self-hosted
+copy of its artwork). Self-hosting is the preference (it costs the footer no
+third-party request) but only where the directory has confirmed it counts: a
+self-hosted copy of the Maidensail badge was not picked up, so the hot-linked
+ones stay hot-linked (small SVGs, no scripts) and, with no `loading="lazy"`
+in their snippets, load eagerly so the request fires. The CSS renders every
+badge 44px tall so mixed artwork lines up, and `tests/chrome.test.mjs`
+asserts each snippet appears verbatim, including which images may be
+hot-linked. To add a directory, paste its snippet as an entry in `badges` and
+the same row into `BADGES` in the test. Don't edit
 `startup-fame-badge.webp` (468×148); re-download it from
 `https://startupfa.me/badges/featured-badge.webp` if Startup Fame changes it.
 
