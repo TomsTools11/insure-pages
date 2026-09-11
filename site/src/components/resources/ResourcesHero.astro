@@ -1,0 +1,91 @@
+---
+import { toolCount, categoryCount } from "../../data/resources.mjs";
+
+// "Over 300" is a claim the data has to keep true. The count is rounded down
+// to the nearest fifty so the copy does not read "Over 309" and does not go
+// stale the day a tool is added. A test holds the floor at 300.
+const roundedDown = Math.floor(toolCount / 50) * 50;
+---
+
+<section class="r-hero">
+  <div class="container r-hero-inner">
+    <span class="section-eyebrow">Resource list</span>
+    <h1>The tools insurance agencies actually run on.</h1>
+    <p class="r-hero-lede">
+      Over {roundedDown} of them, sorted into {categoryCount} categories.
+      Search the whole list, or jump straight to the part you need.
+    </p>
+    <div class="r-hero-stickers">
+      <span class="r-sticker r-sticker-yellow">★ Free to browse</span>
+      <span class="r-sticker r-sticker-green">No account needed</span>
+    </div>
+    <p class="r-hero-note">
+      Listings are not endorsements. We are not paid to include anything here.
+    </p>
+  </div>
+</section>
+
+<style>
+  .r-hero {
+    padding: 72px 0 40px;
+  }
+  .r-hero-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+  }
+  h1 {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: clamp(34px, 4.4vw, 58px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    max-width: 900px;
+  }
+  .r-hero-lede {
+    font-size: 19px;
+    line-height: 1.55;
+    color: #3a3a3a;
+    font-weight: 500;
+    max-width: 600px;
+  }
+  .r-hero-stickers {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .r-sticker {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 16px;
+    border: 2px solid var(--ink);
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .r-sticker-yellow {
+    background: var(--yellow);
+    transform: rotate(-2deg);
+  }
+  .r-sticker-green {
+    background: var(--green);
+    transform: rotate(2deg);
+  }
+  .r-hero-note {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    max-width: 520px;
+    margin-top: 4px;
+  }
+  @media (max-width: 900px) {
+    .r-hero {
+      padding: 44px 0 32px;
+    }
+  }
+</style>

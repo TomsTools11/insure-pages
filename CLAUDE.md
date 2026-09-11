@@ -21,8 +21,8 @@ Structure:
 
 - `src/components/` — one component per page section (`Header`, `Hero`, `TrustStrip`, `Pillars`, `Method`, `Pricing`, `ContactCta`, `Footer`).
 - `src/layouts/Base.astro` — shared page shell; `src/styles/global.css` — design tokens (color, type, spacing).
-- `src/pages/` — the four published pages: `index.astro`, `accessibility.astro`, `templates.astro`, `tools.astro`.
-- `tests/*.test.mjs` — 50 `node:test` assertions against the built HTML. The shared `page()` helper lives in `tests/support/page.mjs`, which is imported by every test file. **Test files must never import from each other**: `node --test` globs `tests/*.mjs`, so a test file that imports another test file re-registers that file's tests, silently duplicating them. Keep shared helpers under `tests/support/` (outside the glob) and have each test file import only from there.
+- `src/pages/` — the five published pages: `index.astro`, `accessibility.astro`, `templates.astro`, `tools.astro`, `resources.astro`.
+- `tests/*.test.mjs` — 58 `node:test` assertions against the built HTML. The shared `page()` helper lives in `tests/support/page.mjs`, which is imported by every test file. **Test files must never import from each other**: `node --test` globs `tests/*.mjs`, so a test file that imports another test file re-registers that file's tests, silently duplicating them. Keep shared helpers under `tests/support/` (outside the glob) and have each test file import only from there.
 
 Brand mark: the master lockup lives at repo root as `ip-logo.png` (800×350 RGBA,
 transparent). Two derived assets are what the site actually serves, both trimmed
@@ -94,6 +94,54 @@ checker and robots.txt tester have no accessible name (no `<label>`,
 `aria-label`, or `aria-labelledby`, only a placeholder). That is content we do
 not control. Do not try to reach into the frame to fix it, and do not soften
 the statement to match.
+
+## Resource list page (`/resources/`)
+
+`/resources/` lists the tools insurance agencies run on: 309 of them in 43
+categories at the time of writing. The list is `src/data/resources.mjs`, the
+page is `src/pages/resources.astro`, and the components live under
+`src/components/resources/`. The list was compiled from Insurance Leads
+Guide's "Ultimate Insurance Agent Resource List" (August 2026), with the
+blurbs rewritten, GOAL added, and a URL added for every tool that could be
+verified. The page carries no credit to that source; adding one is the
+owner's call.
+
+Everything on the page derives from the data file: the hero's counts, the
+card numbering, the jump nav, the group totals, and the toolbar's label. To
+add a tool, append an item to its category; to add a category, append it to
+its part. Things that hold and are easy to break:
+
+1. **"Over 300" is a claim the data has to keep true.** The hero rounds the
+   tool count down to the nearest fifty, and `tests/resources.test.mjs` fails
+   if the count drops under 300. Trimming the list past that means changing
+   the copy, not the test.
+2. **An item with no URL renders as a plain dashed card, never as an empty
+   link.** Thirteen tools have no address we could verify. Leave `url` empty
+   rather than guessing; a test fails on any `href=""`.
+3. **The page reads in full without JavaScript.** Category cards are native
+   `<details>` shipped open, and the jump nav's groups are `<details>` too.
+   Search, Clear, Expand all and Collapse all need the inline script in
+   `ResourcesList.astro`, so the toolbar is hidden by a `<noscript>` style
+   rather than a `hidden` attribute the script removes: with JavaScript on it
+   is there at first paint, with no layout shift.
+4. **Cards are dealt into two columns, evens left and odds right,** so
+   accordions that change height leave no gaps. Each card carries its index
+   in its group as `--i`; under 900px the columns become `display: contents`
+   and `order: var(--i)` puts the cards back in numbered sequence. Drop
+   either half and phones read 01, 03, 05.
+5. **The toolbar sticks under the header,** so its `top` is the header's
+   height: 123px, and 102px under 480px where the header shrinks the logo.
+   Change the header's padding or logo width and this moves with it.
+
+"Listings are not endorsements. We are not paid to include anything here."
+sits in the hero and a test asserts it. The list stays free to browse with no
+account, and every external link opens in a new tab with `rel="noopener"`.
+
+The header marks the standalone page the visitor is on with
+`aria-current="page"` (lavender sticker); the hash links to home sections
+never carry it. Six links plus the CTA no longer fit beside the logo under
+about 1130px, so the nav links fold at 1180px, not the 900px the rest of the
+site uses.
 
 ## Template demos (`/demos/`)
 

@@ -1,0 +1,502 @@
+---
+import { groups } from "../../data/resources.mjs";
+
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+const toolsIn = (cats) => cats.reduce((a, c) => a + c.items.length, 0);
+
+// Two independent columns rather than a 2-up grid: accordion cards change
+// height as they open, and a grid would leave a gap under the shorter card
+// in every row. Even-numbered cards fill the left column, odd the right.
+// Each card also carries its index as --i, so when the columns collapse to
+// one (display: contents, below 900px) `order` puts the cards back in
+// sequence instead of all the evens and then all the odds.
+const columns = (cats) => [
+  cats.filter((_, i) => i % 2 === 0),
+  cats.filter((_, i) => i % 2 === 1),
+];
+---
+
+<section class="r-list">
+  <div class="container r-list-inner">
+    {
+      groups.map((group) => (
+        <div class="r-group" id={`part-${group.id}`} data-res-group>
+          <div class="r-group-head">
+            <h2>{group.name}</h2>
+            <span class="r-group-count" data-res-group-count>
+              {plural(toolsIn(group.categories), "tool", "tools")}
+            </span>
+          </div>
+          <div class="r-cols">
+            {columns(group.categories).map((col) => (
+              <div class="r-col">
+                {col.map((cat) => (
+                  <details
+                    class="r-cat"
+                    id={`cat-${cat.id}`}
+                    data-res-cat
+                    data-name={cat.name.toLowerCase()}
+                    style={`--i:${group.categories.indexOf(cat)}`}
+                    open
+                  >
+                    <summary class="r-cat-summary">
+                      <span class={`r-cat-num num-${cat.accent}`} aria-hidden="true">
+                        {cat.num}
+                      </span>
+                      <span class="r-cat-text">
+                        <span class="r-cat-name">{cat.name}</span>
+                        <span class="r-cat-count" data-res-count>
+                          {plural(cat.items.length, "tool", "tools")}
+                        </span>
+                      </span>
+                      <span class="r-cat-chev" aria-hidden="true" />
+                    </summary>
+                    <div class="r-cat-body">
+                      <p class="r-cat-blurb">{cat.blurb}</p>
+                      <ul class="r-items">
+                        {cat.items.map((item) => (
+                          <li
+                            data-res-item
+                            data-search={`${item.name} ${item.note}`.toLowerCase()}
+                          >
+                            {item.url ? (
+                              <a
+                                class="r-item r-item-link"
+                                href={item.url}
+                                target="_blank"
+                                rel="noopener"
+                              >
+                                <span class="r-item-name">
+                                  {item.name}{" "}
+                                  <span class="r-item-out" aria-hidden="true">
+                                    ↗
+                                  </span>
+                                </span>
+                                {item.note && (
+                                  <span class="r-item-note">{item.note}</span>
+                                )}
+                              </a>
+                            ) : (
+                              <span class="r-item r-item-plain">
+                                <span class="r-item-name">{item.name}</span>
+                                {item.note && (
+                                  <span class="r-item-note">{item.note}</span>
+                                )}
+                              </span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </details>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+
+    <div class="r-empty" data-res-empty hidden>
+      <h2>Nothing matched that.</h2>
+      <p>
+        Try a shorter word, or the category you think it belongs in. If we are
+        missing a tool you rely on, <a href="/#contact">tell us</a> and we will
+        add it.
+      </p>
+      <button type="button" class="btn btn-yellow" data-res-clear>
+        Show the whole list
+      </button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .r-list {
+    padding: 56px 0 96px;
+  }
+  .r-list-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+  }
+  /* The script toggles hidden on groups, cards, items and the empty state.
+     Anything given its own display value needs the attribute to win. */
+  .r-list [hidden] {
+    display: none !important;
+  }
+  .r-group {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    /* Header (123px) plus the sticky toolbar, so a jump lands below both. */
+    scroll-margin-top: 190px;
+  }
+  .r-group-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 14px;
+  }
+  .r-group-head h2 {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: clamp(24px, 2.6vw, 34px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .r-group-count {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .r-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    align-items: start;
+  }
+  .r-col {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    min-width: 0;
+  }
+  .r-cat {
+    background: #fff;
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+    box-shadow: 5px 5px 0 var(--ink);
+    overflow: hidden;
+    scroll-margin-top: 200px;
+    order: var(--i);
+  }
+  .r-cat-summary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  /* Safari draws its own marker through list-style: none. */
+  .r-cat-summary::-webkit-details-marker {
+    display: none;
+  }
+  .r-cat-summary:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: -5px;
+    border-radius: 18px;
+  }
+  .r-cat-num {
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border: 2px solid var(--ink);
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .num-yellow {
+    background: var(--yellow);
+  }
+  .num-green {
+    background: var(--green);
+  }
+  .num-blue {
+    background: var(--blue);
+  }
+  .num-lavender {
+    background: var(--lavender);
+  }
+  .r-cat-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+  .r-cat-name {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+  .r-cat-count {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+  .r-cat-chev {
+    flex: none;
+    margin-left: auto;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    background: var(--cream-deep);
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 1;
+  }
+  .r-cat-chev::before {
+    content: "+";
+  }
+  .r-cat[open] .r-cat-chev {
+    background: var(--yellow);
+  }
+  .r-cat[open] .r-cat-chev::before {
+    content: "\2212";
+  }
+  .r-cat-body {
+    padding: 20px 24px 24px;
+    border-top: 2px solid var(--ink);
+  }
+  .r-cat-blurb {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--muted);
+    max-width: 660px;
+    margin-bottom: 20px;
+    text-wrap: pretty;
+  }
+  .r-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+    list-style: none;
+  }
+  .r-items li {
+    min-width: 0;
+  }
+  .r-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    height: 100%;
+    border-radius: 10px;
+    padding: 11px 14px;
+  }
+  .r-item-link {
+    background: #fff;
+    border: 2px solid var(--ink);
+    text-decoration: none;
+    color: var(--ink);
+    transition: all 0.15s ease;
+  }
+  .r-item-link:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 3px 3px 0 var(--ink);
+    background: var(--cream-deep);
+  }
+  /* Tools we could not find a current address for. Listed, not linked, and
+     drawn so the difference is obvious: nothing here is a dead link. */
+  .r-item-plain {
+    background: var(--cream);
+    border: 2px dashed rgba(26, 26, 26, 0.35);
+  }
+  .r-item-plain .r-item-name {
+    color: var(--muted);
+  }
+  .r-item-name {
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+  }
+  .r-item-out {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .r-item-note {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    line-height: 1.4;
+    text-wrap: pretty;
+  }
+  .r-empty {
+    background: #fff;
+    border: 2px dashed var(--ink);
+    border-radius: 24px;
+    padding: 56px 32px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .r-empty h2 {
+    font-family: "Unbounded", sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+  }
+  .r-empty p {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--muted);
+    max-width: 420px;
+  }
+  .r-empty a {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .r-empty .btn {
+    margin-top: 8px;
+  }
+  @media (max-width: 900px) {
+    .r-cols {
+      grid-template-columns: 1fr;
+    }
+    /* One column: the cards become direct children of .r-cols and `order`
+       (from --i) puts them back in numbered sequence. */
+    .r-col {
+      display: contents;
+    }
+  }
+  @media (max-width: 600px) {
+    .r-list {
+      padding: 40px 0 72px;
+    }
+    .r-cat-summary {
+      padding: 16px 18px;
+      gap: 12px;
+    }
+    .r-cat-body {
+      padding: 18px 14px 20px;
+    }
+    .r-cat-name {
+      font-size: 16px;
+    }
+    .r-items {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var bar = document.querySelector("[data-res-toolbar]");
+    if (!bar) return;
+    var input = bar.querySelector("[data-res-q]");
+    var label = bar.querySelector("[data-res-label]");
+    var groups = document.querySelectorAll("[data-res-group]");
+    var cards = document.querySelectorAll("[data-res-cat]");
+    var empty = document.querySelector("[data-res-empty]");
+
+    function plural(n, one, many) {
+      return n + " " + (n === 1 ? one : many);
+    }
+
+    /* Cards that were closed when a search began. A search opens every
+       matching card so the matches are visible; clearing it closes those
+       again and leaves the rest as they were. Expand all and Collapse all
+       drop the memory, since the visitor has just said what they want. */
+    var searching = false;
+    var wasClosed = [];
+
+    function apply() {
+      var q = input.value.trim().toLowerCase();
+      var total = 0;
+      var shownCats = 0;
+
+      for (var i = 0; i < cards.length; i++) {
+        var card = cards[i];
+        var catHit = !q || card.getAttribute("data-name").indexOf(q) > -1;
+        var items = card.querySelectorAll("[data-res-item]");
+        var shown = 0;
+        for (var j = 0; j < items.length; j++) {
+          var hit = catHit || items[j].getAttribute("data-search").indexOf(q) > -1;
+          items[j].hidden = !hit;
+          if (hit) shown += 1;
+        }
+        card.hidden = shown === 0;
+        card.querySelector("[data-res-count]").textContent = plural(shown, "tool", "tools");
+        var chip = document.querySelector('[data-res-chip="' + card.id.slice(4) + '"]');
+        if (chip) chip.parentNode.hidden = shown === 0;
+        if (shown) {
+          shownCats += 1;
+          total += shown;
+        }
+      }
+
+      for (var g = 0; g < groups.length; g++) {
+        var visible = groups[g].querySelectorAll("[data-res-cat]:not([hidden])");
+        var inGroup = 0;
+        for (var v = 0; v < visible.length; v++) {
+          inGroup += visible[v].querySelectorAll("[data-res-item]:not([hidden])").length;
+        }
+        groups[g].hidden = visible.length === 0;
+        groups[g].querySelector("[data-res-group-count]").textContent = plural(inGroup, "tool", "tools");
+      }
+
+      empty.hidden = shownCats > 0;
+      label.textContent = q
+        ? plural(total, "match", "matches") + " in " + plural(shownCats, "category", "categories")
+        : plural(total, "tool", "tools") + ", " + plural(shownCats, "category", "categories");
+
+      if (q && !searching) {
+        searching = true;
+        wasClosed = [];
+        for (var c = 0; c < cards.length; c++) {
+          if (!cards[c].open) wasClosed.push(cards[c]);
+          cards[c].open = true;
+        }
+      } else if (!q && searching) {
+        searching = false;
+        for (var w = 0; w < wasClosed.length; w++) wasClosed[w].open = false;
+        wasClosed = [];
+      }
+    }
+
+    function setAll(open) {
+      wasClosed = [];
+      for (var i = 0; i < cards.length; i++) cards[i].open = open;
+    }
+
+    function clear() {
+      input.value = "";
+      apply();
+      input.focus();
+    }
+
+    input.addEventListener("input", apply);
+    bar.querySelector("[data-res-expand]").addEventListener("click", function () {
+      setAll(true);
+    });
+    bar.querySelector("[data-res-collapse]").addEventListener("click", function () {
+      setAll(false);
+    });
+    var clears = document.querySelectorAll("[data-res-clear]");
+    for (var k = 0; k < clears.length; k++) clears[k].addEventListener("click", clear);
+
+    /* A browser can restore a typed query on back navigation. */
+    if (input.value) apply();
+
+    /* Deep links and the jump chips both land on a collapsed card otherwise. */
+    function openFromHash() {
+      var id = location.hash.slice(1);
+      if (!id) return;
+      var el = document.getElementById(id);
+      if (el && el.hasAttribute("data-res-cat") && !el.open) el.open = true;
+    }
+    openFromHash();
+    window.addEventListener("hashchange", openFromHash);
+    /* Clicking a chip for the card already in the hash fires no hashchange. */
+    var chips = document.querySelectorAll("[data-res-chip]");
+    for (var m = 0; m < chips.length; m++) {
+      chips[m].addEventListener("click", function () {
+        var el = document.getElementById(this.getAttribute("href").slice(1));
+        if (el && !el.open) el.open = true;
+      });
+    }
+  })();
+</script>

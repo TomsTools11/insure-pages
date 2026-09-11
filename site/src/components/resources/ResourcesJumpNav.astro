@@ -1,0 +1,130 @@
+---
+import { groups } from "../../data/resources.mjs";
+
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+---
+
+{/* Closed by default: 43 chips is a lot of vertical space to spend on
+    navigation before the list itself starts. Native <details> so the groups
+    open without JavaScript. */}
+<nav class="r-jump" aria-label="Jump to category">
+  <div class="container r-jump-inner">
+    {
+      groups.map((group) => (
+        <details class="r-jump-group">
+          <summary class="r-jump-summary">
+            <span class="r-jump-sign" aria-hidden="true" />
+            <span class="r-jump-name">{group.name}</span>
+            <span class="r-jump-count">
+              {plural(group.categories.length, "category", "categories")}
+            </span>
+          </summary>
+          <ul class="r-jump-list">
+            {group.categories.map((cat) => (
+              <li>
+                <a
+                  class="r-chip"
+                  href={`#cat-${cat.id}`}
+                  data-res-chip={cat.id}
+                >
+                  {cat.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </details>
+      ))
+    }
+  </div>
+</nav>
+
+<style>
+  .r-jump {
+    background: var(--cream-deep);
+    border-bottom: 2px solid var(--ink);
+    padding: 18px 0;
+  }
+  .r-jump-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .r-jump-summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    width: fit-content;
+  }
+  .r-jump-summary::-webkit-details-marker {
+    display: none;
+  }
+  .r-jump-sign {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    display: grid;
+    place-items: center;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    font-weight: 800;
+    font-size: 13px;
+    line-height: 1;
+    background: #fff;
+  }
+  .r-jump-sign::before {
+    content: "+";
+  }
+  .r-jump-group[open] .r-jump-sign {
+    background: var(--yellow);
+  }
+  .r-jump-group[open] .r-jump-sign::before {
+    content: "\2212";
+  }
+  .r-jump-name {
+    font-family: "Unbounded", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .r-jump-count {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .r-jump-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px 0 4px 30px;
+    list-style: none;
+  }
+  .r-jump-list [hidden] {
+    display: none;
+  }
+  .r-chip {
+    display: inline-flex;
+    align-items: center;
+    background: #fff;
+    border: 1.5px solid var(--ink);
+    border-radius: 100px;
+    padding: 3px 11px;
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.5;
+    text-decoration: none;
+    color: var(--ink);
+    transition: all 0.15s ease;
+  }
+  .r-chip:hover {
+    background: var(--yellow);
+  }
+  @media (max-width: 600px) {
+    .r-jump-list {
+      padding-left: 0;
+    }
+  }
+</style>

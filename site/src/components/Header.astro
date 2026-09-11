@@ -1,3 +1,11 @@
+---
+// Marks the link for the page the visitor is on. Only the standalone pages
+// can match: the hash links all point at the home page, and marking every
+// one of them there would say nothing.
+const here = Astro.url.pathname;
+const current = (href) => (here === href ? "page" : undefined);
+---
+
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand-mark" href="/" aria-label="InsurePages home">
@@ -15,8 +23,9 @@
     <nav class="primary-nav" aria-label="Main">
       <a class="sticker nav-link" href="/#build">What you get</a>
       <a class="sticker nav-link" href="/#method">How it works</a>
-      <a class="sticker nav-link" href="/templates/">Templates</a>
-      <a class="sticker nav-link" href="/tools/">Free tools</a>
+      <a class="sticker nav-link" href="/templates/" aria-current={current("/templates/")}>Templates</a>
+      <a class="sticker nav-link" href="/tools/" aria-current={current("/tools/")}>Free tools</a>
+      <a class="sticker nav-link" href="/resources/" aria-current={current("/resources/")}>Resources</a>
       <a class="sticker nav-link" href="/#pricing">Pricing</a>
       <a class="sticker nav-cta" href="/#contact"
         >Start now <span class="cta-star" aria-hidden="true">✦</span></a
@@ -68,6 +77,7 @@
     align-items: center;
   }
   .primary-nav a { text-decoration: none; color: var(--ink); }
+  .nav-link[aria-current="page"] { background: var(--lavender); }
   /* Spec fix 1a: centered label. The star sits in its own span so the text
      block itself stays optically centered inside the pill. */
   .nav-cta {
@@ -80,7 +90,10 @@
      other star on the site, so it takes the brand red. Decorative and
      aria-hidden, so it carries no meaning the label doesn't already. */
   .cta-star { color: var(--red); }
-  @media (max-width: 900px) {
+  /* Six links plus the CTA come to about 1130px with the logo and the
+     header's side padding, so the links go before that, not at the 900px
+     the rest of the site folds at. */
+  @media (max-width: 1180px) {
     .nav-link { display: none; }
   }
   /* Verification fix (Task 8): on narrow phones the brand mark plus the
