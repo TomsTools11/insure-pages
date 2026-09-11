@@ -17,6 +17,7 @@ Three packages, same build and same turnaround. The price shown is the price pai
 - [Home](https://www.insurepages.com/): What every site does, the five-step build, and the three packages.
 - [Templates](https://www.insurepages.com/templates/): Six complete website templates for insurance agencies. Each one opens as a working demo.
 - [Free tools](https://www.insurepages.com/tools/): Four free checks for an agency website: an SEO analyzer, a traffic checker, a robots.txt tester, and an llms.txt generator. No account needed.
+- [Resource list](https://www.insurepages.com/resources/): Over 300 tools insurance agencies run on, sorted into 43 categories: lead companies, CRMs, raters, agency management, websites, marketing, phones and more. Searchable, free to browse, and no account needed.
 - [Accessibility statement](https://www.insurepages.com/accessibility/): How this site and the sites built for clients are designed and tested for accessibility, and how to report a barrier.
 
 ## Contact

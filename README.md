@@ -30,12 +30,12 @@ InsurePages' own marketing site — the site that sells the productized service 
 
 ### `site/` layout
 
-- `src/components/` — one component per page section: `Header`, `Hero`, `TrustStrip`, `Pillars`, `Method`, `Pricing`, `ContactCta`, `Footer`, plus `templates/` and `tools/` for the two secondary pages.
+- `src/components/` — one component per page section: `Header`, `Hero`, `TrustStrip`, `Pillars`, `Method`, `Pricing`, `ContactCta`, `Footer`, plus `templates/`, `tools/` and `resources/` for the three secondary pages.
 - `src/layouts/Base.astro` — shared page shell (head, meta, layout wrapper).
 - `src/styles/global.css` — design tokens (color, type, spacing) and global styles.
-- `src/pages/` — the four published pages: `index.astro` (home), `templates.astro` (the template gallery), `tools.astro` (the free tools page), and `accessibility.astro` (the published accessibility statement).
+- `src/pages/` — the five published pages: `index.astro` (home), `templates.astro` (the template gallery), `tools.astro` (the free tools page), `resources.astro` (the resource list: 300+ tools insurance agencies run on, in 43 categories, with search), and `accessibility.astro` (the published accessibility statement).
 - `public/fonts/` — self-hosted Unbounded and Plus Jakarta Sans (latin, variable woff2). `public/images/og.png` — Open Graph image.
-- `tests/` — 50 `node:test` assertions that check the built HTML in `dist/`; shared helper at `tests/support/page.mjs`.
+- `tests/` — 58 `node:test` assertions that check the built HTML in `dist/`; shared helper at `tests/support/page.mjs`.
 
 ### Commands (run from `site/`)
 
@@ -49,9 +49,9 @@ npm run preview  # preview the production build locally
 
 ### Quality gates (passing)
 
-- 50/50 tests green
-- axe: zero violations on all four pages
-- Lighthouse on a local production build, all four pages: accessibility **100**, SEO **100**,
+- 58/58 tests green
+- axe: zero violations on all five pages
+- Lighthouse on a local production build, all five pages: accessibility **100**, SEO **100**,
   best practices **96**, performance **95 to 100**
 
 Accessibility is built in and scanned automatically before every release. The site does

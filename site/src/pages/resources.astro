@@ -1,0 +1,25 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import ResourcesHero from "../components/resources/ResourcesHero.astro";
+import ResourcesToolbar from "../components/resources/ResourcesToolbar.astro";
+import ResourcesJumpNav from "../components/resources/ResourcesJumpNav.astro";
+import ResourcesList from "../components/resources/ResourcesList.astro";
+import ResourcesBridge from "../components/resources/ResourcesBridge.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Base
+  title="Tools and resources for insurance agencies | InsurePages"
+  description="Over 300 tools insurance agencies run on, sorted into 43 categories: leads, CRMs, raters, agency management, websites, marketing, phones and more. Free to browse, no account needed."
+>
+  <Header />
+  <main id="main">
+    <ResourcesHero />
+    <ResourcesToolbar />
+    <ResourcesJumpNav />
+    <ResourcesList />
+    <ResourcesBridge />
+  </main>
+  <Footer />
+</Base>
