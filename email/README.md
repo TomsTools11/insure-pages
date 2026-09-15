@@ -23,7 +23,7 @@ Two links to retarget per campaign:
 
 | What | Where it points |
 | --- | --- |
-| Primary button | `https://www.insurepages.com/templates` |
+| Primary button | `https://www.insurepages.com/templates/` |
 | "Fill out the form" | `https://formrobin.com/f/344no93` |
 
 The only remote asset is the logo, served from the live site at

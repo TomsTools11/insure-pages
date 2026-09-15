@@ -58,6 +58,50 @@ the same row into `BADGES` in the test. Don't edit
 `startup-fame-badge.webp` (468×148); re-download it from
 `https://startupfa.me/badges/featured-badge.webp` if Startup Fame changes it.
 
+## One URL per page
+
+Every page answers on exactly one URL: `https://www.insurepages.com/<route>/`,
+absolute, `https`, `www`, trailing slash. That single spelling is what
+`Base.astro` declares as `<link rel="canonical">` and `og:url` (both derived
+from `Astro.url.pathname` against `site` in `astro.config.mjs`), what
+`@astrojs/sitemap` writes into `sitemap-0.xml`, and what `robots.txt` hands
+Google. Three rules in `vercel.json` collapse every other spelling into it:
+
+| Spelling | Rule | Lands on |
+| --- | --- | --- |
+| `/tools` | `trailingSlash: true` | `/tools/` |
+| `/index.html` | `redirects` entry | `/` |
+| `/tools/index.html` | `redirects` entry `/:path+/index.html` | `/tools/` |
+
+The `.html` pair is written out rather than delegated to Vercel's `cleanUrls`,
+and that is deliberate. `cleanUrls` compiles to one route,
+`^/(?:(.+)/)?index(?:\.html)?/?$` with `Location: "/$1/"`. For `/index.html`
+the optional capture does not participate, Vercel's router resolves the empty
+group to `""`, and the homepage is sent to `Location: //` — a network-path
+reference with an empty authority, which is not a valid URL. It breaks `/index`
+and `/index/` the same way. Two explicit rules have no empty capture to
+resolve. Verify any change to this against the real route table rather than by
+reading the docs: `npm i @vercel/routing-utils` and run `getTransformedRoutes`
+on the config, which is how the `//` was caught.
+
+The alias redirect stays **first** in the `redirects` array. Behind the `.html`
+rules, `insure-pages.vercel.app/index.html` would bounce to the alias root
+before crossing hosts, turning one hop into two.
+
+`tests/indexing.test.mjs` pins all of this: the directory build format, a
+self-referential canonical matching `og:url` on every page, no stray
+`noindex`, the sitemap listing exactly the built pages with trailing slashes,
+robots.txt staying open and naming the canonical host, both `.html` redirects
+(and that `cleanUrls` is *not* set), and the alias rule's position. Adding a
+page needs no test change — the file walks `dist`.
+
+Search Console will keep reporting **Page with redirect** and **Alternate page
+with proper canonical tag** for a while after any of this changes. Both are
+healthy outcomes, not errors: they mean a duplicate spelling was found and
+folded into the canonical. **Duplicate, Google chose different canonical than
+user** is the row that means Google overrode us, and the only one worth
+opening.
+
 ## Free tools page (`/tools/`)
 
 `/tools/` embeds four Keywords Everywhere tools. Data lives in
